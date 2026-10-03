@@ -1,8 +1,8 @@
 # Etapa 2 — Login, cadastro da empresa e identidade visual
 
 **Data:** 2026-10-03
-**Status:** desenho em andamento — partes 1, 2 e identidade visual **aprovadas**; parte de testes **apresentada, aguardando aprovação**.
-**Próximo passo ao retomar:** confirmar com o Caio a parte de testes → revisar este documento → criar o plano de implementação (skill `writing-plans`) → implementar.
+**Status:** desenho **aprovado** por completo (telas, segurança, banco, identidade visual e testes).
+**Próximo passo ao retomar:** plano de implementação em `docs/superpowers/plans/` (skill `writing-plans`) → implementar.
 
 ---
 
@@ -100,7 +100,7 @@ Rascunho aprovado: [`docs/design/identidade-visual-aprovada.html`](../../design/
   - Perguntas ordenadas da melhor para a pior; legenda das faixas abaixo. Limites ajustáveis depois.
 - Todo texto deve passar WCAG AA (exceto o "!" do logo, decisão do Caio).
 
-## 6. Testes (apresentado — AGUARDANDO APROVAÇÃO)
+## 6. Testes (aprovado)
 
 1. **Banco/segurança:** duas empresas de teste (A e B); provar que A não lê/edita B, `anon` não vê nada, ninguém insere empresa pela API, trigger cria a empresa no cadastro. Advisors do Supabase com zero alertas.
 2. **Vitest** (biblioteca nova, `npm test`), com TDD: schemas zod dos formulários, função de redirecionamento seguro, função de faixa da nota (Boa/Atenção/Ruim).
