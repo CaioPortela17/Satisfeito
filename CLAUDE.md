@@ -69,4 +69,4 @@ Regras de acesso:
 
 ## Status
 - [x] Etapa 1: estrutura do projeto (Next.js 16 + Tailwind 4 + Supabase projeto `satisfeito`, ref `cvgayvfqzrbdqmlsvcal`, região sa-east-1)
-- [ ] Etapa 2: login e cadastro da empresa
+- [ ] Etapa 2: login e cadastro da empresa — **desenho em andamento**. Antes de qualquer coisa, leia `docs/superpowers/specs/2026-10-03-etapa-2-login-design.md` (todas as decisões já aprovadas e o próximo passo). Não refaça perguntas que já estão respondidas lá.

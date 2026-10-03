@@ -43,3 +43,6 @@ next-env.d.ts
 
 # cache de ferramentas locais
 .impeccable/
+
+# rascunhos visuais do brainstorming
+.superpowers/
