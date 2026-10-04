@@ -44,6 +44,12 @@
 
 ---
 
+### Task 0 (Etapa 2.5): várias empresas por login
+
+Ver seção 0 do spec. Passos: (1) TDD de `escolherEmpresaAtual` em `src/lib/empresas/empresa-atual.ts`; (2) atualizar `supabase/tests/rls_empresas.sql` (segunda empresa própria permitida; empresa para outro dono recusada) e ver falhar; (3) migração `20261004000000_varias_empresas.sql` e ver o teste passar; advisors; tipos; (4) `obterContextoEmpresa()` (servidor, com `cache` do React) em `src/lib/empresas/contexto.ts`; (5) `npx shadcn@latest add dropdown-menu`, `SeletorEmpresa` no cabeçalho, actions `trocarEmpresa` e `criarEmpresa`, página `/painel/empresas/nova`; (6) saudação do painel com a empresa atual. Commit por passo lógico.
+
+**Ajustes nas tarefas seguintes:** a migração de funcionários passa a ser `20261004000001_funcionarios.sql`; em `adicionarFuncionario` e na página, usar `obterContextoEmpresa()` (empresa atual) em vez de `from("empresas").select("id").maybeSingle()`, e a página filtra `.eq("empresa_id", atual.id)`. A Task 5 não precisa mais adicionar `dropdown-menu` (só `alert-dialog`).
+
 ### Task 1: Validação do nome do funcionário
 
 **Files:**

@@ -8,6 +8,18 @@ Os funcionários aparecem na pesquisa como a pergunta "Quem te atendeu?" (Etapa 
 
 ---
 
+## 0. Etapa 2.5 — várias empresas por login (aprovado, feito antes da Etapa 3)
+
+Motivo: a mãe do Caio tem várias unidades da Bebelu e outros negócios; um login precisa gerenciar várias empresas. Decisão: **só o dono** (sem gerentes com login próprio por enquanto).
+
+- **Banco:** remover `empresas_owner_id_key` (unique) e criar índice em `owner_id`; `owner_id` com `default auth.uid()`; policy de insert `with check (owner_id = (select auth.uid()))` e `grant insert (nome)`; check `nome = btrim(nome)`. O trigger do cadastro continua criando a primeira empresa.
+- **Empresa atual:** cookie `empresa_atual` (httpOnly, SameSite=Lax, Secure em produção). Função pura `escolherEmpresaAtual(empresas, idDoCookie)` → a do cookie se for do usuário, senão a mais antiga. Cookie adulterado não dá acesso a nada (a lista vem do banco filtrada pelo RLS).
+- **Telas:** seletor de empresa no cabeçalho do painel (lista + "Adicionar empresa"); página `/painel/empresas/nova` (só o nome); ao criar, troca para a nova. Saudação do painel usa a empresa atual.
+- **Funcionários (Etapa 3):** pertencem à **empresa atual**; as actions usam o id dela obtido no servidor.
+- **Testes:** `escolherEmpresaAtual` no Vitest; `rls_empresas.sql` atualizado (criar segunda empresa própria; não criar para outro dono; anon sem acesso).
+
+---
+
 ## 1. Decisões (aprovadas)
 
 | Tema | Decisão |
