@@ -50,12 +50,11 @@ Regras de acesso:
 ## Proteção contra respostas falsas (fazer na Etapa 5)
 Pedido do Caio: impedir que alguém responda várias vezes para prejudicar a nota. Combinar:
 1. Marca no navegador ("já respondeu hoje")
-2. IP **não bloqueia** (Wi-Fi do local é compartilhado): só sinaliza respostas repetidas da mesma conexão como "suspeitas". Guardar só hash do IP (LGPD), nunca o IP
-3. Tempo mínimo de resposta (~3s) contra robôs
-4. Cloudflare Turnstile (anti-robô invisível) — biblioteca/serviço novo, avisar antes
-5. Painel marca respostas "suspeitas" (rajada de notas ruins / mesmo IP) e o dono pode descartar
+2. Tempo mínimo de resposta (~3s) contra robôs
+3. Cloudflare Turnstile (anti-robô invisível) — biblioteca/serviço novo, avisar antes
+4. Painel marca respostas "suspeitas" (rajada de notas ruins em poucos minutos) e o dono pode descartar
+**Não usar** nenhum limite ou sinal por IP nem identificação do cliente (CPF/e-mail): decisão do Caio, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais.
 Consequência: o envio da resposta passa por uma Server Action (que aplica as regras) em vez de insert direto do público no banco.
-Futuro: incentivo "deixe seu e-mail e ganhe desconto"; código único por nota fiscal (premium).
 
 ## Ordem de desenvolvimento
 1. Estrutura do projeto Next.js + Tailwind + conexão com Supabase
