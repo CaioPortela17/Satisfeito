@@ -16,11 +16,11 @@ export function FormularioEsqueciSenha() {
 
   if (estado.sucesso) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-5">
         <Alert role="status">
           <AlertDescription>{estado.sucesso}</AlertDescription>
         </Alert>
-        <Link href="/entrar" className="block text-center text-sm font-semibold underline underline-offset-4">
+        <Link href="/entrar" className="block text-center text-base font-semibold underline underline-offset-4">
           Voltar para Entrar
         </Link>
       </div>
@@ -28,7 +28,7 @@ export function FormularioEsqueciSenha() {
   }
 
   return (
-    <form action={acao} className="space-y-4" noValidate>
+    <form action={acao} className="space-y-5" noValidate>
       {estado.erro && (
         <Alert variant="destructive">
           <AlertDescription>{estado.erro}</AlertDescription>
@@ -55,7 +55,7 @@ export function FormularioEsqueciSenha() {
         {pendente ? "Enviando…" : "Enviar link"}
       </Button>
 
-      <Link href="/entrar" className="block text-center text-sm underline underline-offset-4">
+      <Link href="/entrar" className="block text-center text-base underline underline-offset-4">
         Lembrei a senha
       </Link>
     </form>

@@ -14,7 +14,7 @@ export function FormularioRedefinirSenha() {
   const [estado, acao, pendente] = useActionState(redefinirSenha, estadoInicial);
 
   return (
-    <form action={acao} className="space-y-4" noValidate>
+    <form action={acao} className="space-y-5" noValidate>
       {estado.erro && (
         <Alert variant="destructive">
           <AlertDescription>{estado.erro}</AlertDescription>

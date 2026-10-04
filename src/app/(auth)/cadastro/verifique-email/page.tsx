@@ -9,8 +9,8 @@ export default function PaginaVerifiqueEmail() {
       <div aria-hidden="true" className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-manga-claro text-3xl">
         ✉️
       </div>
-      <h1 className="text-2xl font-semibold">Confira seu e-mail</h1>
-      <p className="mt-2 text-muted-foreground">
+      <h1 className="text-3xl font-bold tracking-tight">Confira seu e-mail</h1>
+      <p className="mt-3 text-base text-muted-foreground">
         Enviamos um link de confirmação. Abra o e-mail e toque no link para ativar sua conta.
       </p>
       <p className="mt-4 text-sm text-muted-foreground">

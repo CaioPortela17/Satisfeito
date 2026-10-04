@@ -14,8 +14,8 @@ export default async function PaginaEntrar({ searchParams }: PageProps<"/entrar"
 
   return (
     <>
-      <h1 className="text-2xl font-semibold">Que bom te ver de novo</h1>
-      <p className="mt-1 mb-6 text-sm text-muted-foreground">
+      <h1 className="text-3xl font-bold tracking-tight">Que bom te ver de novo</h1>
+      <p className="mt-2 mb-8 text-base text-muted-foreground">
         Entre para ver o que seus clientes acharam.
       </p>
       {aviso && (

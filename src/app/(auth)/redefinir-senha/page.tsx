@@ -7,8 +7,8 @@ export const metadata: Metadata = { title: "Nova senha" };
 export default function PaginaRedefinirSenha() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">Crie uma nova senha</h1>
-      <p className="mt-1 mb-6 text-sm text-muted-foreground">
+      <h1 className="text-3xl font-bold tracking-tight">Crie uma nova senha</h1>
+      <p className="mt-2 mb-8 text-base text-muted-foreground">
         Escolha uma senha que você não use em outros sites.
       </p>
       <FormularioRedefinirSenha />

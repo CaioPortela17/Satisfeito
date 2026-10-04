@@ -6,8 +6,8 @@ export const metadata: Metadata = { title: "Criar conta" };
 export default function PaginaCadastro() {
   return (
     <>
-      <h1 className="text-2xl font-semibold">Crie sua conta</h1>
-      <p className="mt-1 mb-6 text-sm text-muted-foreground">
+      <h1 className="text-3xl font-bold tracking-tight">Crie sua conta</h1>
+      <p className="mt-2 mb-8 text-base text-muted-foreground">
         Em poucos minutos sua primeira pesquisa está no ar.
       </p>
       <FormularioCadastro />

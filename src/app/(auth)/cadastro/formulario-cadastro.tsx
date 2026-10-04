@@ -15,7 +15,7 @@ export function FormularioCadastro() {
   const [estado, acao, pendente] = useActionState(cadastrar, estadoInicial);
 
   return (
-    <form action={acao} className="space-y-4" noValidate>
+    <form action={acao} className="space-y-5" noValidate>
       {estado.erro && (
         <Alert variant="destructive">
           <AlertDescription>{estado.erro}</AlertDescription>
@@ -85,7 +85,7 @@ export function FormularioCadastro() {
         {pendente ? "Criando conta…" : "Criar conta"}
       </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-base text-muted-foreground">
         Já tem conta?{" "}
         <Link href="/entrar" className="font-semibold text-coral-escuro underline-offset-4 hover:underline">
           Entrar

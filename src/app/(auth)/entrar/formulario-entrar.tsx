@@ -17,7 +17,7 @@ export function FormularioEntrar({ next }: { next?: string }) {
   const [estado, acao, pendente] = useActionState(entrar, estadoInicial);
 
   return (
-    <form action={acao} className="space-y-4" noValidate>
+    <form action={acao} className="space-y-5" noValidate>
       <input type="hidden" name="next" value={next ?? ""} />
 
       {estado.erro && (
@@ -45,7 +45,7 @@ export function FormularioEntrar({ next }: { next?: string }) {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="senha">Senha</Label>
-          <Link href="/esqueci-senha" className="text-sm underline underline-offset-4">
+          <Link href="/esqueci-senha" className="text-sm font-medium underline underline-offset-4">
             Esqueci minha senha
           </Link>
         </div>
@@ -65,7 +65,7 @@ export function FormularioEntrar({ next }: { next?: string }) {
         {pendente ? "Entrando…" : "Entrar"}
       </Button>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-base text-muted-foreground">
         Ainda não tem conta?{" "}
         <Link href="/cadastro" className="font-semibold text-coral-escuro underline-offset-4 hover:underline">
           Criar conta
