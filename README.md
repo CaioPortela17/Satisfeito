@@ -50,7 +50,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 ## Progresso
 
 - [x] **Etapa 1** — Estrutura do projeto: Next.js + TypeScript + Tailwind e conexão com o Supabase
-- [ ] **Etapa 2** — Login e cadastro da empresa *(em planejamento)*
+- [x] **Etapa 2** — Login e cadastro da empresa
 - [ ] **Etapa 3** — Cadastro de funcionários
 - [ ] **Etapa 4** — Criação de pesquisas e perguntas
 - [ ] **Etapa 5** — Página pública da pesquisa + QR code
@@ -60,12 +60,26 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 ### O que já existe
 
-- Projeto Next.js com TypeScript, Tailwind e ESLint configurados
-- Projeto no Supabase criado na região de São Paulo (`sa-east-1`), perto dos usuários
-- Dois "clientes" do Supabase prontos para uso:
-  - `src/lib/supabase/client.ts` — para componentes que rodam no **navegador**
-  - `src/lib/supabase/server.ts` — para código que roda no **servidor**; lê a sessão do usuário pelos cookies, o que permite ao RLS saber quem está pedindo os dados
-- Página inicial temporária que testa a conexão com o Supabase
+**Identidade visual satisfeito?!**
+- Paleta coral, manga, menta, ameixa e creme; fonte Bricolage Grotesque; ícone `?!` na aba do navegador
+- Componentes [shadcn/ui](https://ui.shadcn.com) (Radix) adaptados à marca, com botões e campos pensados para o toque no celular
+- Ícones próprios em SVG (sem emojis)
+
+**Conta da empresa**
+- Página inicial com "Criar conta" e "Entrar"
+- **Cadastro** em uma tela (nome do negócio, e-mail e senha) com confirmação por e-mail
+- **Entrar**, **sair** e **esqueci a senha** (link por e-mail → nova senha)
+- **Painel** protegido com a saudação da empresa (base para as próximas etapas)
+- Mensagens de erro em português e formulários que não perdem o que foi digitado
+
+**Segurança**
+- Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita a própria empresa; visitante sem login não vê nada
+- Sessão em cookies verificada no servidor (`getClaims`), renovada por um *proxy* que também bloqueia páginas para quem não está logado
+- Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
+
+**Testes**
+- 21 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota)
+- Teste de segurança do banco em `supabase/tests/rls_empresas.sql`, que prova o isolamento entre empresas
 
 ---
 
@@ -86,7 +100,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Abra [http://localhost:3000](http://localhost:3000). Se aparecer **"Conectado ao Supabase ✅"**, está tudo certo.
+Abra [http://localhost:3000](http://localhost:3000).
 
 ### Variáveis de ambiente
 
@@ -94,6 +108,15 @@ Abra [http://localhost:3000](http://localhost:3000). Se aparecer **"Conectado ao
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Endereço do projeto no Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publicável — pode ir para o navegador, pois quem protege os dados é o RLS |
+| `NEXT_PUBLIC_SITE_URL` | Endereço público do site, usado nos links dos e-mails (em desenvolvimento: `http://localhost:3000`) |
+
+### Configuração do Supabase
+
+1. **Banco:** aplique `supabase/migrations/20261003000000_empresas.sql` (pelo SQL Editor ou pela CLI do Supabase).
+2. **Authentication → URL Configuration:** *Site URL* `http://localhost:3000` e, em *Redirect URLs*, `http://localhost:3000/**`.
+3. **Authentication → Sign In / Providers → Email:** "Confirm email" ligado e senha mínima de **8** caracteres.
+
+> No plano gratuito, o Supabase só envia e-mails para os membros da equipe do projeto, poucos por hora, e os modelos de e-mail não podem ser editados. Para produção será configurado um serviço de e-mail próprio (SMTP).
 
 O `.env.local` **nunca** vai para o git (está no `.gitignore`). Chaves secretas, como a `service_role` ou a da IA, nunca levam o prefixo `NEXT_PUBLIC_` e nunca são usadas no navegador.
 
@@ -105,6 +128,8 @@ O `.env.local` **nunca** vai para o git (está no `.gitignore`). Chaves secretas
 | `npm run build` | Gera a versão de produção (também checa os tipos) |
 | `npm run start` | Roda a versão de produção |
 | `npm run lint` | Procura problemas no código com o ESLint |
+| `npm test` | Roda os testes automáticos (Vitest) |
+| `npm run test:watch` | Roda os testes de novo a cada arquivo salvo |
 
 ---
 
@@ -112,13 +137,28 @@ O `.env.local` **nunca** vai para o git (está no `.gitignore`). Chaves secretas
 
 ```
 src/
-├── app/                 # Páginas e rotas (App Router)
-│   ├── layout.tsx       # Layout base de todas as páginas
-│   └── page.tsx         # Página inicial (teste de conexão, por enquanto)
+├── proxy.ts                  # Roda antes de cada página: renova a sessão e protege rotas
+├── app/                      # Páginas e rotas (App Router)
+│   ├── layout.tsx            # Layout base (fonte, idioma)
+│   ├── page.tsx              # Página inicial
+│   ├── (auth)/               # Telas de conta (o grupo não aparece no endereço)
+│   │   ├── actions.ts        # Server Actions: entrar, cadastrar, esqueci/redefinir senha
+│   │   ├── entrar/  cadastro/  esqueci-senha/  redefinir-senha/
+│   ├── auth/confirm/         # Recebe o clique no link do e-mail e cria a sessão
+│   └── painel/               # Área logada
+├── components/
+│   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
+│   ├── marca/                # Logo satisfeito?!
+│   ├── icones/               # Ícones próprios em SVG
+│   └── formulario/           # Peças de formulário (mensagem de erro)
 └── lib/
-    └── supabase/
-        ├── client.ts    # Cliente Supabase para o navegador
-        └── server.ts    # Cliente Supabase para o servidor
+    ├── auth/                 # Validações (zod), mensagens de erro, redirecionamento seguro
+    ├── notas/                # Faixas de nota (boa / atenção / ruim)
+    └── supabase/             # Clientes do Supabase, proxy e tipos do banco
+supabase/
+├── migrations/               # SQL do banco (tabelas, RLS, trigger)
+└── tests/                    # Teste de segurança do RLS
+docs/                         # Desenho, plano e identidade visual de cada etapa
 ```
 
 ---

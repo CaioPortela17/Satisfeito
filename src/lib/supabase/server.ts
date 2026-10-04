@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { Database } from "./database.types";
 
 // Cliente para usar no servidor: Server Components, Server Actions e Route Handlers.
 // Ele lê a sessão do usuário a partir dos cookies da requisição, então o
@@ -8,10 +9,11 @@ import { cookies } from "next/headers";
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
+      cookieOptions: { secure: process.env.NODE_ENV === "production" },
       cookies: {
         getAll() {
           return cookieStore.getAll();
@@ -22,8 +24,8 @@ export async function createClient() {
               cookieStore.set(name, value, options),
             );
           } catch {
-            // Server Components não podem gravar cookies. Tudo bem ignorar aqui:
-            // na Etapa 2 o proxy vai cuidar de renovar a sessão.
+            // Server Components não podem gravar cookies. Tudo bem ignorar:
+            // o proxy (src/proxy.ts) cuida de renovar a sessão.
           }
         },
       },

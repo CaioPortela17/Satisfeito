@@ -47,6 +47,19 @@ Regras de acesso:
 - A empresa só lê e edita os próprios dados (funcionários, pesquisas, perguntas, respostas)
 - O público (cliente sem login) só pode ler pesquisas ativas e inserir respostas, nunca ler respostas
 
+## Proteção contra respostas falsas (fazer na Etapa 5)
+Pedido do Caio: impedir que alguém responda várias vezes para prejudicar a nota. Combinar:
+1. Marca no navegador ("já respondeu hoje")
+2. Tempo mínimo de resposta (~3s) contra robôs
+3. Cloudflare Turnstile (anti-robô invisível) — biblioteca/serviço novo, avisar antes
+4. Painel marca respostas "suspeitas" (rajada de notas ruins em poucos minutos) e o dono pode descartar
+**Não usar** nenhum limite ou sinal por IP, nem exigir identificação para responder: decisão do Caio, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais.
+Consequência: o envio da resposta passa por uma Server Action (que aplica as regras) em vez de insert direto do público no banco.
+
+## Decisões registradas
+- **Nome da empresa não é único** (negócios diferentes podem ter o mesmo nome). O que será único é o `slug` do link público da pesquisa (Etapa 5); se já existir, sugerir outro (ex.: `bebelu-2`).
+- **E-mails de login**: no plano gratuito do Supabase os modelos não são editáveis, então os e-mails saem no padrão (em inglês) e o link volta para `/auth/confirm?code=...`. Ao publicar o site: comprar domínio + configurar SMTP próprio (Resend) no Supabase e traduzir/estilizar os e-mails.
+
 ## Ordem de desenvolvimento
 1. Estrutura do projeto Next.js + Tailwind + conexão com Supabase
 2. Login e cadastro da empresa
@@ -65,8 +78,10 @@ Regras de acesso:
 - Não instale bibliotecas novas sem avisar e explicar por quê
 - Nunca coloque chaves de API ou segredos no código; use `.env.local` e garanta que ele está no `.gitignore`
 - Ao terminar uma etapa que funciona, sugira uma mensagem de commit
+- **Sem emojis na interface**: pedido do Caio. Para cada ícone, criar um SVG próprio com as cores da marca em `src/components/icones/` (ex.: `IconeEmail`, `IconeOla`). Ícones genéricos de interface (setas, fechar, etc.) podem vir do `lucide-react`
 - O projeto usa Next.js 16; siga as regras de @AGENTS.md (consultar `node_modules/next/dist/docs/` antes de escrever código)
 
 ## Status
 - [x] Etapa 1: estrutura do projeto (Next.js 16 + Tailwind 4 + Supabase projeto `satisfeito`, ref `cvgayvfqzrbdqmlsvcal`, região sa-east-1)
-- [ ] Etapa 2: login e cadastro da empresa — **desenho em andamento**. Antes de qualquer coisa, leia `docs/superpowers/specs/2026-10-03-etapa-2-login-design.md` (todas as decisões já aprovadas e o próximo passo). Não refaça perguntas que já estão respondidas lá.
+- [x] Etapa 2: login e cadastro da empresa — concluída e testada de ponta a ponta (cadastro, confirmação por e-mail, entrar, sair, esqueci a senha). Decisões e identidade visual em `docs/superpowers/specs/2026-10-03-etapa-2-login-design.md`; plano em `docs/superpowers/plans/2026-10-03-etapa-2-login.md`
+- [ ] Etapa 3: CRUD de funcionários — próxima. Começar pelo brainstorming (perguntas, desenho, plano) antes de codar
