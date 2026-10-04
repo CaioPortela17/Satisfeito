@@ -28,7 +28,7 @@ export function FormularioCadastro() {
           id="nomeEmpresa"
           name="nomeEmpresa"
           autoComplete="organization"
-          placeholder="Ex.: Lanchonete Bebelu"
+          placeholder="Ex.: Padaria Pão Quente"
           maxLength={100}
           required
           defaultValue={estado.valores?.nomeEmpresa}
