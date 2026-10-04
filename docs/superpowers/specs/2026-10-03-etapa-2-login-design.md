@@ -22,7 +22,7 @@
 
 1. **`/`** — apresentação curta + botões "Criar conta" e "Entrar"
 2. **`/cadastro`** — nome do negócio, e-mail, senha (mín. 8) → tela "Confira seu e-mail"
-3. **`/auth/confirm`** — rota que valida o link do e-mail (`verifyOtp` com `token_hash`) e manda para `/painel` logado
+3. **`/auth/confirm`** — rota que valida o link do e-mail e manda para `/painel` logado. **Mudança na implementação:** no plano gratuito os modelos de e-mail não são editáveis, então a rota troca o `?code=` do link padrão por sessão (`exchangeCodeForSession`, precisa ser o mesmo navegador do cadastro); o formato `token_hash` (`verifyOtp`) segue aceito para quando houver SMTP próprio
 4. **`/entrar`** — e-mail e senha, erros em português claro
 5. **`/esqueci-senha`** e **`/redefinir-senha`** — recuperação de senha
 6. **`/painel`** — protegido; "Olá, {empresa} 👋", botão **Sair**, espaço para as próximas etapas
