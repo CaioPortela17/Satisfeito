@@ -76,12 +76,7 @@ export function FormularioCadastro() {
         <ErroDoCampo id="senha-erro" erros={estado.erros?.senha} />
       </div>
 
-      <Button
-        type="submit"
-        size="lg"
-        className="w-full bg-coral text-ameixa hover:bg-coral/90"
-        disabled={pendente}
-      >
+      <Button type="submit" size="lg" className="w-full" disabled={pendente}>
         {pendente ? "Criando conta…" : "Criar conta"}
       </Button>
 
