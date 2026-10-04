@@ -15,12 +15,15 @@ const senhaNova = z
   .min(8, "A senha precisa ter pelo menos 8 caracteres.")
   .max(72, "A senha pode ter no máximo 72 caracteres.");
 
+// Usado no cadastro e em "Adicionar empresa"
+export const esquemaNomeEmpresa = z
+  .string("Digite o nome do seu negócio.")
+  .trim()
+  .min(1, "Digite o nome do seu negócio.")
+  .max(100, "O nome pode ter no máximo 100 caracteres.");
+
 export const esquemaCadastro = z.object({
-  nomeEmpresa: z
-    .string("Digite o nome do seu negócio.")
-    .trim()
-    .min(1, "Digite o nome do seu negócio.")
-    .max(100, "O nome pode ter no máximo 100 caracteres."),
+  nomeEmpresa: esquemaNomeEmpresa,
   email,
   senha: senhaNova,
 });

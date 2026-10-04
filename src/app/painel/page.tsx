@@ -1,27 +1,25 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IconeOla } from "@/components/icones/icone-ola";
-import { createClient } from "@/lib/supabase/server";
+import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 
 export const metadata: Metadata = { title: "Painel" };
 
 export default async function PaginaPainel() {
-  const supabase = await createClient();
+  const { supabase, atual } = await obterContextoEmpresa();
 
   // Segunda camada de proteção: o proxy já barra quem não está logado,
   // mas a página confere de novo, verificando a assinatura do token.
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) redirect("/entrar");
 
-  // Não precisamos filtrar por usuário: o RLS do banco só devolve a empresa dele
-  const { data: empresa } = await supabase.from("empresas").select("nome").maybeSingle();
-
   return (
     <div className="space-y-6">
       <div>
         <p className="text-muted-foreground">Bem-vindo ao seu painel</p>
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
-          Olá, {empresa?.nome ?? "tudo bem"}
+          Olá, {atual?.nome ?? "tudo bem"}
           <IconeOla className="size-10 shrink-0" />
         </h1>
       </div>
@@ -32,6 +30,12 @@ export default async function PaginaPainel() {
           Em breve você vai cadastrar seus funcionários, criar pesquisas e acompanhar as notas
           dos seus clientes neste painel.
         </p>
+        <Link
+          href="/painel/funcionarios"
+          className="mt-4 inline-block font-semibold text-coral-escuro underline-offset-4 hover:underline"
+        >
+          Cadastrar funcionários →
+        </Link>
       </section>
     </div>
   );
