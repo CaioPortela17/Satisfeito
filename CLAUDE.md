@@ -56,13 +56,6 @@ Pedido do Caio: impedir que alguém responda várias vezes para prejudicar a not
 **Não usar** nenhum limite ou sinal por IP, nem exigir identificação para responder: decisão do Caio, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais.
 Consequência: o envio da resposta passa por uma Server Action (que aplica as regras) em vez de insert direto do público no banco.
 
-## Recompensa opcional (etapa própria, depois da Etapa 6)
-Ideia do Caio: no fim da pesquisa, oferecer um prêmio (sorvete, desconto… o dono escolhe) para quem **quiser** deixar e-mail ou CPF. Nunca obrigatório: quem não quiser responde anônimo.
-- 1 prêmio por pessoa por período (controlado pelo e-mail/CPF)
-- Cliente recebe um código (ex.: `BEBELU-7K2X`), na tela e por e-mail; funcionário marca como "usado" no painel
-- LGPD: dizer para que serve o dado, caixa de consentimento separada para receber contato/marketing; CPF validado e guardado com cuidado
-- Respostas identificadas ajudam a detectar fraude
-
 ## Ordem de desenvolvimento
 1. Estrutura do projeto Next.js + Tailwind + conexão com Supabase
 2. Login e cadastro da empresa
