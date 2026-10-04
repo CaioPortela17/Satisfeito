@@ -26,7 +26,8 @@ export function NavPainel() {
             className={cn(
               "rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
               // Ativo: pílula ameixa (bem visível). Inativo: texto escuro com fundo ao passar o mouse
-              ativo ? "bg-ameixa text-creme" : "text-ameixa hover:bg-muted",
+              // Todos com fundo visível; o da página atual é escuro
+              ativo ? "bg-ameixa text-creme" : "bg-muted text-ameixa hover:bg-border",
             )}
           >
             {link.rotulo}
