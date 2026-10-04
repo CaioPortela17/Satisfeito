@@ -11,10 +11,9 @@ export default async function LayoutPainel({ children }: LayoutProps<"/painel">)
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* Cabeçalho direto sobre o menta, como o logo das telas de login.
-          Cada botão tem o próprio fundo para continuar bem visível. */}
-      <header className="px-4 pt-5">
-        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-5 gap-y-3">
+      {/* Faixa branca de ponta a ponta, presa no topo ao rolar a página */}
+      <header className="sticky top-0 z-10 border-b border-ameixa/10 bg-card shadow-[0_2px_12px_rgba(42,31,45,0.08)]">
+        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3">
           <Link href="/painel" className="rounded-md" aria-label="Painel">
             <Logo className="text-2xl" />
           </Link>
