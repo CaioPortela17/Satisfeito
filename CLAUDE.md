@@ -85,4 +85,6 @@ Consequência: o envio da resposta passa por uma Server Action (que aplica as re
 ## Status
 - [x] Etapa 1: estrutura do projeto (Next.js 16 + Tailwind 4 + Supabase projeto `satisfeito`, ref `cvgayvfqzrbdqmlsvcal`, região sa-east-1)
 - [x] Etapa 2: login e cadastro da empresa — concluída e testada de ponta a ponta (cadastro, confirmação por e-mail, entrar, sair, esqueci a senha). Decisões e identidade visual em `docs/superpowers/specs/2026-10-03-etapa-2-login-design.md`; plano em `docs/superpowers/plans/2026-10-03-etapa-2-login.md`
-- [ ] Etapa 3: CRUD de funcionários — próxima. Começar pelo brainstorming (perguntas, desenho, plano) antes de codar
+- [x] Etapa 2.5: várias empresas por login (seletor no painel, "Adicionar empresa", página 404) — feita no branch `etapa-3-funcionarios`
+- [ ] Etapa 3: funcionários — **em andamento no branch `etapa-3-funcionarios`**. Desenho: `docs/superpowers/specs/2026-10-04-etapa-3-funcionarios-design.md`; plano: `docs/superpowers/plans/2026-10-04-etapa-3-funcionarios.md`. Feitas: Task 0 (2.5), Task 1 (validação), Task 2 (banco + RLS testado), Task 3 (menu). **Próxima: Task 4** (página /painel/funcionarios: listar e adicionar), depois Task 5 (renomear/desativar/excluir) e Task 6 (teste com o Caio, README, PR). Antes: repaginada visual feita (ver PRODUCT.md); topo do painel = faixa branca fixa, seletor manga, link ativo ameixa, inativo menta claro com borda
+- Dica: o servidor em segundo plano costuma cair por falta de memória; peça ao Caio para rodar `npm run start` no terminal dele
