@@ -3,7 +3,8 @@ import { Logo } from "@/components/marca/logo";
 
 export default function LayoutAuth({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center px-4 py-12">
+    // Fundo menta em volta; o cartão branco mantém a leitura fácil onde se digita
+    <main className="flex flex-1 flex-col items-center justify-center bg-menta px-4 py-12">
       <Link href="/" className="mb-8 rounded-md" aria-label="Página inicial">
         <Logo className="text-4xl" />
       </Link>

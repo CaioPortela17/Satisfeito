@@ -93,6 +93,7 @@ Rascunho aprovado: [`docs/design/identidade-visual-aprovada.html`](../../design/
 - Botões coloridos (coral, manga, menta) usam **texto escuro** (ameixa), nunca branco.
 - **Pesquisa do cliente:** manga (barra de progresso, nota escolhida, botão); fundo das notas `#FFF1CC`.
 - **Login:** cartão branco, botão ameixa, link "Criar conta" em `#C2321F`.
+- **Telas de login/cadastro/senha:** fundo da página **menta** (`#14B8A6`) com o cartão branco por cima (decisão do Caio, 2026-10-04; coral foi testado e descartado porque o "?" do logo sumia).
 - **Painel:** cada nota com cor da faixa + **número** + **etiqueta escrita** (nunca só a cor):
   - **Boa** (menta) 8 a 10 — etiqueta `#D5F5F0` / `#0B6B60`
   - **Atenção** (manga) 6 a 7,9 — etiqueta `#FFF1CC` / `#7A5200`
