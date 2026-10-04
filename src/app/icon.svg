@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>satisfeito?!</title>
+  <!-- Quadrado arredondado ameixa com o "?" coral e o "!" manga, como no logo -->
+  <rect width="64" height="64" rx="16" fill="#2A1F2D"/>
+  <text x="32" y="47" text-anchor="middle"
+        font-family="'Bricolage Grotesque', 'Arial Black', Arial, Helvetica, sans-serif"
+        font-size="40" font-weight="800" letter-spacing="-2">
+    <tspan fill="#FF5A4E">?</tspan><tspan fill="#FFC23C">!</tspan>
+  </text>
+</svg>
