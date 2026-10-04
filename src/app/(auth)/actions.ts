@@ -2,7 +2,12 @@
 
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { esquemaCadastro, esquemaEntrar } from "@/lib/auth/esquemas";
+import {
+  esquemaCadastro,
+  esquemaEntrar,
+  esquemaEsqueciSenha,
+  esquemaRedefinirSenha,
+} from "@/lib/auth/esquemas";
 import { mensagemDeErro } from "@/lib/auth/mensagens-erro";
 import { caminhoSeguro } from "@/lib/auth/redirect-seguro";
 import { createClient } from "@/lib/supabase/server";
@@ -71,4 +76,48 @@ export async function cadastrar(
   // Mesmo que o e-mail já tenha conta, o Supabase responde "ok" sem enviar nada:
   // assim ninguém descobre quais e-mails estão cadastrados.
   redirect("/cadastro/verifique-email");
+}
+
+export async function esqueciSenha(
+  _estadoAnterior: EstadoFormulario,
+  formData: FormData,
+): Promise<EstadoFormulario> {
+  const dados = { email: texto(formData, "email") };
+  const valores = { email: dados.email };
+
+  const resultado = esquemaEsqueciSenha.safeParse(dados);
+  if (!resultado.success) {
+    return { erros: z.flattenError(resultado.error).fieldErrors, valores };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(resultado.data.email);
+
+  // Só mostramos erro de "muitas tentativas". Qualquer outro caso recebe a
+  // mesma resposta, para não revelar se o e-mail tem conta ou não.
+  if (error?.code?.startsWith("over_")) {
+    return { erro: mensagemDeErro(error.code), valores };
+  }
+  return {
+    sucesso: "Se existir uma conta com esse e-mail, enviamos um link para criar uma nova senha.",
+  };
+}
+
+export async function redefinirSenha(
+  _estadoAnterior: EstadoFormulario,
+  formData: FormData,
+): Promise<EstadoFormulario> {
+  const resultado = esquemaRedefinirSenha.safeParse({
+    senha: texto(formData, "senha"),
+    confirmacao: texto(formData, "confirmacao"),
+  });
+  if (!resultado.success) {
+    return { erros: z.flattenError(resultado.error).fieldErrors };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: resultado.data.senha });
+  if (error) return { erro: mensagemDeErro(error.code) };
+
+  redirect("/painel");
 }
