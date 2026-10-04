@@ -27,7 +27,9 @@ export function NavPainel() {
               "rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
               // Ativo: pílula ameixa (bem visível). Inativo: texto escuro com fundo ao passar o mouse
               // Todos com fundo visível; o da página atual é escuro
-              ativo ? "bg-ameixa text-creme" : "bg-muted text-ameixa hover:bg-border",
+              ativo
+                ? "border-2 border-ameixa bg-ameixa text-creme"
+                : "border-2 border-menta bg-menta-claro text-ameixa hover:bg-menta/30",
             )}
           >
             {link.rotulo}
