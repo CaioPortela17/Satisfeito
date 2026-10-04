@@ -5,7 +5,8 @@ import { FormularioEntrar } from "./formulario-entrar";
 export const metadata: Metadata = { title: "Entrar" };
 
 const AVISOS: Record<string, string> = {
-  "link-invalido": "Esse link expirou ou já foi usado. Entre com sua senha ou peça um novo.",
+  "link-invalido":
+    "Não deu para entrar pelo link (ele pode ter vencido ou sido aberto em outro navegador). Se você confirmou seu cadastro, é só entrar com sua senha.",
 };
 
 export default async function PaginaEntrar({ searchParams }: PageProps<"/entrar">) {

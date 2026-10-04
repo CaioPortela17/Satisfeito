@@ -10,6 +10,7 @@ import {
 } from "@/lib/auth/esquemas";
 import { mensagemDeErro } from "@/lib/auth/mensagens-erro";
 import { caminhoSeguro } from "@/lib/auth/redirect-seguro";
+import { urlDoSite } from "@/lib/site-url";
 import { createClient } from "@/lib/supabase/server";
 
 // O que a action devolve para o formulário mostrar na tela
@@ -68,8 +69,12 @@ export async function cadastrar(
   const { error } = await supabase.auth.signUp({
     email: resultado.data.email,
     password: resultado.data.senha,
-    // Vai para raw_user_meta_data; o trigger do banco usa para criar a empresa
-    options: { data: { nome_empresa: resultado.data.nomeEmpresa } },
+    options: {
+      // Vai para raw_user_meta_data; o trigger do banco usa para criar a empresa
+      data: { nome_empresa: resultado.data.nomeEmpresa },
+      // Para onde o link do e-mail de confirmação leva de volta
+      emailRedirectTo: urlDoSite("/auth/confirm?next=/painel"),
+    },
   });
   if (error) return { erro: mensagemDeErro(error.code), valores };
 
@@ -91,7 +96,10 @@ export async function esqueciSenha(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.resetPasswordForEmail(resultado.data.email);
+  const { error } = await supabase.auth.resetPasswordForEmail(resultado.data.email, {
+    // O link do e-mail volta para o site e cai na tela de nova senha
+    redirectTo: urlDoSite("/auth/confirm?next=/redefinir-senha"),
+  });
 
   // Só mostramos erro de "muitas tentativas". Qualquer outro caso recebe a
   // mesma resposta, para não revelar se o e-mail tem conta ou não.
