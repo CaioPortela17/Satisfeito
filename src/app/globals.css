@@ -1,26 +1,130 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-bricolage);
+  --font-heading: var(--font-bricolage);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Cores da marca como classes do Tailwind: bg-coral, text-menta-texto... */
+  --color-coral: var(--coral);
+  --color-coral-texto: var(--coral-texto);
+  --color-coral-escuro: var(--coral-escuro);
+  --color-manga: var(--manga);
+  --color-manga-claro: var(--manga-claro);
+  --color-manga-texto: var(--manga-texto);
+  --color-menta: var(--menta);
+  --color-menta-claro: var(--menta-claro);
+  --color-menta-texto: var(--menta-texto);
+  --color-ameixa: var(--ameixa);
+  --color-creme: var(--creme);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Marca satisfeito?! */
+  --coral: #ff5a4e;
+  --coral-texto: #ee4638; /* coral um tom mais escuro: passa contraste em texto grande */
+  --coral-escuro: #c2321f; /* coral para texto pequeno */
+  --manga: #ffc23c;
+  --manga-claro: #fff1cc;
+  --manga-texto: #8f6500; /* amarelo legível em texto pequeno */
+  --menta: #14b8a6;
+  --menta-claro: #d5f5f0;
+  --menta-texto: #0b6b60;
+  --ameixa: #2a1f2d;
+  --creme: #fff8f3;
+
+  /* Tema do shadcn apontando para a marca */
+  --radius: 0.875rem;
+  --background: var(--creme);
+  --foreground: var(--ameixa);
+  --card: #ffffff;
+  --card-foreground: var(--ameixa);
+  --popover: #ffffff;
+  --popover-foreground: var(--ameixa);
+  --primary: var(--ameixa);
+  --primary-foreground: var(--creme);
+  --secondary: #ffede8;
+  --secondary-foreground: var(--ameixa);
+  --muted: #f1e9e5;
+  --muted-foreground: #6b5f6e;
+  --accent: var(--manga-claro);
+  --accent-foreground: var(--ameixa);
+  --destructive: var(--coral-escuro);
+  --border: #e9dcd6;
+  --input: #e9dcd6;
+  --ring: var(--coral-texto);
+
+  /* Gráficos (Etapa 6): boa, atenção, ruim, depois neutros */
+  --chart-1: var(--menta);
+  --chart-2: var(--manga);
+  --chart-3: var(--coral);
+  --chart-4: var(--ameixa);
+  --chart-5: #6b5f6e;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--ameixa);
+  --sidebar-primary: var(--ameixa);
+  --sidebar-primary-foreground: var(--creme);
+  --sidebar-accent: var(--manga-claro);
+  --sidebar-accent-foreground: var(--ameixa);
+  --sidebar-border: #e9dcd6;
+  --sidebar-ring: var(--coral-texto);
+}
+
+/* Por enquanto só tema claro; o modo escuro fica para depois. */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
 }
