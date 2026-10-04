@@ -43,7 +43,7 @@ export function SeletorEmpresa({
         <DropdownMenuTrigger asChild>
           <Button
             variant="secondary"
-            className="max-w-60 justify-between gap-2 bg-manga-claro text-ameixa hover:bg-manga-claro/70"
+            className="max-w-60 justify-between gap-2 bg-manga text-ameixa hover:bg-manga/85"
             disabled={pendente}
             aria-label={`Empresa atual: ${atual?.nome}. Trocar de empresa`}
           >
