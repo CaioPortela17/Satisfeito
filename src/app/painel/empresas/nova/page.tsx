@@ -7,7 +7,7 @@ export default function PaginaNovaEmpresa() {
   return (
     <div className="mx-auto max-w-lg">
       <h1 className="text-3xl font-bold tracking-tight">Adicionar empresa</h1>
-      <p className="mt-1 mb-6 text-muted-foreground">
+      <p className="mt-1 mb-6 text-ameixa">
         Cada empresa ou unidade tem seus próprios funcionários, pesquisas e resultados. Você troca
         entre elas no topo do painel.
       </p>

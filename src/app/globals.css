@@ -76,7 +76,7 @@
 
   /* Tema do shadcn apontando para a marca */
   --radius: 0.875rem;
-  --background: var(--creme);
+  --background: var(--menta); /* fundo de todas as telas */
   --foreground: var(--ameixa);
   --card: #ffffff;
   --card-foreground: var(--ameixa);

@@ -17,7 +17,7 @@ export default async function PaginaPainel() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-muted-foreground">Bem-vindo ao seu painel</p>
+        <p className="font-medium text-ameixa">Bem-vindo ao seu painel</p>
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
           Olá, {atual?.nome ?? "tudo bem"}
           <IconeOla className="size-10 shrink-0" />

@@ -18,7 +18,7 @@
 - Interface e comentários em português do Brasil. **Sem emojis** na interface: ícones próprios em `src/components/icones/`; ícones genéricos (⋯) do `lucide-react` (o de reticências se chama `Ellipsis`).
 - Nome do funcionário: trim, 1 a 60 caracteres; único por empresa sem diferenciar maiúsculas.
 - Mensagem de nome repetido (exata): `Já existe um funcionário com esse nome. Diferencie, por exemplo: Ana Paula ou Ana C.`
-- Cores e componentes da Etapa 2 (botões principais ameixa, `bg-manga-claro`, `text-coral-escuro`, `text-destructive`). Texto de itens inativos com `text-muted-foreground`, **nunca** `opacity` (contraste).
+- Fundo de todas as telas é menta; texto fora dos cartões brancos usa `text-ameixa` (nunca `text-muted-foreground` direto sobre o menta). Cores e componentes da Etapa 2 (botões principais ameixa, `bg-manga-claro`, `text-coral-escuro`, `text-destructive`). Texto de itens inativos com `text-muted-foreground`, **nunca** `opacity` (contraste).
 - Nenhuma biblioteca nova. `npx shadcn@latest add dropdown-menu alert-dialog` é permitido (usa o `radix-ui` instalado).
 - Cada tarefa termina com `npm run lint`, `npm run build` e `npm test` passando (conferir o código de saída) e um commit em português terminando com `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`. Explicar ao Caio o que foi feito ao fim de cada tarefa.
 
