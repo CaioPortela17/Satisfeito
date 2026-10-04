@@ -5,14 +5,13 @@ import { createClient } from "@/lib/supabase/server";
 export default async function Home() {
   const supabase = await createClient();
 
-  // Tentamos contar as linhas da tabela "empresas" (head: true = não traz os dados).
-  // Ela ainda não existe, então esperamos o erro PGRST205 ("tabela não encontrada").
-  // Receber esse erro já prova que o Supabase respondeu, ou seja, a conexão funciona.
-  const { error } = await supabase
-    .from("empresas")
-    .select("id", { count: "exact", head: true });
+  // Tentamos ler uma linha da tabela "empresas".
+  // Sem login, o banco nega o acesso (erro 42501) — prova de que o RLS funciona
+  // e de que o Supabase respondeu, ou seja, a conexão está ok.
+  // (Não usamos head: true porque aí o erro volta sem o código.)
+  const { error } = await supabase.from("empresas").select("id").limit(1);
 
-  const conectado = !error || error.code === "PGRST205";
+  const conectado = !error || error.code === "42501";
 
   return (
     <main className="flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
@@ -22,9 +21,9 @@ export default async function Home() {
       ) : (
         <p className="text-lg text-red-700">Erro ao conectar: {error?.message}</p>
       )}
-      {error?.code === "PGRST205" && (
-        <p className="text-sm text-zinc-500">
-          As tabelas ainda não foram criadas — isso vem nas próximas etapas.
+      {error?.code === "42501" && (
+        <p className="text-sm text-zinc-600">
+          Visitante sem login não pode ver as empresas — o RLS está protegendo os dados.
         </p>
       )}
     </main>
