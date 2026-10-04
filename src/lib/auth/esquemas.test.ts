@@ -7,7 +7,11 @@ import {
   esquemaRedefinirSenha,
 } from "./esquemas";
 
-function errosDos(resultado: { success: boolean; error?: z.ZodError }) {
+// Junta os erros por campo: { email: ["Digite um e-mail válido."], ... }
+function errosDos(resultado: {
+  success: boolean;
+  error?: z.ZodError;
+}): Record<string, string[] | undefined> {
   return resultado.error ? z.flattenError(resultado.error).fieldErrors : {};
 }
 
