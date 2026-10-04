@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { IconeOla } from "@/components/icones/icone-ola";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Painel" };
@@ -19,9 +20,9 @@ export default async function PaginaPainel() {
     <div className="space-y-6">
       <div>
         <p className="text-muted-foreground">Bem-vindo ao seu painel</p>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Olá, {empresa?.nome ?? "tudo bem"}{" "}
-          <span aria-hidden="true">👋</span>
+        <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight">
+          Olá, {empresa?.nome ?? "tudo bem"}
+          <IconeOla className="size-10 shrink-0" />
         </h1>
       </div>
 
