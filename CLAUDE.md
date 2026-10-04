@@ -56,6 +56,10 @@ Pedido do Caio: impedir que alguém responda várias vezes para prejudicar a not
 **Não usar** nenhum limite ou sinal por IP, nem exigir identificação para responder: decisão do Caio, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais.
 Consequência: o envio da resposta passa por uma Server Action (que aplica as regras) em vez de insert direto do público no banco.
 
+## Decisões registradas
+- **Nome da empresa não é único** (negócios diferentes podem ter o mesmo nome). O que será único é o `slug` do link público da pesquisa (Etapa 5); se já existir, sugerir outro (ex.: `bebelu-2`).
+- **E-mails de login**: no plano gratuito do Supabase os modelos não são editáveis, então os e-mails saem no padrão (em inglês) e o link volta para `/auth/confirm?code=...`. Ao publicar o site: comprar domínio + configurar SMTP próprio (Resend) no Supabase e traduzir/estilizar os e-mails.
+
 ## Ordem de desenvolvimento
 1. Estrutura do projeto Next.js + Tailwind + conexão com Supabase
 2. Login e cadastro da empresa
