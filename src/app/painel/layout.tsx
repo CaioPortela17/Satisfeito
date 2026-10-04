@@ -11,8 +11,9 @@ export default async function LayoutPainel({ children }: LayoutProps<"/painel">)
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="border-b border-border bg-card">
-        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3">
+      {/* Cabeçalho em cartão branco flutuando sobre o menta, como as outras telas */}
+      <header className="px-4 pt-4">
+        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center gap-x-5 gap-y-3 rounded-3xl bg-card px-5 py-3 shadow-[0_8px_24px_rgba(42,31,45,0.12)]">
           <Link href="/painel" className="rounded-md" aria-label="Painel">
             <Logo className="text-2xl" />
           </Link>
@@ -24,7 +25,7 @@ export default async function LayoutPainel({ children }: LayoutProps<"/painel">)
           </div>
 
           <form action={sair} className="ml-auto">
-            <Button type="submit" variant="ghost">
+            <Button type="submit" variant="outline">
               Sair
             </Button>
           </form>

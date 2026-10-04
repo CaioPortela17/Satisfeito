@@ -42,13 +42,13 @@ export function SeletorEmpresa({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline"
-            className="max-w-60 justify-between gap-2"
+            variant="secondary"
+            className="max-w-60 justify-between gap-2 bg-manga-claro text-ameixa hover:bg-manga-claro/70"
             disabled={pendente}
             aria-label={`Empresa atual: ${atual?.nome}. Trocar de empresa`}
           >
             <span className="truncate">{pendente ? "Trocando…" : atual?.nome}</span>
-            <ChevronsUpDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+            <ChevronsUpDown className="size-4 shrink-0" aria-hidden="true" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-64">

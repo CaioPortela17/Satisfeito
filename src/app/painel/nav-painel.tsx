@@ -24,8 +24,9 @@ export function NavPainel() {
             href={link.href}
             aria-current={ativo ? "page" : undefined}
             className={cn(
-              "rounded-full px-3.5 py-2 text-sm font-semibold transition-colors hover:bg-muted",
-              ativo ? "bg-manga-claro text-ameixa" : "text-muted-foreground",
+              "rounded-full px-4 py-2.5 text-sm font-semibold transition-colors",
+              // Ativo: pílula ameixa (bem visível). Inativo: texto escuro com fundo ao passar o mouse
+              ativo ? "bg-ameixa text-creme" : "text-ameixa hover:bg-muted",
             )}
           >
             {link.rotulo}
