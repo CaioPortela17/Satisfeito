@@ -17,7 +17,7 @@ export function FormularioEntrar({ next }: { next?: string }) {
   const [estado, acao, pendente] = useActionState(entrar, estadoInicial);
 
   return (
-    <form action={acao} className="space-y-5" noValidate>
+    <form action={acao} className="space-y-4" noValidate>
       <input type="hidden" name="next" value={next ?? ""} />
 
       {estado.erro && (

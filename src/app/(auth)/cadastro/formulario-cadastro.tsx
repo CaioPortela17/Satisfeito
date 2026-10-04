@@ -15,7 +15,7 @@ export function FormularioCadastro() {
   const [estado, acao, pendente] = useActionState(cadastrar, estadoInicial);
 
   return (
-    <form action={acao} className="space-y-5" noValidate>
+    <form action={acao} className="space-y-4" noValidate>
       {estado.erro && (
         <Alert variant="destructive">
           <AlertDescription>{estado.erro}</AlertDescription>
@@ -55,7 +55,13 @@ export function FormularioCadastro() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="senha">Senha</Label>
+        {/* Dica ao lado do rótulo: economiza uma linha e a tela cabe sem rolar */}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="senha">Senha</Label>
+          <span id="senha-dica" className="text-sm text-muted-foreground">
+            mínimo 8 caracteres
+          </span>
+        </div>
         <Input
           id="senha"
           name="senha"
@@ -65,15 +71,9 @@ export function FormularioCadastro() {
           maxLength={72}
           required
           aria-invalid={Boolean(estado.erros?.senha)}
-          aria-describedby={estado.erros?.senha ? "senha-erro" : "senha-dica"}
+          aria-describedby={estado.erros?.senha ? "senha-erro senha-dica" : "senha-dica"}
         />
-        {estado.erros?.senha ? (
-          <ErroDoCampo id="senha-erro" erros={estado.erros.senha} />
-        ) : (
-          <p id="senha-dica" className="text-sm text-muted-foreground">
-            Pelo menos 8 caracteres.
-          </p>
-        )}
+        <ErroDoCampo id="senha-erro" erros={estado.erros?.senha} />
       </div>
 
       <Button

@@ -16,7 +16,7 @@ export function FormularioEsqueciSenha() {
 
   if (estado.sucesso) {
     return (
-      <div className="space-y-5">
+      <div className="space-y-4">
         <Alert role="status">
           <AlertDescription>{estado.sucesso}</AlertDescription>
         </Alert>
@@ -28,7 +28,7 @@ export function FormularioEsqueciSenha() {
   }
 
   return (
-    <form action={acao} className="space-y-5" noValidate>
+    <form action={acao} className="space-y-4" noValidate>
       {estado.erro && (
         <Alert variant="destructive">
           <AlertDescription>{estado.erro}</AlertDescription>
