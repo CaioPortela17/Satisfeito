@@ -76,7 +76,7 @@
 
   /* Tema do shadcn apontando para a marca */
   --radius: 0.875rem;
-  --background: var(--creme);
+  --background: var(--menta); /* fundo de todas as telas */
   --foreground: var(--ameixa);
   --card: #ffffff;
   --card-foreground: var(--ameixa);
@@ -124,7 +124,48 @@
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* Celular: botões e links respondem na hora (sem esperar o "toque duplo"),
+     e segurar o dedo num botão não seleciona o texto dele */
+  button,
+  a,
+  [role="button"],
+  [role="menuitem"] {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
   html {
     @apply font-sans;
+    /* Sem o flash cinza do navegador ao tocar; cada botão tem o próprio :active */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    /* Barra de rolagem nas cores da marca (Firefox e Chrome) */
+    scrollbar-color: color-mix(in srgb, var(--ameixa) 35%, transparent) transparent;
+  }
+  /* Texto selecionado e cursor de digitação também são da marca */
+  ::selection {
+    background: var(--manga);
+    color: var(--ameixa);
+  }
+  input,
+  textarea {
+    caret-color: var(--coral-texto);
+  }
+  /* Números alinhados (notas, contagens) */
+  .numeros {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Um único movimento de entrada: o conteúdo principal sobe suave ao abrir a tela */
+@media (prefers-reduced-motion: no-preference) {
+  .entrada {
+    animation: entrada 480ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
 }

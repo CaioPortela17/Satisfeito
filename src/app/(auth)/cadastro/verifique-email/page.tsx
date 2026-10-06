@@ -12,10 +12,10 @@ export default function PaginaVerifiqueEmail() {
       </div>
       <h1 className="text-2xl font-bold tracking-tight sm:text-[1.75rem]">Confira seu e-mail</h1>
       <p className="mt-3 text-base text-muted-foreground">
-        Enviamos um link de confirmação. Abra o e-mail e toque no link para ativar sua conta.
+        Falta pouco! Mandamos um link pro seu e-mail. É só tocar nele para ativar a conta.
       </p>
       <p className="mt-4 text-sm text-muted-foreground">
-        Não chegou? Olhe a caixa de spam ou espere alguns minutos.
+        Não chegou? Dá uma olhada no spam ou espera uns minutinhos.
       </p>
       <Link href="/entrar" className="mt-6 inline-block text-sm font-semibold underline underline-offset-4">
         Voltar para Entrar

@@ -51,7 +51,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 - [x] **Etapa 1** — Estrutura do projeto: Next.js + TypeScript + Tailwind e conexão com o Supabase
 - [x] **Etapa 2** — Login e cadastro da empresa
-- [ ] **Etapa 3** — Cadastro de funcionários
+- [x] **Etapa 3** — Cadastro de funcionários (e várias empresas por login)
 - [ ] **Etapa 4** — Criação de pesquisas e perguntas
 - [ ] **Etapa 5** — Página pública da pesquisa + QR code
 - [ ] **Etapa 6** — Painel com médias e gráficos
@@ -69,17 +69,25 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Página inicial com "Criar conta" e "Entrar"
 - **Cadastro** em uma tela (nome do negócio, e-mail e senha) com confirmação por e-mail
 - **Entrar**, **sair** e **esqueci a senha** (link por e-mail → nova senha)
-- **Painel** protegido com a saudação da empresa (base para as próximas etapas)
+- **Painel** protegido com a saudação da empresa e os primeiros passos
+- **Várias empresas por login** (ex.: duas unidades): seletor no topo do painel e "Adicionar empresa"
 - Mensagens de erro em português e formulários que não perdem o que foi digitado
 
+**Funcionários**
+- Página `/painel/funcionarios`: adicionar em sequência (o campo continua focado), renomear, desativar, reativar e excluir com confirmação
+- Nome único por empresa, sem diferenciar maiúsculas ("Ana" e "ana" são o mesmo), com aviso explicando como diferenciar
+- Inativos somem da pesquisa, mas o histórico fica guardado
+- Funciona pelo teclado e com leitor de tela: o foco nunca se perde, e erros e cadastros são anunciados
+
 **Segurança**
-- Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita a própria empresa; visitante sem login não vê nada
+- Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
+- Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
 - Sessão em cookies verificada no servidor (`getClaims`), renovada por um *proxy* que também bloqueia páginas para quem não está logado
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 21 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota)
-- Teste de segurança do banco em `supabase/tests/rls_empresas.sql`, que prova o isolamento entre empresas
+- 32 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql` e `rls_funcionarios.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -112,7 +120,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 
 ### Configuração do Supabase
 
-1. **Banco:** aplique `supabase/migrations/20261003000000_empresas.sql` (pelo SQL Editor ou pela CLI do Supabase).
+1. **Banco:** aplique os arquivos de `supabase/migrations/` em ordem (pelo SQL Editor ou pela CLI do Supabase).
 2. **Authentication → URL Configuration:** *Site URL* `http://localhost:3000` e, em *Redirect URLs*, `http://localhost:3000/**`.
 3. **Authentication → Sign In / Providers → Email:** "Confirm email" ligado e senha mínima de **8** caracteres.
 
@@ -145,7 +153,9 @@ src/
 │   │   ├── actions.ts        # Server Actions: entrar, cadastrar, esqueci/redefinir senha
 │   │   ├── entrar/  cadastro/  esqueci-senha/  redefinir-senha/
 │   ├── auth/confirm/         # Recebe o clique no link do e-mail e cria a sessão
-│   └── painel/               # Área logada
+│   └── painel/               # Área logada (menu e seletor de empresa)
+│       ├── empresas/         # Trocar e adicionar empresa
+│       └── funcionarios/     # Lista, formulário e ações dos funcionários
 ├── components/
 │   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
 │   ├── marca/                # Logo satisfeito?!
@@ -153,11 +163,13 @@ src/
 │   └── formulario/           # Peças de formulário (mensagem de erro)
 └── lib/
     ├── auth/                 # Validações (zod), mensagens de erro, redirecionamento seguro
+    ├── empresas/             # Qual empresa está aberta no painel
+    ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco
 supabase/
 ├── migrations/               # SQL do banco (tabelas, RLS, trigger)
-└── tests/                    # Teste de segurança do RLS
+└── tests/                    # Testes de segurança do RLS
 docs/                         # Desenho, plano e identidade visual de cada etapa
 ```
 

@@ -78,10 +78,15 @@ Consequência: o envio da resposta passa por uma Server Action (que aplica as re
 - Não instale bibliotecas novas sem avisar e explicar por quê
 - Nunca coloque chaves de API ou segredos no código; use `.env.local` e garanta que ele está no `.gitignore`
 - Ao terminar uma etapa que funciona, sugira uma mensagem de commit
+- **Toda interface usa as skills de design** (pedido do Caio, 2026-10-04): `impeccable` (PRODUCT.md / DESIGN.md, direções, critique, polish, audit), `frontend-design`, `emil-design-eng`, `mobile-native`, `animate`, `design:ux-copy` e `design:accessibility-review`. Siga o `DESIGN.md` quando existir
 - **Sem emojis na interface**: pedido do Caio. Para cada ícone, criar um SVG próprio com as cores da marca em `src/components/icones/` (ex.: `IconeEmail`, `IconeOla`). Ícones genéricos de interface (setas, fechar, etc.) podem vir do `lucide-react`
 - O projeto usa Next.js 16; siga as regras de @AGENTS.md (consultar `node_modules/next/dist/docs/` antes de escrever código)
 
 ## Status
 - [x] Etapa 1: estrutura do projeto (Next.js 16 + Tailwind 4 + Supabase projeto `satisfeito`, ref `cvgayvfqzrbdqmlsvcal`, região sa-east-1)
 - [x] Etapa 2: login e cadastro da empresa — concluída e testada de ponta a ponta (cadastro, confirmação por e-mail, entrar, sair, esqueci a senha). Decisões e identidade visual em `docs/superpowers/specs/2026-10-03-etapa-2-login-design.md`; plano em `docs/superpowers/plans/2026-10-03-etapa-2-login.md`
-- [ ] Etapa 3: CRUD de funcionários — próxima. Começar pelo brainstorming (perguntas, desenho, plano) antes de codar
+- [x] Etapa 2.5: várias empresas por login (seletor no painel, "Adicionar empresa", página 404) — feita no branch `etapa-3-funcionarios`
+- [x] Etapa 3: funcionários — concluída e testada no Chrome (adicionar, repetido, vazio, renomear, Esc, desativar, reativar, excluir, teclado e leitor de tela); RLS testado de novo. Desenho: `docs/superpowers/specs/2026-10-04-etapa-3-funcionarios-design.md`; plano: `docs/superpowers/plans/2026-10-04-etapa-3-funcionarios.md`. Menu do painel = trilho segmentado creme (ativo ameixa, ícones lucide). Pendências anotadas: testar no celular de verdade; borda dos campos (`--input`) com contraste baixo (1,3:1, WCAG pede 3:1), vale para o projeto todo
+- [ ] Etapa 4: pesquisas e perguntas — próxima
+- Dica: no Chrome controlado, o Caio precisa estar logado na aba do grupo do Claude e a janela não pode ficar minimizada (senão as capturas de tela travam). O zoom do navegador em 100% evita confusão de rolagem
+- Dica: o servidor em segundo plano costuma cair por falta de memória; peça ao Caio para rodar `npm run start` no terminal dele

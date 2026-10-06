@@ -51,11 +51,12 @@ begin
     raise exception 'FALHOU: o dono não conseguiu renomear a própria empresa';
   end if;
 
-  -- Criar empresa pela API: proibido
+  -- Criar empresa escolhendo o dono (ex.: no nome da empresa B): proibido.
+  -- O dono é sempre quem está logado (default auth.uid()).
   begin
     insert into public.empresas (nome, owner_id)
-    values ('Falsa', '00000000-0000-0000-0000-00000000000a');
-    raise exception 'FALHOU: o usuário conseguiu criar empresa pela API';
+    values ('Falsa', '00000000-0000-0000-0000-00000000000b');
+    raise exception 'FALHOU: o usuário conseguiu criar empresa no nome de outro';
   exception when insufficient_privilege then null;
   end;
 
@@ -72,6 +73,23 @@ begin
     delete from public.empresas;
     raise exception 'FALHOU: o usuário conseguiu apagar empresa pela API';
   exception when insufficient_privilege then null;
+  end;
+
+  -- Etapa 2.5: criar uma segunda empresa para si mesmo é permitido
+  insert into public.empresas (nome) values ('Empresa A Filial');
+  if (select count(*) from public.empresas) <> 2 then
+    raise exception 'FALHOU: o dono não conseguiu criar a segunda empresa';
+  end if;
+  if (select owner_id from public.empresas where nome = 'Empresa A Filial')
+       <> '00000000-0000-0000-0000-00000000000a' then
+    raise exception 'FALHOU: a empresa nova não ficou com o dono logado';
+  end if;
+
+  -- Nome com espaços nas pontas é recusado pelo banco
+  begin
+    insert into public.empresas (nome) values ('  Espaços  ');
+    raise exception 'FALHOU: aceitou nome com espaços nas pontas';
+  exception when check_violation then null;
   end;
 end $$;
 
@@ -99,7 +117,7 @@ begin
   if (select count(*) from public.empresas where owner_id in (
         '00000000-0000-0000-0000-00000000000a',
         '00000000-0000-0000-0000-00000000000b',
-        '00000000-0000-0000-0000-00000000000c')) <> 3 then
+        '00000000-0000-0000-0000-00000000000c')) <> 4 then  -- 3 do cadastro + a filial de A
     raise exception 'FALHOU: alguma empresa foi apagada';
   end if;
 end $$;

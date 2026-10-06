@@ -8,7 +8,7 @@ export default function LayoutAuth({ children }: { children: React.ReactNode }) 
       <Link href="/" className="mb-4 rounded-md" aria-label="Página inicial">
         <Logo className="text-4xl" />
       </Link>
-      <div className="w-full max-w-md rounded-3xl bg-card p-6 shadow-[0_8px_24px_rgba(42,31,45,0.12)] sm:p-7">
+      <div className="entrada w-full max-w-md rounded-3xl bg-card p-6 shadow-[0_8px_24px_rgba(42,31,45,0.12)] sm:p-7">
         {children}
       </div>
     </main>
