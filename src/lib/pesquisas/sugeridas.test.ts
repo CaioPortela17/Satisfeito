@@ -9,7 +9,7 @@ describe("perguntasSugeridas", () => {
       { texto: "Quer contar mais alguma coisa?", tipo: "texto", obrigatoria: false },
     ]);
   });
-  it(`sem funcionários: pula o "Quem te atendeu?"`, () => {
+  it("sem funcionários: pula o “Quem te atendeu?”", () => {
     expect(perguntasSugeridas(false).map((p) => p.tipo)).toEqual(["nota", "texto"]);
   });
   it("título sugerido", () => {
