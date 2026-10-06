@@ -1,0 +1,88 @@
+import { ChevronRight } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { IconePesquisa } from "@/components/icones/icone-pesquisa";
+import { obterContextoEmpresa } from "@/lib/empresas/contexto";
+import { cn } from "@/lib/utils";
+import { BotaoCriarPesquisa } from "./botao-criar-pesquisa";
+
+export const metadata: Metadata = { title: "Pesquisas" };
+
+export default async function PaginaPesquisas() {
+  const { supabase, atual } = await obterContextoEmpresa();
+  const { data } = await supabase.auth.getClaims();
+  if (!data?.claims) redirect("/entrar");
+
+  // perguntas(count) conta só as que valem (não arquivadas)
+  const { data: pesquisas } = atual
+    ? await supabase
+        .from("pesquisas")
+        .select("id, titulo, ativa, perguntas(count)")
+        .eq("empresa_id", atual.id)
+        .eq("perguntas.arquivada", false)
+        .order("created_at", { ascending: false })
+    : { data: [] };
+
+  const lista = pesquisas ?? [];
+
+  return (
+    // Alinhado à esquerda com o logo, como as outras páginas do painel
+    <div className="max-w-2xl space-y-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Pesquisas</h1>
+          <p className="mt-1 text-lg font-medium text-ameixa">
+            O que seus clientes respondem pelo QR code.
+          </p>
+        </div>
+        {lista.length > 0 && <BotaoCriarPesquisa />}
+      </div>
+
+      <section className="entrada rounded-3xl bg-card p-6 shadow-[0_8px_24px_rgba(42,31,45,0.08)] sm:p-8">
+        {lista.length === 0 ? (
+          <div className="flex flex-col items-center py-4 text-center">
+            <div className="mb-4 flex size-20 items-center justify-center rounded-3xl bg-manga-claro">
+              <IconePesquisa className="size-12" />
+            </div>
+            <p className="font-semibold">Nenhuma pesquisa ainda</p>
+            <p className="mt-1 mb-5 max-w-sm text-muted-foreground">
+              Sua primeira pesquisa fica pronta em 1 minuto: ela já vem com perguntas sugeridas.
+            </p>
+            <BotaoCriarPesquisa />
+          </div>
+        ) : (
+          <ul className="-my-2 divide-y divide-border">
+            {lista.map((p) => {
+              const total = p.perguntas[0]?.count ?? 0;
+              return (
+                <li key={p.id}>
+                  <Link
+                    href={`/painel/pesquisas/${p.id}`}
+                    className="-mx-3 flex min-h-16 items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold break-words">{p.titulo}</p>
+                      <p className="numeros text-sm text-muted-foreground">
+                        {total} {total === 1 ? "pergunta" : "perguntas"}
+                      </p>
+                    </div>
+                    <span
+                      className={cn(
+                        "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold",
+                        p.ativa ? "bg-menta-claro text-menta-texto" : "bg-manga-claro text-manga-texto",
+                      )}
+                    >
+                      {p.ativa ? "Recebendo respostas" : "Pausada"}
+                    </span>
+                    <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
+    </div>
+  );
+}
