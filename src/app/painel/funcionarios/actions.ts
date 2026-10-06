@@ -13,6 +13,7 @@ export type EstadoAcao = {
   erro?: string;
   ok?: number; // muda a cada sucesso (para o formulário saber que deu certo)
   valor?: string; // o que foi digitado, para não sumir depois de um erro
+  adicionado?: string; // nome salvo, para o leitor de tela anunciar
 };
 
 const CAMINHO = "/painel/funcionarios";
@@ -41,7 +42,7 @@ export async function adicionarFuncionario(
   if (error) return { erro: mensagemErroFuncionario(error.code), valor: digitado };
 
   revalidatePath(CAMINHO);
-  return { ok: Date.now() };
+  return { ok: Date.now(), adicionado: nome.data };
 }
 
 export async function renomearFuncionario(

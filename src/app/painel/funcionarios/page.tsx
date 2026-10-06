@@ -53,7 +53,11 @@ export default async function PaginaFuncionarios() {
         ) : (
           <div className="mt-6 space-y-6">
             <ListaFuncionarios titulo="Ativos" funcionarios={ativos} />
-            {inativos.length > 0 && <ListaFuncionarios titulo="Inativos" funcionarios={inativos} />}
+            <ListaFuncionarios
+              titulo="Inativos"
+              dica="Não aparecem na pesquisa, mas as avaliações continuam guardadas."
+              funcionarios={inativos}
+            />
           </div>
         )}
       </section>
@@ -63,9 +67,11 @@ export default async function PaginaFuncionarios() {
 
 function ListaFuncionarios({
   titulo,
+  dica,
   funcionarios,
 }: {
   titulo: string;
+  dica?: string;
   funcionarios: Funcionario[];
 }) {
   if (funcionarios.length === 0) return null;
@@ -75,6 +81,7 @@ function ListaFuncionarios({
       <h2 className="mb-1 font-semibold">
         {titulo} <span className="numeros text-muted-foreground">({funcionarios.length})</span>
       </h2>
+      {dica && <p className="mb-1 text-sm text-muted-foreground">{dica}</p>}
       <ul className="divide-y divide-border">
         {funcionarios.map((f) => (
           <LinhaFuncionario key={f.id} funcionario={f} />

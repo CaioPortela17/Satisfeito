@@ -1,7 +1,7 @@
 "use client";
 
 import { Ellipsis } from "lucide-react";
-import { useActionState, useEffect, useState, useTransition } from "react";
+import { useActionState, useCallback, useEffect, useRef, useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,22 +35,46 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
   const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
   const [erro, setErro] = useState<string>();
   const [pendente, iniciar] = useTransition();
+  const devolverFoco = useRef(false);
 
-  // Roda uma action e mostra o erro, se houver
-  function executar(acao: () => Promise<EstadoAcao>) {
+  // Roda uma action e mostra o erro, se houver. Se der certo, roda aoDarCerto.
+  function executar(acao: () => Promise<EstadoAcao>, aoDarCerto?: () => void) {
     setErro(undefined);
     iniciar(async () => {
       const resultado = await acao();
       if (resultado.erro) setErro(resultado.erro);
+      else aoDarCerto?.();
     });
   }
 
+  // Ao sair da edição, o foco volta para o botão ⋯ desta linha
+  // (sem isso, quem usa teclado "cai" no topo da página)
+  const terminarEdicao = useCallback(() => {
+    devolverFoco.current = true;
+    setEditando(false);
+  }, []);
+
+  // "Ref de callback": o React chama quando o botão ⋯ aparece na tela.
+  // Se viemos da edição, é a hora certa de devolver o foco para ele.
+  function aoMontarBotao(botao: HTMLButtonElement | null) {
+    if (botao && devolverFoco.current) {
+      devolverFoco.current = false;
+      botao.focus();
+    }
+  }
+
+  // Depois de excluir a linha some; o foco vai para o campo de adicionar
+  function focarCampoAdicionar() {
+    document.getElementById("novo-funcionario")?.focus();
+  }
+
   if (editando) {
-    return <FormularioRenomear funcionario={funcionario} aoTerminar={() => setEditando(false)} />;
+    return <FormularioRenomear funcionario={funcionario} aoTerminar={terminarEdicao} />;
   }
 
   return (
-    <li className="py-2">
+    // Entra suave (quem é desativado "muda" de lista); some se o sistema pedir menos movimento
+    <li className="py-2 motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200">
       <div className="flex min-h-10 items-center gap-3">
         {/* Inicial do nome num círculo: ajuda a achar a pessoa de relance */}
         <span
@@ -77,6 +101,7 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
             <Button
               variant="outline"
               disabled={pendente}
+              aria-label={`Reativar ${funcionario.nome}`}
               onClick={() => executar(() => alterarAtivo(funcionario.id, true))}
             >
               Reativar
@@ -85,9 +110,10 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
+                ref={aoMontarBotao}
                 variant="ghost"
                 size="icon"
-                className="size-10"
+                className="size-11"
                 aria-label={`Ações para ${funcionario.nome}`}
                 disabled={pendente}
               >
@@ -130,7 +156,7 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
             <AlertDialogAction
               // Vermelho cheio: deixa claro que é a ação perigosa da caixa
               className="bg-destructive text-white hover:bg-destructive/90"
-              onClick={() => executar(() => excluirFuncionario(funcionario.id))}
+              onClick={() => executar(() => excluirFuncionario(funcionario.id), focarCampoAdicionar)}
             >
               Excluir
             </AlertDialogAction>

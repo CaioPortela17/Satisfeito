@@ -25,7 +25,7 @@ export function NavPainel() {
             href={href}
             aria-current={ativo ? "page" : undefined}
             className={cn(
-              "flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-[background-color,color,box-shadow] duration-200 ease-out",
+              "flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               // Ativo: pílula ameixa com sombra leve. Inativo: só texto, ganha fundo ao passar o mouse
               ativo

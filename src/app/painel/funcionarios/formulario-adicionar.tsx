@@ -38,7 +38,14 @@ export function FormularioAdicionar() {
           {pendente ? "Adicionando…" : "Adicionar"}
         </Button>
       </div>
-      <ErroDoCampo id="erro-adicionar" erros={estado.erro ? [estado.erro] : undefined} />
+      {/* role="alert": o leitor de tela lê o erro assim que ele aparece */}
+      <div role="alert">
+        <ErroDoCampo id="erro-adicionar" erros={estado.erro ? [estado.erro] : undefined} />
+      </div>
+      {/* Invisível na tela; só avisa o leitor de tela que deu certo */}
+      <p role="status" className="sr-only">
+        {estado.adicionado ? `${estado.adicionado} entrou na equipe.` : ""}
+      </p>
     </form>
   );
 }

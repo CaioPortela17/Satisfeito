@@ -124,8 +124,21 @@
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* Celular: botões e links respondem na hora (sem esperar o "toque duplo"),
+     e segurar o dedo num botão não seleciona o texto dele */
+  button,
+  a,
+  [role="button"],
+  [role="menuitem"] {
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
   html {
     @apply font-sans;
+    /* Sem o flash cinza do navegador ao tocar; cada botão tem o próprio :active */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
     /* Barra de rolagem nas cores da marca (Firefox e Chrome) */
     scrollbar-color: color-mix(in srgb, var(--ameixa) 35%, transparent) transparent;
   }

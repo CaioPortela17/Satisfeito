@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/marca/logo";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,9 @@ import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { sair } from "./actions";
 import { NavPainel } from "./nav-painel";
 import { SeletorEmpresa } from "./seletor-empresa";
+
+// No painel o topo é a faixa branca; a barra do celular acompanha
+export const viewport: Viewport = { themeColor: "#ffffff" };
 
 export default async function LayoutPainel({ children }: LayoutProps<"/painel">) {
   const { empresas, atual } = await obterContextoEmpresa();
