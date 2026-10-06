@@ -171,4 +171,4 @@ docs/                         # Desenho, plano e identidade visual de cada etapa
 
 ---
 
-Feito por **Caio Portela**, estudante de Ciência da Computação.
+Feito por **Caio Portela**.
