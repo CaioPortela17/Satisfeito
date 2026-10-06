@@ -2,12 +2,10 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { IconeEquipe } from "@/components/icones/icone-equipe";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
-import { cn } from "@/lib/utils";
 import { FormularioAdicionar } from "./formulario-adicionar";
+import { type Funcionario, LinhaFuncionario } from "./linha-funcionario";
 
 export const metadata: Metadata = { title: "Funcionários" };
-
-type Funcionario = { id: string; nome: string; ativo: boolean };
 
 export default async function PaginaFuncionarios() {
   const { supabase, atual } = await obterContextoEmpresa();
@@ -79,19 +77,7 @@ function ListaFuncionarios({
       </h2>
       <ul className="divide-y divide-border">
         {funcionarios.map((f) => (
-          <li key={f.id} className="flex min-h-14 items-center gap-3 py-2">
-            {/* Inicial do nome num círculo: ajuda a achar a pessoa de relance */}
-            <span
-              aria-hidden="true"
-              className={cn(
-                "flex size-9 shrink-0 items-center justify-center rounded-full font-bold",
-                f.ativo ? "bg-menta-claro text-menta-texto" : "bg-muted text-muted-foreground",
-              )}
-            >
-              {f.nome.charAt(0).toUpperCase()}
-            </span>
-            <span className={cn("min-w-0 font-medium break-words", !f.ativo && "text-muted-foreground")}>{f.nome}</span>
-          </li>
+          <LinhaFuncionario key={f.id} funcionario={f} />
         ))}
       </ul>
     </div>
