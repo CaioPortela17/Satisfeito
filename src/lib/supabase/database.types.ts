@@ -114,6 +114,7 @@ export type Database = {
           created_at: string
           empresa_id: string
           id: string
+          slug: string
           titulo: string
         }
         Insert: {
@@ -121,6 +122,7 @@ export type Database = {
           created_at?: string
           empresa_id: string
           id?: string
+          slug?: string
           titulo: string
         }
         Update: {
@@ -128,6 +130,7 @@ export type Database = {
           created_at?: string
           empresa_id?: string
           id?: string
+          slug?: string
           titulo?: string
         }
         Relationships: [
@@ -140,11 +143,91 @@ export type Database = {
           },
         ]
       }
+      respostas: {
+        Row: {
+          created_at: string
+          id: string
+          pesquisa_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          pesquisa_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          pesquisa_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "respostas_pesquisa_id_fkey"
+            columns: ["pesquisa_id"]
+            isOneToOne: false
+            referencedRelation: "pesquisas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      respostas_itens: {
+        Row: {
+          funcionario_id: string | null
+          id: string
+          pergunta_id: string
+          resposta_id: string
+          valor_nota: number | null
+          valor_texto: string | null
+        }
+        Insert: {
+          funcionario_id?: string | null
+          id?: string
+          pergunta_id: string
+          resposta_id: string
+          valor_nota?: number | null
+          valor_texto?: string | null
+        }
+        Update: {
+          funcionario_id?: string | null
+          id?: string
+          pergunta_id?: string
+          resposta_id?: string
+          valor_nota?: number | null
+          valor_texto?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "respostas_itens_funcionario_id_fkey"
+            columns: ["funcionario_id"]
+            isOneToOne: false
+            referencedRelation: "funcionarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "respostas_itens_pergunta_id_fkey"
+            columns: ["pergunta_id"]
+            isOneToOne: false
+            referencedRelation: "perguntas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "respostas_itens_resposta_id_fkey"
+            columns: ["resposta_id"]
+            isOneToOne: false
+            referencedRelation: "respostas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      pesquisa_publica: { Args: { p_slug: string }; Returns: Json }
+      registrar_resposta: {
+        Args: { p_itens: Json; p_pesquisa_id: string }
+        Returns: string
+      }
       trocar_ordem_perguntas: {
         Args: { a: string; b: string }
         Returns: undefined
