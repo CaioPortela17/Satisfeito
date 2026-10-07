@@ -62,11 +62,12 @@ Seguem PRODUCT.md (fundo menta, cartões brancos, ameixa nos botões principais,
 - Vazio: ícone próprio, "Sua primeira pesquisa fica pronta em 1 minuto." e o botão.
 
 **`/painel/pesquisas/[id]` (editor)**
-- Título editável no lugar (Enter salva, Esc cancela); botão Pausar/Retomar; menu ⋯ do topo com "Excluir pesquisa" (confirmação).
-- Perguntas em ordem: ícone + palavra do tipo (Nota 1 a 10 / Texto livre / Quem te atendeu), texto, selo "Obrigatória"; setas subir/descer (desabilitadas nas pontas); menu ⋯: Editar texto, Tornar obrigatória/opcional, Tirar da pesquisa.
-- "Adicionar pergunta": escolhe o tipo, escreve o texto. "Quem te atendeu?" some da escolha se já houver uma; com 10 perguntas o botão fica desabilitado com "Pesquisas curtas recebem mais respostas. O limite é 10 perguntas."
+- Título editável no lugar (Enter salva, Esc cancela); botão Pausar/Retomar (usa `aria-disabled` em vez de `disabled` enquanto salva, para não perder o foco do teclado); menu ⋯ do topo com "Excluir pesquisa" (confirmação).
+- Perguntas em ordem: ícone + palavra do tipo (Nota 1 a 10 / Texto livre / Quem te atendeu), texto, selo "Obrigatória"; setas subir/descer (inativas nas pontas, também com `aria-disabled` para manter o foco); menu ⋯: Editar texto, Tornar obrigatória/opcional, Tirar da pesquisa.
+- "Adicionar pergunta": escolhe o tipo, escreve o texto. "Quem te atendeu?" some da escolha se já houver uma; com 10 perguntas o formulário é substituído pela mensagem explicativa "Pesquisas curtas recebem mais respostas. O limite é 10 perguntas." (ajuste aprovado: antes era só o botão desabilitado).
 - "Tiradas da pesquisa": seção recolhida (`<details>`) com "Devolver" em cada uma (respeita os limites).
-- Avisos: pergunta de funcionário sem funcionário ativo → "Cadastre a equipe para essa pergunta aparecer." (link); nenhuma pergunta de nota → "Sem uma pergunta de nota, o painel não terá médias."
+- Avisos: pergunta de funcionário sem funcionário ativo → "A pergunta “Quem te atendeu?” só aparece para o cliente quando houver funcionários ativos." + link "Cadastrar a equipe" (texto final, ajuste aprovado); nenhuma pergunta de nota → "Sem uma pergunta de nota, o painel não terá médias."
+- Toda ação que altera ou exclui por id confere se alguma linha mudou (`.select("id")`); se não, devolve o erro genérico (o RLS esconde linhas de outras empresas: nada mudou = id inválido).
 - `[id]` inválido ou de outra empresa → `notFound()` (página 404 já existente).
 
 Acessibilidade (aprendizados da Etapa 3): foco nunca se perde (volta ao gatilho após editar; após subir/descer, o foco acompanha a pergunta), erros com `role="alert"`, sucesso anunciado em `role="status"`, alvos ≥ 44px, nada só por cor.
