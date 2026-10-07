@@ -59,7 +59,7 @@ describe("esquemaIdPesquisa", () => {
 describe("mensagemErroPesquisa", () => {
   it("traduz a segunda pergunta de funcionário (23505)", () => {
     expect(mensagemErroPesquisa("23505")).toBe(
-      'Essa pesquisa já tem a pergunta "Quem te atendeu?".',
+      "Essa pesquisa já tem a pergunta \u201CQuem te atendeu?\u201D.",
     );
   });
   it("traduz o limite de perguntas (SF001)", () => {
