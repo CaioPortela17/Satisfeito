@@ -143,7 +143,7 @@ export function LinhaPergunta({
             variant="ghost"
             size="icon"
             className={classeSeta}
-            aria-label={`Subir “${pergunta.texto}”`}
+            aria-label={`Subir \u201C${pergunta.texto}\u201D`}
             aria-disabled={primeira || pendente}
             onClick={() => {
               if (!primeira) mover("subir");
@@ -156,7 +156,7 @@ export function LinhaPergunta({
             variant="ghost"
             size="icon"
             className={classeSeta}
-            aria-label={`Descer “${pergunta.texto}”`}
+            aria-label={`Descer \u201C${pergunta.texto}\u201D`}
             aria-disabled={ultima || pendente}
             onClick={() => {
               if (!ultima) mover("descer");
@@ -171,7 +171,7 @@ export function LinhaPergunta({
                 variant="ghost"
                 size="icon"
                 className="size-11"
-                aria-label={`Ações para “${pergunta.texto}”`}
+                aria-label={`Ações para \u201C${pergunta.texto}\u201D`}
               >
                 <Ellipsis className="size-5" aria-hidden="true" />
               </Button>
@@ -232,7 +232,7 @@ export function LinhaPerguntaArquivada({
           variant="outline"
           className="min-h-11 aria-disabled:pointer-events-none aria-disabled:opacity-50"
           aria-disabled={bloqueado}
-          aria-label={`Devolver “${pergunta.texto}” para a pesquisa`}
+          aria-label={`Devolver \u201C${pergunta.texto}\u201D para a pesquisa`}
           onClick={() => {
             if (bloqueado) return;
             executar(
@@ -247,7 +247,7 @@ export function LinhaPerguntaArquivada({
       {!podeDevolver && (
         <p className="mt-1 pl-8 text-sm text-muted-foreground">
           {pergunta.tipo === "funcionario"
-            ? "Já existe uma pergunta “Quem te atendeu?” valendo."
+            ? "Já existe uma pergunta \u201CQuem te atendeu?\u201D valendo."
             : "A pesquisa já está com o máximo de perguntas."}
         </p>
       )}
@@ -285,7 +285,7 @@ function FormularioTextoPergunta({
         <Input
           className="min-h-11"
           name="texto"
-          aria-label={`Novo texto para “${pergunta.texto}”`}
+          aria-label={`Novo texto para \u201C${pergunta.texto}\u201D`}
           defaultValue={estado.valor ?? pergunta.texto}
           maxLength={120}
           autoFocus
