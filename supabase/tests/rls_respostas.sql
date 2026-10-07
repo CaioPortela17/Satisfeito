@@ -230,7 +230,15 @@ begin
   if (select count(*) from public.respostas_itens where resposta_id = r) <> 3 then
     raise exception 'FALHOU: itens não gravados';
   end if;
-end $$;
+
+  -- Nota inteira escrita com casa decimal (10.0) é gravada como 10
+  r := public.registrar_resposta(pa, jsonb_build_array(
+    jsonb_build_object('pergunta_id', nota, 'valor_nota', 10.0),
+    jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+  if (select valor_nota from public.respostas_itens where resposta_id = r and pergunta_id = nota::uuid) is distinct from 10 then
+    raise exception 'FALHOU: nota 10.0 não foi gravada como 10';
+  end if;
+end $;
 
 -- Sem equipe ativa, "Quem?" deixa de ser obrigatória
 reset role;
@@ -253,11 +261,11 @@ select set_config('request.jwt.claims',
   '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}', true);
 do $$
 begin
-  if (select count(*) from public.respostas) <> 2 then
-    raise exception 'FALHOU: A deveria ver exatamente as 2 respostas dele';
+  if (select count(*) from public.respostas) <> 3 then
+    raise exception 'FALHOU: A deveria ver exatamente as 3 respostas dele';
   end if;
-  if (select count(*) from public.respostas_itens) <> 4 then
-    raise exception 'FALHOU: A deveria ver os 4 itens dele';
+  if (select count(*) from public.respostas_itens) <> 6 then
+    raise exception 'FALHOU: A deveria ver os 6 itens dele';
   end if;
   begin
     update public.respostas set created_at = now();
