@@ -92,8 +92,14 @@ export async function renomearPesquisa(_estado: EstadoAcao, formData: FormData):
   if (!titulo.success) return { erro: titulo.error.issues[0].message, valor: digitado };
 
   const supabase = await createClient();
-  const { error } = await supabase.from("pesquisas").update({ titulo: titulo.data }).eq("id", id.data);
+  const { data, error } = await supabase
+    .from("pesquisas")
+    .update({ titulo: titulo.data })
+    .eq("id", id.data)
+    .select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code), valor: digitado };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return { ...ERRO, valor: digitado };
 
   atualizarTelas();
   return { ok: Date.now() };
@@ -104,8 +110,10 @@ export async function alterarAtivaPesquisa(idRecebido: string, ativa: boolean): 
   if (!id.success || typeof ativa !== "boolean") return ERRO;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("pesquisas").update({ ativa }).eq("id", id.data);
+  const { data, error } = await supabase.from("pesquisas").update({ ativa }).eq("id", id.data).select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code) };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return ERRO;
 
   atualizarTelas();
   return { ok: Date.now(), anuncio: ativa ? "Pesquisa recebendo respostas." : "Pesquisa pausada." };
@@ -116,8 +124,10 @@ export async function excluirPesquisa(idRecebido: string): Promise<EstadoAcao> {
   if (!id.success) return ERRO;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("pesquisas").delete().eq("id", id.data);
+  const { data, error } = await supabase.from("pesquisas").delete().eq("id", id.data).select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code) };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return ERRO;
 
   atualizarTelas();
   redirect("/painel/pesquisas");
@@ -153,11 +163,14 @@ export async function editarTextoPergunta(_estado: EstadoAcao, formData: FormDat
   if (!textoPergunta.success) return { erro: textoPergunta.error.issues[0].message, valor: digitado };
 
   const supabase = await createClient();
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("perguntas")
     .update({ texto: textoPergunta.data })
-    .eq("id", id.data);
+    .eq("id", id.data)
+    .select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code), valor: digitado };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return { ...ERRO, valor: digitado };
 
   atualizarTelas();
   return { ok: Date.now() };
@@ -168,8 +181,14 @@ export async function alterarObrigatoria(idRecebido: string, obrigatoria: boolea
   if (!id.success || typeof obrigatoria !== "boolean") return ERRO;
 
   const supabase = await createClient();
-  const { error } = await supabase.from("perguntas").update({ obrigatoria }).eq("id", id.data);
+  const { data, error } = await supabase
+    .from("perguntas")
+    .update({ obrigatoria })
+    .eq("id", id.data)
+    .select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code) };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return ERRO;
 
   atualizarTelas();
   return { ok: Date.now(), anuncio: obrigatoria ? "Agora é obrigatória." : "Agora é opcional." };
@@ -192,8 +211,10 @@ export async function arquivarPergunta(idRecebido: string, arquivada: boolean): 
     mudanca = { arquivada, ordem: await proximaOrdem(supabase, pergunta.pesquisa_id) };
   }
 
-  const { error } = await supabase.from("perguntas").update(mudanca).eq("id", id.data);
+  const { data, error } = await supabase.from("perguntas").update(mudanca).eq("id", id.data).select("id");
   if (error) return { erro: mensagemErroPesquisa(error.code) };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return ERRO;
 
   atualizarTelas();
   return {

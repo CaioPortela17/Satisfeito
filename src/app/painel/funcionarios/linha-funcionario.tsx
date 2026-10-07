@@ -36,6 +36,7 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
   const [erro, setErro] = useState<string>();
   const [pendente, iniciar] = useTransition();
   const devolverFoco = useRef(false);
+  const botaoMais = useRef<HTMLButtonElement | null>(null);
 
   // Roda uma action e mostra o erro, se houver. Se der certo, roda aoDarCerto.
   function executar(acao: () => Promise<EstadoAcao>, aoDarCerto?: () => void) {
@@ -56,7 +57,9 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
 
   // "Ref de callback": o React chama quando o botão ⋯ aparece na tela.
   // Se viemos da edição, é a hora certa de devolver o foco para ele.
+  // Também guarda o botão numa ref, para o foco voltar a ele ao fechar a caixa de exclusão.
   function aoMontarBotao(botao: HTMLButtonElement | null) {
+    botaoMais.current = botao;
     if (botao && devolverFoco.current) {
       devolverFoco.current = false;
       botao.focus();
@@ -143,7 +146,14 @@ export function LinhaFuncionario({ funcionario }: { funcionario: Funcionario }) 
       )}
 
       <AlertDialog open={confirmandoExclusao} onOpenChange={setConfirmandoExclusao}>
-        <AlertDialogContent>
+        <AlertDialogContent
+          // O item do menu já sumiu: sem isto o foco cairia no topo da página.
+          // Se a exclusão deu certo, a linha some e o foco vai para o campo de adicionar.
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            if (botaoMais.current?.isConnected) botaoMais.current.focus();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir {funcionario.nome}?</AlertDialogTitle>
             <AlertDialogDescription>

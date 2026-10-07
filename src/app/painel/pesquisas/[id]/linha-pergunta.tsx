@@ -33,6 +33,11 @@ export type PerguntaEditor = {
 // Por isso o foco vai para o título "Perguntas" e o aviso fala pela região da página.
 function focarTituloEAnunciar(frase: string) {
   document.getElementById("titulo-perguntas")?.focus();
+  anunciarNaPagina(frase);
+}
+
+// Fala pela região fixa da página (a linha pode mudar de lugar no DOM e perder o aviso)
+function anunciarNaPagina(frase: string) {
   const regiao = document.getElementById("anuncio-perguntas");
   if (regiao) {
     regiao.textContent = "";
@@ -94,7 +99,14 @@ export function LinhaPergunta({
   function mover(direcao: "subir" | "descer") {
     if (pendente) return;
     focarDepoisDeMover.current = direcao;
-    executar(() => moverPergunta(pergunta.id, direcao));
+    executar(async () => {
+      const r = await moverPergunta(pergunta.id, direcao);
+      // Deu erro: não deixa o foco pendente puxar o foco para esta linha depois
+      if (r.erro) focarDepoisDeMover.current = null;
+      // O aviso sai pela região da página, não pelo role=status da linha (que se move)
+      if (r.anuncio) anunciarNaPagina(r.anuncio);
+      return { ...r, anuncio: undefined };
+    });
   }
 
   const terminarEdicao = useCallback(() => {
