@@ -1,6 +1,6 @@
 "use client";
 
-import { House, Users } from "lucide-react";
+import { ClipboardList, House, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/painel", rotulo: "Início", Icone: House },
   { href: "/painel/funcionarios", rotulo: "Funcionários", Icone: Users },
+  { href: "/painel/pesquisas", rotulo: "Pesquisas", Icone: ClipboardList },
 ];
 
 export function NavPainel() {
@@ -25,7 +26,7 @@ export function NavPainel() {
             href={href}
             aria-current={ativo ? "page" : undefined}
             className={cn(
-              "flex min-h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
+              "flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               // Ativo: pílula ameixa com sombra leve. Inativo: só texto, ganha fundo ao passar o mouse
               ativo
@@ -34,7 +35,8 @@ export function NavPainel() {
             )}
           >
             <Icone aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} />
-            {rotulo}
+            {/* No celular só o link ativo mostra o nome; os outros viram ícone (o nome segue para o leitor de tela) */}
+            <span className={cn(!ativo && "max-sm:sr-only")}>{rotulo}</span>
           </Link>
         );
       })}

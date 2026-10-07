@@ -52,7 +52,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 1** — Estrutura do projeto: Next.js + TypeScript + Tailwind e conexão com o Supabase
 - [x] **Etapa 2** — Login e cadastro da empresa
 - [x] **Etapa 3** — Cadastro de funcionários (e várias empresas por login)
-- [ ] **Etapa 4** — Criação de pesquisas e perguntas
+- [x] **Etapa 4** — Criação de pesquisas e perguntas
 - [ ] **Etapa 5** — Página pública da pesquisa + QR code
 - [ ] **Etapa 6** — Painel com médias e gráficos
 - [ ] **Etapa 7** — Resumo com IA
@@ -79,15 +79,25 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Inativos somem da pesquisa, mas o histórico fica guardado
 - Funciona pelo teclado e com leitor de tela: o foco nunca se perde, e erros e cadastros são anunciados
 
+**Pesquisas**
+- Página `/painel/pesquisas`: lista com o estado de cada pesquisa ("Recebendo respostas" ou "Pausada")
+- Criar pesquisa já com perguntas sugeridas: uma nota obrigatória, "Quem te atendeu?" (só se a empresa tiver funcionários ativos) e um comentário livre
+- Editor da pesquisa: título editável, Pausar/Retomar e Excluir com confirmação
+- Perguntas dos 3 tipos (nota, texto livre e "Quem te atendeu?"), cada uma com ícone próprio: subir/descer, tornar obrigatória/opcional, editar o texto, tirar da pesquisa e devolver depois
+- Limite de 10 perguntas e uma só "Quem te atendeu?" por pesquisa, garantidos também no banco
+- Avisos quando falta pergunta de nota ("sem nota") ou quando não há funcionários para a pergunta de equipe ("sem equipe")
+- Funciona pelo teclado e com leitor de tela
+
 **Segurança**
 - Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
 - Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
+- Tabelas `pesquisas` e `perguntas` também com **RLS**: o dono só mexe nas próprias; o tipo da pergunta, a pesquisa e a empresa não mudam depois de criados; pergunta não se exclui, se arquiva; a troca de ordem é atômica, numa função `security invoker`
 - Sessão em cookies verificada no servidor (`getClaims`), renovada por um *proxy* que também bloqueia páginas para quem não está logado
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 32 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql` e `rls_funcionarios.sql`), que provam o isolamento entre empresas
+- 45 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql` e `rls_pesquisas.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -155,7 +165,8 @@ src/
 │   ├── auth/confirm/         # Recebe o clique no link do e-mail e cria a sessão
 │   └── painel/               # Área logada (menu e seletor de empresa)
 │       ├── empresas/         # Trocar e adicionar empresa
-│       └── funcionarios/     # Lista, formulário e ações dos funcionários
+│       ├── funcionarios/     # Lista, formulário e ações dos funcionários
+│       └── pesquisas/        # Lista, ações e editor (`[id]/`) das pesquisas
 ├── components/
 │   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
 │   ├── marca/                # Logo satisfeito?!
@@ -166,6 +177,7 @@ src/
     ├── empresas/             # Qual empresa está aberta no painel
     ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
+    ├── pesquisas/            # Validações, perguntas sugeridas e rótulos dos tipos
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco
 supabase/
 ├── migrations/               # SQL do banco (tabelas, RLS, trigger)

@@ -67,12 +67,88 @@ export type Database = {
           },
         ]
       }
+      perguntas: {
+        Row: {
+          arquivada: boolean
+          created_at: string
+          id: string
+          obrigatoria: boolean
+          ordem: number
+          pesquisa_id: string
+          texto: string
+          tipo: string
+        }
+        Insert: {
+          arquivada?: boolean
+          created_at?: string
+          id?: string
+          obrigatoria?: boolean
+          ordem: number
+          pesquisa_id: string
+          texto: string
+          tipo: string
+        }
+        Update: {
+          arquivada?: boolean
+          created_at?: string
+          id?: string
+          obrigatoria?: boolean
+          ordem?: number
+          pesquisa_id?: string
+          texto?: string
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "perguntas_pesquisa_id_fkey"
+            columns: ["pesquisa_id"]
+            isOneToOne: false
+            referencedRelation: "pesquisas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pesquisas: {
+        Row: {
+          ativa: boolean
+          created_at: string
+          empresa_id: string
+          id: string
+          titulo: string
+        }
+        Insert: {
+          ativa?: boolean
+          created_at?: string
+          empresa_id: string
+          id?: string
+          titulo: string
+        }
+        Update: {
+          ativa?: boolean
+          created_at?: string
+          empresa_id?: string
+          id?: string
+          titulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pesquisas_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "empresas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      trocar_ordem_perguntas: {
+        Args: { a: string; b: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

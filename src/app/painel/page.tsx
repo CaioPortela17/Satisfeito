@@ -20,6 +20,8 @@ const PASSOS = [
   {
     titulo: "Monte sua pesquisa",
     texto: "Escolha as perguntas: nota de 1 a 10, texto livre e quem atendeu.",
+    href: "/painel/pesquisas",
+    acao: "Montar pesquisa",
   },
   {
     titulo: "Espalhe o QR code",
