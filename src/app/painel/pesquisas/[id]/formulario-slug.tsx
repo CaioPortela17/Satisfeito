@@ -10,11 +10,19 @@ export function FormularioSlug({ id, slug, base }: { id: string; slug: string; b
   const [editando, setEditando] = useState(false);
   const [anuncio, setAnuncio] = useState("");
   const devolverFoco = useRef(false);
+  const temporizador = useRef<ReturnType<typeof setTimeout>>(undefined);
+
+  useEffect(() => () => clearTimeout(temporizador.current), []);
 
   const terminarEdicao = useCallback((novoAnuncio?: string) => {
     devolverFoco.current = true;
-    if (novoAnuncio) setAnuncio(novoAnuncio);
     setEditando(false);
+    if (novoAnuncio) {
+      // Limpa e escreve de novo: salvar duas vezes seguidas anuncia as duas
+      setAnuncio("");
+      clearTimeout(temporizador.current);
+      temporizador.current = setTimeout(() => setAnuncio(novoAnuncio), 100);
+    }
   }, []);
 
   // Ao sair da edição, o foco volta para "Mudar o final do link"
@@ -25,9 +33,15 @@ export function FormularioSlug({ id, slug, base }: { id: string; slug: string; b
     }
   }
 
-  if (!editando) {
-    return (
-      <>
+  // O aviso para o leitor de tela fica sempre na página (montar junto com o texto não é anunciado)
+  return (
+    <>
+      <p role="status" className="sr-only">
+        {anuncio}
+      </p>
+      {editando ? (
+        <EdicaoSlug id={id} slug={slug} base={base} aoTerminar={terminarEdicao} />
+      ) : (
         <Button
           ref={aoMontarBotao}
           type="button"
@@ -37,14 +51,9 @@ export function FormularioSlug({ id, slug, base }: { id: string; slug: string; b
         >
           Mudar o final do link
         </Button>
-        <p role="status" className="sr-only">
-          {anuncio}
-        </p>
-      </>
-    );
-  }
-
-  return <EdicaoSlug id={id} slug={slug} base={base} aoTerminar={terminarEdicao} />;
+      )}
+    </>
+  );
 }
 
 function EdicaoSlug({

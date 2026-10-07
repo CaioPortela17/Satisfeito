@@ -170,8 +170,9 @@
   }
 }
 
-/* Cartaz: na impressão some o topo do painel e o fundo menta */
+/* Impressão (cartaz): o fundo menta some; o topo do painel usa print:hidden */
 @media print {
-  header { display: none !important; }
-  body { background: #fff !important; }
+  body {
+    background: #fff !important;
+  }
 }

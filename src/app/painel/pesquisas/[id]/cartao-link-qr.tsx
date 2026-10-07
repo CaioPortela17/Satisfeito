@@ -6,7 +6,7 @@ import { BotaoCopiarLink } from "./botao-copiar-link";
 import { FormularioSlug } from "./formulario-slug";
 
 const BOTAO_SECUNDARIO =
-  "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-ameixa/25 px-4 text-sm font-semibold text-ameixa transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
+  "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-ameixa/25 px-4 text-sm font-semibold text-ameixa select-none transition-[background-color,transform] duration-150 ease-out hover:bg-muted active:scale-[0.97] motion-reduce:transition-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none";
 
 // Cartão do editor: link público, QR code para baixar e atalho para o cartaz
 export async function CartaoLinkQr({ pesquisaId, slug }: { pesquisaId: string; slug: string }) {
