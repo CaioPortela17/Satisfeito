@@ -169,3 +169,9 @@
     transform: translateY(12px);
   }
 }
+
+/* Cartaz: na impressão some o topo do painel e o fundo menta */
+@media print {
+  header { display: none !important; }
+  body { background: #fff !important; }
+}
