@@ -238,7 +238,7 @@ begin
   if (select valor_nota from public.respostas_itens where resposta_id = r and pergunta_id = nota::uuid) is distinct from 10 then
     raise exception 'FALHOU: nota 10.0 não foi gravada como 10';
   end if;
-end $;
+end $$;
 
 -- Sem equipe ativa, "Quem?" deixa de ser obrigatória
 reset role;
