@@ -59,13 +59,16 @@ describe("esquemaIdPesquisa", () => {
 describe("mensagemErroPesquisa", () => {
   it("traduz a segunda pergunta de funcionário (23505)", () => {
     expect(mensagemErroPesquisa("23505")).toBe(
-      "Essa pesquisa já tem a pergunta “Quem te atendeu?”.",
+      'Essa pesquisa já tem a pergunta "Quem te atendeu?".',
     );
   });
   it("traduz o limite de perguntas (SF001)", () => {
     expect(mensagemErroPesquisa("SF001")).toBe(
       "Pesquisas curtas recebem mais respostas. O limite é 10 perguntas.",
     );
+  });
+  it("traduz pesquisa com respostas (23503)", () => {
+    expect(mensagemErroPesquisa("23503")).toBe("Essa pesquisa já tem respostas. Pause em vez de excluir.");
   });
   it("usa mensagem genérica nos outros casos", () => {
     expect(mensagemErroPesquisa("42501")).toBe("Algo deu errado. Tente de novo em instantes.");

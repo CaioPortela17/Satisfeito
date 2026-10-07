@@ -13,6 +13,8 @@ export const esquemaIdFuncionario = z.uuid("Funcionário inválido.");
 const MENSAGENS: Record<string, string> = {
   // unique_violation: o índice único (empresa_id, lower(nome)) recusou
   "23505": "Já existe um funcionário com esse nome. Diferencie, por exemplo: Ana Paula ou Ana C.",
+  // chave estrangeira restrict de avaliações (respostas_itens.funcionario_id)
+  "23503": "Essa pessoa já tem avaliações. Desative em vez de excluir: o histórico continua guardado.",
 };
 
 export function mensagemErroFuncionario(codigo?: string): string {

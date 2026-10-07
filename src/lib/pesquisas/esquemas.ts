@@ -26,7 +26,9 @@ export const esquemaIdPesquisa = z.uuid("Item inválido.");
 
 const MENSAGENS: Record<string, string> = {
   // unique_violation: índice "uma pergunta de funcionário por pesquisa"
-  "23505": "Essa pesquisa já tem a pergunta “Quem te atendeu?”.",
+  "23505": 'Essa pesquisa já tem a pergunta "Quem te atendeu?".',
+  // chave estrangeira restrict de respostas
+  "23503": "Essa pesquisa já tem respostas. Pause em vez de excluir.",
   // erro próprio do trigger limitar_perguntas
   SF001: "Pesquisas curtas recebem mais respostas. O limite é 10 perguntas.",
 };

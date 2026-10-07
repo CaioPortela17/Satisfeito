@@ -12,6 +12,6 @@ export function perguntasSugeridas(temFuncionarios: boolean): PerguntaSugerida[]
     ...(temFuncionarios
       ? [{ texto: "Quem te atendeu?", tipo: "funcionario" as const, obrigatoria: false }]
       : []),
-    { texto: "Quer contar mais alguma coisa?", tipo: "texto", obrigatoria: false },
+    { texto: "Onde podemos melhorar?", tipo: "texto", obrigatoria: false },
   ];
 }
