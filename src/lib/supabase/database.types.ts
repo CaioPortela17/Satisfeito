@@ -226,10 +226,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      envios_suspeitos: {
+        Args: { p_pesquisa_id: string }
+        Returns: {
+          resposta_id: string
+        }[]
+      }
       pesquisa_publica: { Args: { p_slug: string }; Returns: Json }
       registrar_resposta: {
         Args: { p_itens: Json; p_pesquisa_id: string }
         Returns: string
+      }
+      respostas_pesquisa: {
+        Args: { p_aba?: string; p_pagina?: number; p_pesquisa_id: string }
+        Returns: Json
       }
       resultados_pesquisa: {
         Args: { p_fuso?: string; p_pesquisa_id: string }

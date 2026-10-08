@@ -85,9 +85,9 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 3** — Cadastro de funcionários (e várias empresas por login)
 - [x] **Etapa 4** — Criação de pesquisas e perguntas
 - [x] **Etapa 5A** — Página pública da pesquisa, link, QR code e cartaz
-- [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile); a tela para descartar respostas suspeitas vem na Etapa 6
+- [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile) e a coluna para descartar respostas
 - [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
-- [ ] **Etapa 6B** — Lista de respostas, respostas suspeitas e descarte
+- [x] **Etapa 6B** — Lista de respostas, selo de respostas suspeitas e descarte
 - [ ] **Etapa 7** — Resumo com IA
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
@@ -130,6 +130,14 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Respostas descartadas não entram em nenhum número; pesquisa sem respostas mostra como receber a primeira
 - Os números saem de uma função do banco (`resultados_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê a própria pesquisa
 
+**Respostas, suspeitas e descarte**
+- Página `/painel/respostas`: lista as respostas de uma pesquisa, da mais recente para a mais antiga, 20 por página, com abas **Todas**, **Suspeitas** e **Descartadas** (cada uma com a quantidade)
+- Cada resposta mostra data e hora (horário de São Paulo), notas com número e palavra, texto livre e a pessoa escolhida em "Quem te atendeu?". Texto de cliente é sempre mostrado como texto puro
+- **Selo "Suspeita":** uma resposta é ruim quando a média das notas dela é 4 ou menos; 4 ou mais respostas ruins em até 15 minutos, na mesma pesquisa, formam uma rajada e todas ganham o selo. O selo só avisa: quem decide é o dono. Não usa IP nem identificação
+- Botões **Descartar** e **Restaurar** (reversíveis) e, na aba Suspeitas, "Descartar as suspeitas desta página". Descartar tira a resposta de todos os números de Resultados; a página anuncia o resultado para leitor de tela
+- A página Resultados mostra um aviso "N respostas suspeitas" com link para a aba Suspeitas
+- A regra e a lista saem de funções do banco (`envios_suspeitos` e `respostas_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê e descarta as próprias respostas
+
 **Página pública, link e QR code**
 - Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
 - No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
@@ -140,7 +148,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - **Proteção contra respostas falsas:** tempo mínimo de 3 segundos, marca "já respondeu hoje" no navegador e um teste invisível do Cloudflare Turnstile. O servidor confere o resultado com a Cloudflare antes de gravar; se a verificação falhar, a resposta não é aceita. **Nenhum sinal por IP é usado**, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais
 
 **Segurança**
-- Coluna `respostas.descartada`: o dono pode descartar respostas suspeitas das próprias pesquisas (e só mexer nessa coluna); a tela chega na Etapa 6
+- Coluna `respostas.descartada`: o dono pode descartar respostas das próprias pesquisas (e só mexer nessa coluna); a tela de descarte é a página Respostas
 - Tabelas `respostas` e `respostas_itens`: só o dono da empresa lê; o público nunca lê. A leitura pública da pesquisa passa pela função `pesquisa_publica` (devolve só o necessário) e a gravação pela função `registrar_resposta`, que só o servidor consegue chamar
 - Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
 - Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
@@ -149,8 +157,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 84 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql` e `rls_resultados.sql`), que provam o isolamento entre empresas
+- 94 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql` e `rls_respostas_lista.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -225,6 +233,7 @@ src/
 │       ├── funcionarios/     # Lista, formulário e ações dos funcionários
 │       ├── pesquisas/        # Lista, ações, editor (`[id]/`) e cartaz das pesquisas
 │       ├── resultados/       # Totais, notas, gráfico e ranking da equipe
+│       ├── respostas/        # Lista de respostas, abas, selo de suspeita e descarte
 │   └── p/[slug]/             # Página pública da pesquisa (cliente, sem login)
 ├── components/
 │   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
@@ -236,7 +245,7 @@ src/
     ├── empresas/             # Qual empresa está aberta no painel
     ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
-    ├── respostas/            # Validação e montagem do envio do cliente
+    ├── respostas/            # Validação e montagem do envio do cliente; leitura da lista de respostas
     ├── resultados/           # Tipos e formatação dos números da página Resultados
     ├── pesquisas/            # Validações, perguntas sugeridas e rótulos dos tipos
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco

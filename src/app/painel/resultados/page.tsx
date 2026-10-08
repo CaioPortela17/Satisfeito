@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
+import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { escolherPesquisaPadrao } from "@/lib/resultados/apresentacao";
 import type { Resultados } from "@/lib/resultados/tipos";
 import { CartoesPerguntas } from "./cartoes-perguntas";
@@ -26,19 +28,7 @@ export default async function PaginaResultados({
   const { pesquisa: pedido } = await searchParams;
 
   // Pesquisas da empresa atual, da mais recente para a mais antiga, com quantos envios cada uma tem
-  const { data: linhas } = atual
-    ? await supabase
-        .from("pesquisas")
-        .select("id, titulo, slug, respostas(count)")
-        .eq("empresa_id", atual.id)
-        .order("created_at", { ascending: false })
-    : { data: [] };
-  const pesquisas = (linhas ?? []).map((p) => ({
-    id: p.id,
-    titulo: p.titulo,
-    slug: p.slug,
-    respostas: p.respostas[0]?.count ?? 0,
-  }));
+  const pesquisas = await listarPesquisasParaSeletor(supabase, atual?.id);
 
   const escolhida = escolherPesquisaPadrao(pesquisas, pedido);
 
@@ -77,6 +67,25 @@ export default async function PaginaResultados({
         <Vazio pesquisaId={escolhida} />
       ) : (
         <>
+          {resultados.suspeitas > 0 && (
+            <section className="entrada flex flex-col gap-3 rounded-3xl bg-manga-claro p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div>
+                <p className="font-semibold">
+                  {resultados.suspeitas === 1 ? "1 resposta suspeita" : `${resultados.suspeitas} respostas suspeitas`}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Várias notas ruins em poucos minutos. Veja e decida se descarta.
+                </p>
+              </div>
+              <Link
+                href={`/painel/respostas?pesquisa=${escolhida}&aba=suspeitas`}
+                className="inline-flex min-h-11 items-center font-semibold text-ameixa underline underline-offset-4"
+              >
+                Ver respostas suspeitas
+              </Link>
+            </section>
+          )}
+
           <CartoesTotais totais={resultados.totais} />
 
           <section className={SECAO}>
