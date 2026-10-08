@@ -289,5 +289,54 @@ begin
   end if;
 end $$;
 
+-- Descartar respostas (base da Etapa 6): só o dono, só a coluna descartada
+reset role;
+set local role authenticated;
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}', true);
+do $$
+begin
+  update public.respostas set descartada = true
+   where id = (select id from public.respostas order by created_at limit 1);
+  if (select count(*) from public.respostas where descartada) <> 1 then
+    raise exception 'FALHOU: dono não conseguiu descartar a própria resposta';
+  end if;
+  begin
+    update public.respostas set pesquisa_id = current_setting('app.pb')::uuid;
+    raise exception 'FALHOU: dono alterou outra coluna de respostas';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+
+-- Dono B não descarta resposta da empresa A (0 linhas afetadas)
+reset role;
+set local role authenticated;
+select set_config('request.jwt.claims',
+  '{"sub":"00000000-0000-0000-0000-0000000000b3","role":"authenticated"}', true);
+do $$
+declare
+  n int;
+begin
+  update public.respostas set descartada = true where pesquisa_id = current_setting('app.pa')::uuid;
+  get diagnostics n = row_count;
+  if n <> 0 then
+    raise exception 'FALHOU: B descartou % resposta(s) da empresa A', n;
+  end if;
+end $$;
+
+-- Visitante sem login não descarta
+reset role;
+set local role anon;
+select set_config('request.jwt.claims', '{"role":"anon"}', true);
+do $$
+begin
+  begin
+    update public.respostas set descartada = true;
+    raise exception 'FALHOU: visitante descartou resposta';
+  exception when insufficient_privilege then null;
+  end;
+end $$;
+reset role;
+
 select 'TODOS OS TESTES DE SEGURANÇA PASSARAM' as resultado;
 rollback;

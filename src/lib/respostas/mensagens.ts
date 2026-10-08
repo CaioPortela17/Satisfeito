@@ -12,3 +12,9 @@ const MENSAGENS: Record<string, string> = {
 export function mensagemErroResposta(codigo?: string): string {
   return (codigo && MENSAGENS[codigo]) || "Não deu para enviar agora. Tente de novo em instantes.";
 }
+
+export function mensagemTurnstile(resultado: "invalido" | "indisponivel"): string {
+  return resultado === "invalido"
+    ? "Não conseguimos confirmar que você é uma pessoa. Recarregue a página e tente de novo."
+    : "Não deu para verificar agora. Tente de novo em instantes.";
+}

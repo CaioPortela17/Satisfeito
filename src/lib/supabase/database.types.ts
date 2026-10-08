@@ -146,16 +146,19 @@ export type Database = {
       respostas: {
         Row: {
           created_at: string
+          descartada: boolean
           id: string
           pesquisa_id: string
         }
         Insert: {
           created_at?: string
+          descartada?: boolean
           id?: string
           pesquisa_id: string
         }
         Update: {
           created_at?: string
+          descartada?: boolean
           id?: string
           pesquisa_id?: string
         }
