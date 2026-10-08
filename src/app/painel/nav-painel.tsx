@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartColumn, ClipboardList, House, Users } from "lucide-react";
+import { ChartColumn, ClipboardList, House, MessageSquareText, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 const LINKS = [
   { href: "/painel", rotulo: "Início", Icone: House },
   { href: "/painel/resultados", rotulo: "Resultados", Icone: ChartColumn },
+  { href: "/painel/respostas", rotulo: "Respostas", Icone: MessageSquareText },
   { href: "/painel/funcionarios", rotulo: "Funcionários", Icone: Users },
   { href: "/painel/pesquisas", rotulo: "Pesquisas", Icone: ClipboardList },
 ];
@@ -27,7 +28,7 @@ export function NavPainel() {
             href={href}
             aria-current={ativo ? "page" : undefined}
             className={cn(
-              "flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
+              "flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full px-3 text-sm sm:px-4 font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               // Ativo: pílula ameixa com sombra leve. Inativo: só texto, ganha fundo ao passar o mouse
               ativo

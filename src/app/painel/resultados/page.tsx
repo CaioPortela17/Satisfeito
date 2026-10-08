@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
+import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { escolherPesquisaPadrao } from "@/lib/resultados/apresentacao";
 import type { Resultados } from "@/lib/resultados/tipos";
 import { CartoesPerguntas } from "./cartoes-perguntas";
@@ -26,19 +27,7 @@ export default async function PaginaResultados({
   const { pesquisa: pedido } = await searchParams;
 
   // Pesquisas da empresa atual, da mais recente para a mais antiga, com quantos envios cada uma tem
-  const { data: linhas } = atual
-    ? await supabase
-        .from("pesquisas")
-        .select("id, titulo, slug, respostas(count)")
-        .eq("empresa_id", atual.id)
-        .order("created_at", { ascending: false })
-    : { data: [] };
-  const pesquisas = (linhas ?? []).map((p) => ({
-    id: p.id,
-    titulo: p.titulo,
-    slug: p.slug,
-    respostas: p.respostas[0]?.count ?? 0,
-  }));
+  const pesquisas = await listarPesquisasParaSeletor(supabase, atual?.id);
 
   const escolhida = escolherPesquisaPadrao(pesquisas, pedido);
 
