@@ -53,7 +53,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 2** — Login e cadastro da empresa
 - [x] **Etapa 3** — Cadastro de funcionários (e várias empresas por login)
 - [x] **Etapa 4** — Criação de pesquisas e perguntas
-- [ ] **Etapa 5** — Página pública da pesquisa + QR code
+- [x] **Etapa 5A** — Página pública da pesquisa, link, QR code e cartaz
+- [ ] **Etapa 5B** — Proteção contra respostas falsas
 - [ ] **Etapa 6** — Painel com médias e gráficos
 - [ ] **Etapa 7** — Resumo com IA
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
@@ -88,7 +89,16 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Avisos quando falta pergunta de nota ("sem nota") ou quando não há funcionários para a pergunta de equipe ("sem equipe")
 - Funciona pelo teclado e com leitor de tela
 
+**Página pública, link e QR code**
+- Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
+- No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
+- Página do cliente pensada para o celular: nota de 1 a 10, texto livre e "Quem te atendeu?", com tela de agradecimento
+- Pesquisa pausada mostra um aviso em vez do formulário
+- O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, funcionário ativo da mesma empresa, obrigatórias)
+- Pesquisa ou funcionário com respostas não podem ser excluídos (pausar ou desativar em vez disso)
+
 **Segurança**
+- Tabelas `respostas` e `respostas_itens`: só o dono da empresa lê; o público nunca lê. A leitura pública da pesquisa passa pela função `pesquisa_publica` (devolve só o necessário) e a gravação pela função `registrar_resposta`, que só o servidor consegue chamar
 - Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
 - Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
 - Tabelas `pesquisas` e `perguntas` também com **RLS**: o dono só mexe nas próprias; o tipo da pergunta, a pesquisa e a empresa não mudam depois de criados; pergunta não se exclui, se arquiva; a troca de ordem é atômica, numa função `security invoker`
@@ -96,8 +106,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 45 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql` e `rls_pesquisas.sql`), que provam o isolamento entre empresas
+- 64 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql` e `rls_respostas.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -126,6 +136,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Endereço do projeto no Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publicável — pode ir para o navegador, pois quem protege os dados é o RLS |
+| `SUPABASE_SECRET_KEY` | Chave secreta, **só no servidor** (nunca com `NEXT_PUBLIC_`): usada para gravar as respostas dos clientes |
 | `NEXT_PUBLIC_SITE_URL` | Endereço público do site, usado nos links dos e-mails (em desenvolvimento: `http://localhost:3000`) |
 
 ### Configuração do Supabase
@@ -166,7 +177,8 @@ src/
 │   └── painel/               # Área logada (menu e seletor de empresa)
 │       ├── empresas/         # Trocar e adicionar empresa
 │       ├── funcionarios/     # Lista, formulário e ações dos funcionários
-│       └── pesquisas/        # Lista, ações e editor (`[id]/`) das pesquisas
+│   │   └── pesquisas/        # Lista, ações, editor (`[id]/`) e cartaz das pesquisas
+│   └── p/[slug]/             # Página pública da pesquisa (cliente, sem login)
 ├── components/
 │   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
 │   ├── marca/                # Logo satisfeito?!
@@ -177,6 +189,7 @@ src/
     ├── empresas/             # Qual empresa está aberta no painel
     ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
+    ├── respostas/            # Validação e montagem do envio do cliente
     ├── pesquisas/            # Validações, perguntas sugeridas e rótulos dos tipos
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco
 supabase/
