@@ -22,4 +22,5 @@ export type Resultados = {
   perguntas: PerguntaNota[];
   evolucao: PontoEvolucao[];
   equipe: MembroEquipe[];
+  suspeitas: number; // respostas marcadas como suspeitas (ainda não descartadas)
 };

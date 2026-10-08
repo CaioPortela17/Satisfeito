@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
@@ -66,6 +67,25 @@ export default async function PaginaResultados({
         <Vazio pesquisaId={escolhida} />
       ) : (
         <>
+          {resultados.suspeitas > 0 && (
+            <section className="entrada flex flex-col gap-3 rounded-3xl bg-manga-claro p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div>
+                <p className="font-semibold">
+                  {resultados.suspeitas === 1 ? "1 resposta suspeita" : `${resultados.suspeitas} respostas suspeitas`}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Várias notas ruins em poucos minutos. Veja e decida se descarta.
+                </p>
+              </div>
+              <Link
+                href={`/painel/respostas?pesquisa=${escolhida}&aba=suspeitas`}
+                className="inline-flex min-h-11 items-center font-semibold text-ameixa underline underline-offset-4"
+              >
+                Ver respostas suspeitas
+              </Link>
+            </section>
+          )}
+
           <CartoesTotais totais={resultados.totais} />
 
           <section className={SECAO}>
