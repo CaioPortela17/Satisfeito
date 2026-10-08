@@ -1,12 +1,13 @@
 "use client";
 
-import { ClipboardList, House, Users } from "lucide-react";
+import { ChartColumn, ClipboardList, House, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const LINKS = [
   { href: "/painel", rotulo: "Início", Icone: House },
+  { href: "/painel/resultados", rotulo: "Resultados", Icone: ChartColumn },
   { href: "/painel/funcionarios", rotulo: "Funcionários", Icone: Users },
   { href: "/painel/pesquisas", rotulo: "Pesquisas", Icone: ClipboardList },
 ];

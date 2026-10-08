@@ -44,7 +44,23 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 ![Pesquisa pública com nota, "Quem te atendeu?" e comentário](docs/prints/pesquisa-publica.jpg)
 
-> As telas do painel (funcionários, pesquisas, link e QR code) entram aqui em breve.
+**Painel da empresa** (com login):
+
+| Funcionários | Pesquisas |
+|---|---|
+| ![Lista de funcionários](docs/prints/painel-funcionarios.jpg) | ![Lista de pesquisas](docs/prints/painel-pesquisas.jpg) |
+
+| Link e QR code da pesquisa | Perguntas da pesquisa |
+|---|---|
+| ![Link, QR code e cartaz](docs/prints/painel-link-qr.jpg) | ![Editor de perguntas](docs/prints/painel-perguntas.jpg) |
+
+**Resultados** (totais, nota de cada pergunta, evolução e ranking da equipe):
+
+![Totais e nota por pergunta](docs/prints/resultados-numeros.jpg)
+
+![Evolução da nota e ranking da equipe](docs/prints/resultados-grafico-ranking.jpg)
+
+> Os números desses prints são de exemplo, criados só para a demonstração.
 
 ---
 
@@ -56,7 +72,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 | Linguagem | TypeScript |
 | Estilo | Tailwind CSS 4 |
 | Banco e login | [Supabase](https://supabase.com) — Postgres + Auth, com RLS (Row Level Security) |
-| Gráficos | Recharts *(etapa 6)* |
+| Gráficos | [Recharts](https://recharts.org) |
 | Anti-robô | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) (invisível, sem usar IP) |
 | IA | API de IA chamada só pelo servidor *(etapa 7)* |
 
@@ -70,7 +86,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 4** — Criação de pesquisas e perguntas
 - [x] **Etapa 5A** — Página pública da pesquisa, link, QR code e cartaz
 - [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile); a tela para descartar respostas suspeitas vem na Etapa 6
-- [ ] **Etapa 6** — Painel com médias e gráficos
+- [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
+- [ ] **Etapa 6B** — Lista de respostas, respostas suspeitas e descarte
 - [ ] **Etapa 7** — Resumo com IA
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
@@ -104,6 +121,15 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Avisos quando falta pergunta de nota ("sem nota") ou quando não há funcionários para a pergunta de equipe ("sem equipe")
 - Funciona pelo teclado e com leitor de tela
 
+**Resultados**
+- Página `/painel/resultados`: uma pesquisa por vez, com seletor quando a empresa tem mais de uma (a pesquisa mais recente com respostas abre primeiro)
+- Totais de respostas: hoje, últimos 7 dias e últimos 30 dias (no horário de São Paulo)
+- Nota média de cada pergunta, sempre com número e palavra ("Ótimo", "Pode melhorar", "Ruim"), nunca só cor
+- Gráfico da nota média por dia nos últimos 30 dias (eixo de tempo real), com tabela escondida para leitor de tela
+- Ranking da equipe pela nota média dos clientes que escolheram cada pessoa; quem tem menos de 3 avaliações aparece depois, com a etiqueta "poucas avaliações"
+- Respostas descartadas não entram em nenhum número; pesquisa sem respostas mostra como receber a primeira
+- Os números saem de uma função do banco (`resultados_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê a própria pesquisa
+
 **Página pública, link e QR code**
 - Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
 - No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
@@ -123,8 +149,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 72 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql` e `rls_respostas.sql`), que provam o isolamento entre empresas
+- 84 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql` e `rls_resultados.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -197,7 +223,8 @@ src/
 │   └── painel/               # Área logada (menu e seletor de empresa)
 │       ├── empresas/         # Trocar e adicionar empresa
 │       ├── funcionarios/     # Lista, formulário e ações dos funcionários
-│   │   └── pesquisas/        # Lista, ações, editor (`[id]/`) e cartaz das pesquisas
+│       ├── pesquisas/        # Lista, ações, editor (`[id]/`) e cartaz das pesquisas
+│       ├── resultados/       # Totais, notas, gráfico e ranking da equipe
 │   └── p/[slug]/             # Página pública da pesquisa (cliente, sem login)
 ├── components/
 │   ├── ui/                   # Componentes do shadcn/ui adaptados à marca
@@ -210,6 +237,7 @@ src/
     ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
     ├── respostas/            # Validação e montagem do envio do cliente
+    ├── resultados/           # Tipos e formatação dos números da página Resultados
     ├── pesquisas/            # Validações, perguntas sugeridas e rótulos dos tipos
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco
 supabase/
