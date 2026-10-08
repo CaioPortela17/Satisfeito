@@ -18,7 +18,7 @@ export function NavPainel() {
 
   return (
     // Trilho: um fundo creme único que agrupa os links, como um controle segmentado
-    <nav aria-label="Painel" className="flex gap-1 rounded-full border border-border bg-creme p-1">
+    <nav aria-label="Painel" className="flex max-w-full min-w-0 gap-0.5 rounded-full border border-border bg-creme p-1">
       {LINKS.map(({ href, rotulo, Icone }) => {
         // "Início" só fica ativo na própria página; os outros também nas subpáginas
         const ativo = href === "/painel" ? caminho === "/painel" : caminho.startsWith(href);
@@ -28,17 +28,18 @@ export function NavPainel() {
             href={href}
             aria-current={ativo ? "page" : undefined}
             className={cn(
-              "flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-full px-3 text-sm sm:px-4 font-semibold transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
+              "flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm font-semibold sm:gap-2 sm:px-4 transition-[background-color,color,box-shadow,transform] duration-150 ease-out active:scale-[0.97]",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               // Ativo: pílula ameixa com sombra leve. Inativo: só texto, ganha fundo ao passar o mouse
+              // Ativo pode encolher (min-w-0) e o nome é cortado com "…" em vez de estourar a largura
               ativo
-                ? "bg-ameixa text-creme shadow-[0_1px_3px_rgba(42,31,45,0.25)]"
-                : "text-ameixa/75 hover:bg-ameixa/[0.06] hover:text-ameixa active:bg-ameixa/10",
+                ? "min-w-0 shrink bg-ameixa text-creme shadow-[0_1px_3px_rgba(42,31,45,0.25)]"
+                : "shrink-0 text-ameixa/75 hover:bg-ameixa/[0.06] hover:text-ameixa active:bg-ameixa/10",
             )}
           >
             <Icone aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} />
             {/* No celular só o link ativo mostra o nome; os outros viram ícone (o nome segue para o leitor de tela) */}
-            <span className={cn(!ativo && "max-sm:sr-only")}>{rotulo}</span>
+            <span className={cn("min-w-0 truncate", !ativo && "max-sm:sr-only")}>{rotulo}</span>
           </Link>
         );
       })}

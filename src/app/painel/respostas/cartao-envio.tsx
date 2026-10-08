@@ -24,8 +24,11 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
   return (
     <li
       className={cn(
-        "rounded-3xl bg-card p-5 shadow-[0_8px_24px_rgba(42,31,45,0.08)] sm:p-6",
-        envio.descartada && "opacity-80",
+        "rounded-3xl p-5 sm:p-6",
+        // Descartada: fundo creme e borda tracejada (sem opacidade, para o texto manter o contraste)
+        envio.descartada
+          ? "border-2 border-dashed border-border bg-creme"
+          : "bg-card shadow-[0_8px_24px_rgba(42,31,45,0.08)]",
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
@@ -38,7 +41,7 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
               </span>
             )}
             {envio.descartada && (
-              <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+              <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-foreground">
                 Descartada
               </span>
             )}
@@ -60,7 +63,7 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
       ) : (
         <ul className="mt-4 space-y-3">
           {envio.itens.map((item, i) => (
-            <li key={`${item.ordem}-${i}`} className="rounded-2xl bg-creme p-4">
+            <li key={`${item.ordem}-${i}`} className={cn("rounded-2xl p-4", envio.descartada ? "bg-card" : "bg-creme")}>
               {item.tipo === "nota" && item.nota !== null && (
                 <div className="flex items-center gap-4">
                   <p className="min-w-0 flex-1 font-semibold break-words">{item.pergunta}</p>
