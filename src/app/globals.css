@@ -169,3 +169,10 @@
     transform: translateY(12px);
   }
 }
+
+/* Impressão (cartaz): o fundo menta some; o topo do painel usa print:hidden */
+@media print {
+  body {
+    background: #fff !important;
+  }
+}

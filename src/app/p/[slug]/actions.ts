@@ -1,0 +1,50 @@
+"use server";
+
+import { verificarCarimbo } from "@/lib/respostas/carimbo";
+import { lerResposta } from "@/lib/respostas/formulario";
+import { mensagemErroResposta } from "@/lib/respostas/mensagens";
+import { criarClienteAdmin } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
+import type { EstadoEnvio, PesquisaPublica } from "./tipos";
+
+function campo(formData: FormData, nome: string) {
+  const valor = formData.get(nome);
+  return typeof valor === "string" ? valor : "";
+}
+
+export async function enviarResposta(_estado: EstadoEnvio, formData: FormData): Promise<EstadoEnvio> {
+  // 1. Carimbo de tempo: robô responde rápido demais; carimbo inventado não passa
+  const segredo = process.env.CARIMBO_SEGREDO;
+  if (!segredo) return { erro: mensagemErroResposta() };
+  const carimbo = verificarCarimbo(campo(formData, "carimbo"), Date.now(), segredo);
+  if (carimbo === "rapido") return { erro: "Ops, foi rápido demais. Confira as respostas e envie de novo." };
+  if (carimbo === "expirado") return { erro: "Essa página ficou aberta muito tempo. Recarregue e responda de novo." };
+  if (carimbo !== "ok") return { erro: mensagemErroResposta() };
+
+  // 2. As perguntas vêm do banco, nunca do navegador
+  const supabase = await createClient();
+  const { data } = await supabase.rpc("pesquisa_publica", { p_slug: campo(formData, "slug") });
+  const pesquisa = data as unknown as PesquisaPublica | null; // Json do Supabase → nosso tipo
+  if (!pesquisa?.ativa) return { erro: mensagemErroResposta("SF101") };
+
+  // 3. Lê e valida o formulário
+  const leitura = lerResposta(formData, pesquisa.perguntas);
+  if (!leitura.ok) {
+    const { geral, ...erros } = leitura.erros;
+    return { erro: geral ?? "Confira as perguntas marcadas.", erros };
+  }
+
+  // 4. Grava pela função do banco, que confere tudo de novo.
+  // Qualquer falha vira uma mensagem genérica: nada do erro técnico chega ao cliente.
+  try {
+    const { error } = await criarClienteAdmin().rpc("registrar_resposta", {
+      p_pesquisa_id: pesquisa.id,
+      p_itens: leitura.itens,
+    });
+    if (error) return { erro: mensagemErroResposta(error.code) };
+  } catch {
+    return { erro: mensagemErroResposta() };
+  }
+
+  return { enviado: true };
+}

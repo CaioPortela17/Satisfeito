@@ -10,6 +10,7 @@ import {
   esquemaTituloPesquisa,
   mensagemErroPesquisa,
 } from "@/lib/pesquisas/esquemas";
+import { candidatosDeSlug, esquemaSlug, gerarSlug } from "@/lib/pesquisas/slug";
 import { perguntasSugeridas, TITULO_SUGERIDO } from "@/lib/pesquisas/sugeridas";
 import { createClient } from "@/lib/supabase/server";
 
@@ -51,12 +52,21 @@ export async function criarPesquisa(): Promise<EstadoAcao> {
   const { supabase, atual } = await obterContextoEmpresa();
   if (!atual) return ERRO;
 
-  const { data: pesquisa, error } = await supabase
-    .from("pesquisas")
-    .insert({ empresa_id: atual.id, titulo: TITULO_SUGERIDO })
-    .select("id")
-    .single();
-  if (error || !pesquisa) return { erro: mensagemErroPesquisa(error?.code) };
+  // Link público a partir do nome da empresa: bebelu, bebelu-2, bebelu-3…
+  let pesquisa: { id: string } | null = null;
+  for (const slug of candidatosDeSlug(gerarSlug(atual.nome))) {
+    const { data, error } = await supabase
+      .from("pesquisas")
+      .insert({ empresa_id: atual.id, titulo: TITULO_SUGERIDO, slug })
+      .select("id")
+      .single();
+    if (!error) {
+      pesquisa = data;
+      break;
+    }
+    if (error.code !== "23505") return { erro: mensagemErroPesquisa(error.code) }; // 23505 = slug em uso
+  }
+  if (!pesquisa) return ERRO;
 
   // "Quem te atendeu?" só entra se houver alguém ativo para escolher
   const { count } = await supabase
@@ -103,6 +113,30 @@ export async function renomearPesquisa(_estado: EstadoAcao, formData: FormData):
 
   atualizarTelas();
   return { ok: Date.now() };
+}
+
+export async function alterarSlug(_estado: EstadoAcao, formData: FormData): Promise<EstadoAcao> {
+  const digitado = texto(formData, "slug");
+  const id = esquemaIdPesquisa.safeParse(texto(formData, "id"));
+  const slug = esquemaSlug.safeParse(digitado);
+  if (!id.success) return { ...ERRO, valor: digitado };
+  if (!slug.success) return { erro: slug.error.issues[0].message, valor: digitado };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("pesquisas")
+    .update({ slug: slug.data })
+    .eq("id", id.data)
+    .select("id");
+  if (error?.code === "23505") {
+    return { erro: "Esse link já está em uso. Tente outro, por exemplo: bebelu-centro.", valor: digitado };
+  }
+  if (error) return { erro: mensagemErroPesquisa(error.code), valor: digitado };
+  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
+  if (!data?.length) return { ...ERRO, valor: digitado };
+
+  atualizarTelas();
+  return { ok: Date.now(), anuncio: "Link atualizado." };
 }
 
 export async function alterarAtivaPesquisa(idRecebido: string, ativa: boolean): Promise<EstadoAcao> {

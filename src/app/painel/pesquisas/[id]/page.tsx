@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { esquemaIdPesquisa, LIMITE_PERGUNTAS, TIPOS_PERGUNTA } from "@/lib/pesquisas/esquemas";
 import { CabecalhoPesquisa } from "./cabecalho-pesquisa";
+import { CartaoLinkQr } from "./cartao-link-qr";
 import { FormularioNovaPergunta } from "./formulario-nova-pergunta";
 import { LinhaPergunta, LinhaPerguntaArquivada, type PerguntaEditor } from "./linha-pergunta";
 
@@ -22,7 +23,7 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
 
   const { data: pesquisa } = await supabase
     .from("pesquisas")
-    .select("id, titulo, ativa")
+    .select("id, titulo, ativa, slug")
     .eq("id", id.data)
     .eq("empresa_id", atual.id)
     .maybeSingle();
@@ -60,6 +61,8 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
       </Link>
 
       <CabecalhoPesquisa id={pesquisa.id} titulo={pesquisa.titulo} ativa={pesquisa.ativa} />
+
+      <CartaoLinkQr pesquisaId={pesquisa.id} slug={pesquisa.slug} />
 
       <section className="entrada rounded-3xl bg-card p-6 shadow-[0_8px_24px_rgba(42,31,45,0.08)] sm:p-8">
         {/* tabIndex -1: recebe o foco quando uma pergunta sai da lista */}

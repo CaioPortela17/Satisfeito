@@ -41,6 +41,12 @@ describe("mensagemErroFuncionario", () => {
     );
   });
 
+  it("traduz funcionário com avaliações (23503)", () => {
+    expect(mensagemErroFuncionario("23503")).toBe(
+      "Essa pessoa já tem avaliações. Desative em vez de excluir: o histórico continua guardado.",
+    );
+  });
+
   it("usa mensagem genérica nos outros casos", () => {
     expect(mensagemErroFuncionario("42501")).toBe("Algo deu errado. Tente de novo em instantes.");
     expect(mensagemErroFuncionario()).toBe("Algo deu errado. Tente de novo em instantes.");
