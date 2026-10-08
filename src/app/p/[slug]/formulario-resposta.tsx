@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { startTransition, useActionState, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { IconeObrigado } from "@/components/icones/icone-obrigado";
 import { Button } from "@/components/ui/button";
 import { faixaDaNota } from "@/lib/notas/faixa";
@@ -62,6 +62,12 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
   const [rodada, setRodada] = useState(0); // trocar a "rodada" recria o widget e gera token novo
   const [demorouEm, setDemorouEm] = useState(-1); // rodada em que a confirmação passou de 10 s
   const demorou = !token && demorouEm === rodada;
+
+  // Chegou token: zera o aviso de demora, para ele não reaparecer se o token expirar e for renovado
+  const aoMudarToken = useCallback((novo: string) => {
+    setToken(novo);
+    if (novo) setDemorouEm(-1);
+  }, []);
 
   // Se o token não chega em 10 s (script bloqueado, rede ruim), avisa em vez de ficar parado
   useEffect(() => {
@@ -193,7 +199,7 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
           </p>
         )}
       </div>
-      <WidgetTurnstile key={rodada} aoMudar={setToken} />
+      <WidgetTurnstile key={rodada} aoMudar={aoMudarToken} />
       <p role="status" className="min-h-5 text-center text-sm text-muted-foreground">
         {token ? (
           <span className="sr-only">Pronto para enviar</span>
