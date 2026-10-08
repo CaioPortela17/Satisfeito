@@ -5,6 +5,7 @@ import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { escolherPesquisaPadrao } from "@/lib/resultados/apresentacao";
 import { lerAba, lerPagina, type ListaRespostas } from "@/lib/respostas/lista";
 import { SeletorPesquisa } from "../resultados/seletor-pesquisa";
+import { AvisosDescarte } from "./avisos-descarte";
 import { Abas } from "./abas";
 import { BotaoDescartarSuspeitas } from "./botoes-descarte";
 import { CartaoEnvio } from "./cartao-envio";
@@ -66,13 +67,13 @@ export default async function PaginaRespostas({
           <p className="mt-1 text-muted-foreground">Recarregue a página em instantes.</p>
         </section>
       ) : (
-        <>
+        <AvisosDescarte aba={aba}>
           <Abas pesquisaId={escolhida} atual={aba} contagens={lista.contagens} />
 
           {aba === "suspeitas" && lista.envios.length > 0 && (
             <div className="space-y-3">
               <p className="text-muted-foreground">
-                Marcamos como suspeitas as respostas de uma rajada: 4 ou mais envios com nota média 4 ou menos em 15
+                Marcamos como suspeitas as respostas de uma rajada: 4 ou mais respostas com média 4 ou menos, enviadas em até 15
                 minutos. Só você decide: descartar tira a resposta dos números, e dá para restaurar.
               </p>
               <BotaoDescartarSuspeitas ids={lista.envios.map((e) => e.id)} />
@@ -91,7 +92,7 @@ export default async function PaginaRespostas({
               <Paginacao pesquisaId={escolhida} aba={aba} pagina={lista.pagina} totalPaginas={lista.total_paginas} />
             </>
           )}
-        </>
+        </AvisosDescarte>
       )}
     </div>
   );
@@ -101,7 +102,7 @@ function Cabecalho() {
   return (
     <div>
       <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Respostas</h1>
-      <p className="mt-1 text-lg font-medium text-ameixa">O que seus clientes escreveram.</p>
+      <p className="mt-1 text-lg font-medium text-ameixa">O que cada cliente respondeu.</p>
     </div>
   );
 }

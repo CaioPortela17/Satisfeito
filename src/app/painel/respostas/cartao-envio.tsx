@@ -19,7 +19,7 @@ function SeloNota({ nota }: { nota: number }) {
   );
 }
 
-// Um envio de cliente. Todo texto do cliente entra como texto comum do React (nunca como HTML).
+// Uma resposta de cliente. Todo texto do cliente entra como texto comum do React (nunca como HTML).
 export function CartaoEnvio({ envio }: { envio: Envio }) {
   return (
     <li
@@ -49,7 +49,7 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
         </div>
         {envio.media !== null && (
           <div className="text-right">
-            <p className="text-xs font-medium text-muted-foreground">Média do envio</p>
+            <p className="text-xs font-medium text-muted-foreground">Média da resposta</p>
             <p className="flex items-center justify-end gap-2">
               <span className="numeros text-2xl font-bold tracking-tight">{formatarMedia(envio.media)}</span>
               <SeloNota nota={envio.media} />
@@ -59,7 +59,7 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
       </div>
 
       {envio.itens.length === 0 ? (
-        <p className="mt-4 text-muted-foreground">Sem respostas neste envio</p>
+        <p className="mt-4 text-muted-foreground">Esta resposta não tem itens</p>
       ) : (
         <ul className="mt-4 space-y-3">
           {envio.itens.map((item, i) => (

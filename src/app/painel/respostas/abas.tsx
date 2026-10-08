@@ -11,7 +11,11 @@ const ROTULOS: { aba: Aba; rotulo: string }[] = [
 // Três filtros em colunas iguais. Cada um é um link comum (a URL guarda a aba escolhida).
 export function Abas({ pesquisaId, atual, contagens }: { pesquisaId: string; atual: Aba; contagens: Contagens }) {
   return (
-    <nav aria-label="Filtrar respostas" className="grid grid-cols-3 gap-1 rounded-2xl border border-border bg-creme p-1">
+    <nav
+      id="abas-respostas"
+      tabIndex={-1} // permite receber o foco por código (ver AvisosDescarte)
+      aria-label="Filtrar respostas"
+      className="grid focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring grid-cols-3 gap-1 rounded-2xl border border-border bg-creme p-1">
       {ROTULOS.map(({ aba, rotulo }) => {
         const ativa = aba === atual;
         return (

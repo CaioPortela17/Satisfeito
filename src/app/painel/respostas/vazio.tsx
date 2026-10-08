@@ -2,7 +2,7 @@ import { IconePesquisa } from "@/components/icones/icone-pesquisa";
 import type { Aba } from "@/lib/respostas/lista";
 
 const TEXTOS: Record<Aba, { titulo: string; texto: string }> = {
-  todas: { titulo: "Ainda sem respostas", texto: "Quando um cliente responder, o envio aparece aqui." },
+  todas: { titulo: "Ainda sem respostas", texto: "Quando um cliente responder, a resposta aparece aqui." },
   suspeitas: {
     titulo: "Nenhuma resposta suspeita",
     texto: "Se aparecer uma rajada de notas ruins em poucos minutos, ela aparece aqui para você decidir.",
@@ -13,7 +13,7 @@ const TEXTOS: Record<Aba, { titulo: string; texto: string }> = {
   },
 };
 
-// Aba sem nenhum envio
+// Aba sem nenhuma resposta
 export function VazioRespostas({ aba }: { aba: Aba }) {
   const { titulo, texto } = TEXTOS[aba];
   return (

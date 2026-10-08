@@ -62,5 +62,5 @@ export const esquemaIdResposta = z.uuid("Resposta inválida.");
 export const esquemaIdsResposta = z.array(z.uuid("Resposta inválida.")).min(1).max(20);
 
 export function mensagemErroDescarte(): string {
-  return "Não deu para atualizar esta resposta agora. Tente de novo em instantes.";
+  return "Não deu para atualizar agora. Tente de novo em instantes.";
 }
