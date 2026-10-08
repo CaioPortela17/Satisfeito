@@ -60,6 +60,15 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
   const obrigado = useRef<HTMLHeadingElement>(null);
   const [token, setToken] = useState("");
   const [rodada, setRodada] = useState(0); // trocar a "rodada" recria o widget e gera token novo
+  const [demorouEm, setDemorouEm] = useState(-1); // rodada em que a confirmação passou de 10 s
+  const demorou = !token && demorouEm === rodada;
+
+  // Se o token não chega em 10 s (script bloqueado, rede ruim), avisa em vez de ficar parado
+  useEffect(() => {
+    if (token) return;
+    const timer = setTimeout(() => setDemorouEm(rodada), 10_000);
+    return () => clearTimeout(timer);
+  }, [token, rodada]);
 
   const erros = { ...estado.erros, ...errosLocais };
 
@@ -186,7 +195,13 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
       </div>
       <WidgetTurnstile key={rodada} aoMudar={setToken} />
       <p role="status" className="min-h-5 text-center text-sm text-muted-foreground">
-        {token ? "" : "Confirmando que você é uma pessoa…"}
+        {token ? (
+          <span className="sr-only">Pronto para enviar</span>
+        ) : demorou ? (
+          "Não conseguimos confirmar. Verifique a conexão e recarregue a página."
+        ) : (
+          "Confirmando que você é uma pessoa…"
+        )}
       </p>
       <Button type="submit" size="lg" disabled={pendente || !token} className="w-full">
         {pendente ? "Enviando…" : "Enviar"}
