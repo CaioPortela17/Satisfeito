@@ -62,21 +62,23 @@ export function GraficoEvolucao({ dados }: { dados: PontoEvolucao[] }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <table className="sr-only">
-        <caption>{resumo}</caption>
-        <thead>
-          <tr><th>Dia</th><th>Nota média</th><th>Respostas com nota</th></tr>
-        </thead>
-        <tbody>
-          {dados.map((d) => (
-            <tr key={d.dia}>
-              <td>{rotuloDia(d.dia)}</td>
-              <td>{formatarMedia(d.media)}</td>
-              <td>{d.respostas}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="sr-only">
+        <table>
+          <caption>{resumo}</caption>
+          <thead>
+            <tr><th>Dia</th><th>Nota média</th><th>Respostas com nota</th></tr>
+          </thead>
+          <tbody>
+            {dados.map((d) => (
+              <tr key={d.dia}>
+                <td>{rotuloDia(d.dia)}</td>
+                <td>{formatarMedia(d.media)}</td>
+                <td>{d.respostas}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
