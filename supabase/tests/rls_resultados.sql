@@ -99,6 +99,8 @@ begin
   if (r->'totais'->>'sete_dias')::int <> 5 then raise exception 'FALHOU: 7 dias = %', r->'totais'; end if;
   if (r->'totais'->>'trinta_dias')::int <> 6 then raise exception 'FALHOU: 30 dias = %', r->'totais'; end if;
   if (r->'totais'->>'geral')::int <> 7 then raise exception 'FALHOU: geral = %', r->'totais'; end if;
+  -- Nenhuma rajada nos dados desta prova (só 2 envios ruins)
+  if (r->>'suspeitas')::int <> 0 then raise exception 'FALHOU: suspeitas = %', r->>'suspeitas'; end if;
 
   -- Perguntas: só as de nota não arquivadas, na ordem
   if jsonb_array_length(r->'perguntas') <> 2 then raise exception 'FALHOU: perguntas = %', r->'perguntas'; end if;
