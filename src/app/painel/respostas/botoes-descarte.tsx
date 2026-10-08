@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import { mensagemErroDescarte } from "@/lib/respostas/lista";
 import {
   descartarResposta,
   descartarVarias,
@@ -18,8 +19,13 @@ function useAcaoDescarte() {
   function executar(acao: () => Promise<EstadoDescarte>) {
     setErro(undefined);
     iniciar(async () => {
-      const resultado = await acao();
-      if (resultado.erro) setErro(resultado.erro);
+      try {
+        const resultado = await acao();
+        if (resultado.erro) setErro(resultado.erro);
+      } catch {
+        // Sem internet ou servidor fora do ar: mostra a mensagem amigável em vez de quebrar a página
+        setErro(mensagemErroDescarte());
+      }
     });
   }
 
