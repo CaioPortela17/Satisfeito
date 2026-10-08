@@ -34,6 +34,20 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 ---
 
+## Telas
+
+| Página inicial | Entrar |
+|---|---|
+| ![Página inicial do satisfeito?!](docs/prints/inicio.png) | ![Tela de login](docs/prints/entrar.jpg) |
+
+**Pesquisa que o cliente responde pelo celular** (a página abre pelo QR code, sem login):
+
+![Pesquisa pública com nota, "Quem te atendeu?" e comentário](docs/prints/pesquisa-publica.jpg)
+
+> As telas do painel (funcionários, pesquisas, link e QR code) entram aqui em breve.
+
+---
+
 ## Tecnologias
 
 | Camada | Tecnologia |
@@ -43,6 +57,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 | Estilo | Tailwind CSS 4 |
 | Banco e login | [Supabase](https://supabase.com) — Postgres + Auth, com RLS (Row Level Security) |
 | Gráficos | Recharts *(etapa 6)* |
+| Anti-robô | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) (invisível, sem usar IP) |
 | IA | API de IA chamada só pelo servidor *(etapa 7)* |
 
 ---
@@ -54,7 +69,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 3** — Cadastro de funcionários (e várias empresas por login)
 - [x] **Etapa 4** — Criação de pesquisas e perguntas
 - [x] **Etapa 5A** — Página pública da pesquisa, link, QR code e cartaz
-- [ ] **Etapa 5B** — Proteção contra respostas falsas
+- [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile); a tela para descartar respostas suspeitas vem na Etapa 6
 - [ ] **Etapa 6** — Painel com médias e gráficos
 - [ ] **Etapa 7** — Resumo com IA
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
@@ -96,8 +111,10 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Pesquisa pausada mostra um aviso em vez do formulário
 - O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, funcionário ativo da mesma empresa, obrigatórias)
 - Pesquisa ou funcionário com respostas não podem ser excluídos (pausar ou desativar em vez disso)
+- **Proteção contra respostas falsas:** tempo mínimo de 3 segundos, marca "já respondeu hoje" no navegador e um teste invisível do Cloudflare Turnstile. O servidor confere o resultado com a Cloudflare antes de gravar; se a verificação falhar, a resposta não é aceita. **Nenhum sinal por IP é usado**, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais
 
 **Segurança**
+- Coluna `respostas.descartada`: o dono pode descartar respostas suspeitas das próprias pesquisas (e só mexer nessa coluna); a tela chega na Etapa 6
 - Tabelas `respostas` e `respostas_itens`: só o dono da empresa lê; o público nunca lê. A leitura pública da pesquisa passa pela função `pesquisa_publica` (devolve só o necessário) e a gravação pela função `registrar_resposta`, que só o servidor consegue chamar
 - Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
 - Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
@@ -106,7 +123,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 64 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
+- 72 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual)
 - Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql` e `rls_respostas.sql`), que provam o isolamento entre empresas
 
 ---
@@ -137,6 +154,9 @@ Abra [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_SUPABASE_URL` | Endereço do projeto no Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publicável — pode ir para o navegador, pois quem protege os dados é o RLS |
 | `SUPABASE_SECRET_KEY` | Chave secreta, **só no servidor** (nunca com `NEXT_PUBLIC_`): usada para gravar as respostas dos clientes |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Chave pública do widget Turnstile (Cloudflare). Em desenvolvimento, use as [chaves de teste](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) da Cloudflare |
+| `TURNSTILE_SECRET_KEY` | Chave secreta do Turnstile, **só no servidor** |
+| `CARIMBO_SEGREDO` | Segredo que assina o carimbo de tempo da pesquisa pública (gere com o comando do `.env.example`) |
 | `NEXT_PUBLIC_SITE_URL` | Endereço público do site, usado nos links dos e-mails (em desenvolvimento: `http://localhost:3000`) |
 
 ### Configuração do Supabase
@@ -207,5 +227,9 @@ docs/                         # Desenho, plano e identidade visual de cada etapa
 - Segredos ficam apenas em variáveis de ambiente no servidor
 
 ---
+
+## Licença
+
+Distribuído sob a licença [MIT](LICENSE).
 
 Feito por **Caio Portela**.

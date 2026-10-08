@@ -20,7 +20,7 @@ Decisões do Caio que continuam valendo: **nenhum limite ou sinal por IP** e **n
 ## 3. Fluxo
 
 1. A página `/p/[slug]` carrega o script `https://challenges.cloudflare.com/turnstile/v0/api.js` (`next/script`, `afterInteractive`, `?render=explicit`).
-2. Um componente `WidgetTurnstile` (cliente) desenha o widget numa `div`, com a *site key* pública. Quando a Cloudflare aprova, o callback grava o token num `<input type="hidden" name="cf-turnstile-response">` dentro do formulário. Se o token expira ou dá erro, o campo é limpo e o widget se reinicia.
+2. Um componente `WidgetTurnstile` (cliente) desenha o widget numa `div`, com a *site key* pública. Quando a Cloudflare aprova, o callback grava o token num `<input type="hidden" name="cf-turnstile-response">` dentro do formulário. Se o token expira ou dá erro, o campo é limpo e a própria Cloudflare tenta de novo.
 3. O botão **Enviar** fica desabilitado até existir token. O texto de apoio ("Confirmando que você é uma pessoa...") é anunciado por `aria-live`.
 4. Na Server Action `enviarResposta`, o novo passo vem **primeiro**, antes do carimbo e do banco: `verificarTurnstile(token, segredo)`. Se falhar, devolve `{ erro }` e nada é gravado.
 5. Depois do envio (com sucesso ou erro) o widget é reiniciado, porque cada token só vale uma vez.
@@ -77,7 +77,7 @@ Migração `20261008000000_respostas_descartadas.sql`:
 
 ## 9. Interface e acessibilidade
 
-Sem emojis; textos em português. O widget invisível não tem aparência; se a Cloudflare pedir interação, ela aparece acima do botão, com altura reservada para a página não pular. O estado "confirmando" tem texto visível e `aria-live="polite"`. Segue o `DESIGN.md`; passada das skills de design e `design:accessibility-review`.
+Sem emojis; textos em português. O widget invisível não tem aparência; se a Cloudflare pedir interação, ela aparece acima do botão (o widget usa `appearance: "interaction-only"`; sem desafio, não ocupa espaço). O estado "confirmando" tem texto visível e `aria-live="polite"`; quando o token chega, um texto só para leitor de tela anuncia "Pronto para enviar"; se passar de 10 s sem token, o texto vira "Não conseguimos confirmar. Verifique a conexão e recarregue a página." Segue o `DESIGN.md`; passada das skills de design e `design:accessibility-review`.
 
 ## 10. Testes
 
