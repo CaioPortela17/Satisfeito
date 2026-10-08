@@ -29,14 +29,14 @@ export default async function PaginaResultados({
   const { data: linhas } = atual
     ? await supabase
         .from("pesquisas")
-        .select("id, titulo, created_at, respostas(count)")
+        .select("id, titulo, slug, respostas(count)")
         .eq("empresa_id", atual.id)
         .order("created_at", { ascending: false })
     : { data: [] };
   const pesquisas = (linhas ?? []).map((p) => ({
     id: p.id,
     titulo: p.titulo,
-    criada: p.created_at,
+    slug: p.slug,
     respostas: p.respostas[0]?.count ?? 0,
   }));
 
@@ -60,7 +60,7 @@ export default async function PaginaResultados({
 
   const opcoes = pesquisas.map((p) => ({
     id: p.id,
-    titulo: `${p.titulo} (criada em ${new Date(p.criada).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" })})`,
+    titulo: `${p.titulo} (${p.slug})`, // o slug é único e aparece no link público
   }));
 
   return (
