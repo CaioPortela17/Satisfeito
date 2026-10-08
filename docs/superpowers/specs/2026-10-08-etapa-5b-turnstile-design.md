@@ -35,7 +35,7 @@ verificarTurnstile(token, segredo, buscar = fetch) → "ok" | "invalido" | "indi
 
 - Token vazio ou maior que 2048 caracteres → `invalido` (sem chamar a rede).
 - POST `https://challenges.cloudflare.com/turnstile/v0/siteverify`, corpo `secret` + `response` (**sem `remoteip`**), com limite de 5 s (`AbortSignal.timeout`).
-- Resposta `success: true` → `ok`; `success: false` → `invalido`; erro de rede, tempo esgotado, status não 2xx ou JSON inesperado → `indisponivel`.
+- Resposta `success: true` → `ok`; `success: false` → `invalido` (exceto `error-codes` com `internal-error`, problema da própria Cloudflare → `indisponivel`); erro de rede, tempo esgotado, status não 2xx ou JSON inesperado → `indisponivel`.
 - A action traduz: `invalido` → "Não conseguimos confirmar que você é uma pessoa. Recarregue a página e tente de novo."; `indisponivel` → "Não deu para verificar agora. Tente de novo em instantes." Nenhum detalhe técnico chega ao cliente.
 - Segredo ausente em `process.env` → mensagem genérica (mesmo padrão do `CARIMBO_SEGREDO`).
 
