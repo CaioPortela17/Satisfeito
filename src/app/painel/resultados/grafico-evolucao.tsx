@@ -41,9 +41,9 @@ export function GraficoEvolucao({ dados }: { dados: PontoEvolucao[] }) {
     <div>
       <div role="img" aria-label={resumo} className="h-56 w-full sm:h-64">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={pontos} margin={{ top: 8, right: 12, bottom: 0, left: -16 }}>
+          <LineChart data={pontos} accessibilityLayer={false} margin={{ top: 8, right: 12, bottom: 0, left: -16 }}>
             <CartesianGrid stroke={COR_GRADE} vertical={false} />
-            <XAxis dataKey="t" type="number" scale="time" domain={dominio} tickFormatter={(t) => rotuloDeTempo(Number(t))} tick={{ fontSize: 12, fill: COR_TEXTO_EIXO }} tickLine={false} axisLine={false} minTickGap={24} />
+            <XAxis dataKey="t" type="number" scale="time" domain={dominio} ticks={pontos.length <= 7 ? pontos.map((p) => p.t) : undefined} tickFormatter={(t) => rotuloDeTempo(Number(t))} tick={{ fontSize: 12, fill: COR_TEXTO_EIXO }} tickLine={false} axisLine={false} minTickGap={24} />
             <YAxis domain={[1, 10]} ticks={[2, 4, 6, 8, 10]} tick={{ fontSize: 12, fill: COR_TEXTO_EIXO }} tickLine={false} axisLine={false} width={40} />
             <Tooltip
               formatter={(valor) => [formatarMedia(Number(valor)), "Nota média"]}
