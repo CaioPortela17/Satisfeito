@@ -231,6 +231,10 @@ export type Database = {
         Args: { p_itens: Json; p_pesquisa_id: string }
         Returns: string
       }
+      resultados_pesquisa: {
+        Args: { p_fuso?: string; p_pesquisa_id: string }
+        Returns: Json
+      }
       trocar_ordem_perguntas: {
         Args: { a: string; b: string }
         Returns: undefined
