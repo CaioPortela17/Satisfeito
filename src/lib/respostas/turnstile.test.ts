@@ -36,11 +36,12 @@ describe("verificarTurnstile", () => {
   });
 
   it("envia secret e response, e nunca o IP (remoteip)", async () => {
-    const buscar = vi.fn((_url: string | URL | Request, _init?: RequestInit) => resposta({ success: true }));
+    const buscar = vi.fn<typeof fetch>(() => resposta({ success: true }));
     await verificarTurnstile("meu-token", "meu-segredo", buscar);
     const [url, init] = buscar.mock.calls[0];
     expect(url).toBe("https://challenges.cloudflare.com/turnstile/v0/siteverify");
     expect(init?.method).toBe("POST");
+    expect(init?.signal).toBeInstanceOf(AbortSignal);
     const corpo = new URLSearchParams(String(init?.body));
     expect(corpo.get("secret")).toBe("meu-segredo");
     expect(corpo.get("response")).toBe("meu-token");

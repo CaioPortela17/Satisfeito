@@ -8,6 +8,7 @@ import { LIMITE_TEXTO_RESPOSTA, type PerguntaPublica } from "@/lib/respostas/for
 import { cn } from "@/lib/utils";
 import { enviarResposta } from "./actions";
 import type { EstadoEnvio, FuncionarioPublico } from "./tipos";
+import { WidgetTurnstile } from "./widget-turnstile";
 
 const ROTULO_FAIXA = { boa: "Ótimo", atencao: "Pode melhorar", ruim: "Ruim" } as const;
 const COR_FAIXA = {
@@ -18,7 +19,7 @@ const COR_FAIXA = {
 
 const SOMBRA_CARTAO = "shadow-[0_8px_24px_rgba(42,31,45,0.12)]";
 
-// "Já respondeu hoje": marca no navegador (não impede quem limpa os dados; a 5B reforça)
+// "Já respondeu hoje": marca no navegador (só uma ajuda, não impede quem limpa os dados; quem protege de verdade é o servidor)
 function chave(pesquisaId: string) {
   return `satisfeito:respondeu:${pesquisaId}`;
 }
@@ -57,6 +58,8 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
   const [errosLocais, setErrosLocais] = useState<Record<string, string>>({});
   const jaRespondeu = useSyncExternalStore(nada, () => lerMarca(pesquisaId), () => false);
   const obrigado = useRef<HTMLHeadingElement>(null);
+  const [token, setToken] = useState("");
+  const [rodada, setRodada] = useState(0); // trocar a "rodada" recria o widget e gera token novo
 
   const erros = { ...estado.erros, ...errosLocais };
 
@@ -91,6 +94,9 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
       return;
     }
     const dados = new FormData(e.currentTarget);
+    // Cada token vale uma vez só: depois de enviar, pede um novo ao widget
+    setToken("");
+    setRodada((r) => r + 1);
     startTransition(() => acao(dados));
   }
 
@@ -118,6 +124,7 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
     <form onSubmit={enviar} noValidate className="mt-4 space-y-4">
       <input type="hidden" name="carimbo" value={carimbo} />
       <input type="hidden" name="slug" value={slug} />
+      <input type="hidden" name="cf-turnstile-response" value={token} />
       <h1 className="text-center text-3xl font-bold tracking-tight text-balance">{titulo}</h1>
 
       {perguntas.map((p) => {
@@ -177,7 +184,11 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
           </p>
         )}
       </div>
-      <Button type="submit" size="lg" disabled={pendente} className="w-full">
+      <WidgetTurnstile key={rodada} aoMudar={setToken} />
+      <p role="status" className="min-h-5 text-center text-sm text-muted-foreground">
+        {token ? "" : "Confirmando que você é uma pessoa…"}
+      </p>
+      <Button type="submit" size="lg" disabled={pendente || !token} className="w-full">
         {pendente ? "Enviando…" : "Enviar"}
       </Button>
     </form>
