@@ -14,13 +14,16 @@ export default async function PaginaPesquisas() {
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) redirect("/entrar");
 
-  // perguntas(count) conta só as que valem (não arquivadas)
+  // perguntas(count) conta só as que valem (não arquivadas); respostas(count) ignora as descartadas.
+  // O filtro em tabela embutida (sem !inner) só limita as linhas embutidas: a pesquisa sem
+  // respostas continua na lista, com contagem 0.
   const { data: pesquisas } = atual
     ? await supabase
         .from("pesquisas")
-        .select("id, titulo, ativa, perguntas(count)")
+        .select("id, titulo, slug, ativa, perguntas(count), respostas(count)")
         .eq("empresa_id", atual.id)
         .eq("perguntas.arquivada", false)
+        .eq("respostas.descartada", false)
         .order("created_at", { ascending: false })
     : { data: [] };
 
@@ -55,27 +58,38 @@ export default async function PaginaPesquisas() {
           <ul className="-my-2 divide-y divide-border">
             {lista.map((p) => {
               const total = p.perguntas[0]?.count ?? 0;
+              const recebidas = p.respostas[0]?.count ?? 0;
               return (
                 <li key={p.id}>
                   <Link
                     href={`/painel/pesquisas/${p.id}`}
-                    className="-mx-3 flex min-h-16 items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="-mx-3 grid min-h-16 grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 rounded-2xl sm:flex sm:gap-y-0 px-3 py-3 transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold break-words">{p.titulo}</p>
-                      <p className="numeros text-sm text-muted-foreground">
-                        {total} {total === 1 ? "pergunta" : "perguntas"}
+                      {/* Títulos iguais são comuns: o final do link e os números ajudam a distinguir */}
+                      <p className="numeros flex flex-wrap items-baseline gap-x-2 text-sm text-muted-foreground">
+                        <span className="font-mono break-all">/p/{p.slug}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>
+                          {total} {total === 1 ? "pergunta" : "perguntas"}
+                        </span>
+                        <span aria-hidden="true">·</span>
+                        <span>
+                          {recebidas} {recebidas === 1 ? "resposta" : "respostas"}
+                        </span>
                       </p>
                     </div>
                     <span
                       className={cn(
-                        "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold",
+                        // No celular a pílula fica numa linha própria, embaixo do texto
+                        "row-start-2 shrink-0 justify-self-start rounded-full px-2.5 py-1 text-xs font-semibold sm:row-auto sm:justify-self-auto",
                         p.ativa ? "bg-menta-claro text-menta-texto" : "bg-manga-claro text-manga-texto",
                       )}
                     >
                       {p.ativa ? "Recebendo respostas" : "Pausada"}
                     </span>
-                    <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
+                    <ChevronRight aria-hidden="true" className="col-start-2 row-start-1 size-5 shrink-0 text-muted-foreground sm:col-auto sm:row-auto" />
                   </Link>
                 </li>
               );
