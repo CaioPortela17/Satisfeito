@@ -39,8 +39,7 @@ export function NavPainel() {
             )}
           >
             <Icone aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} />
-            {/* No celular só o link ativo mostra o nome; os outros viram ícone (o nome segue para o leitor de tela) */}
-            {/* Até 420px não cabe o nome do link ativo: fica só o ícone (aria-current continua valendo) */}
+            {/* Abaixo de 768px (md) os links inativos mostram só o ícone (o nome segue para o leitor de tela). O ativo também fica só com o ícone abaixo de 420px e mostra o nome de 420px para cima (aria-current vale nos dois casos) */}
             <span className={cn("min-w-0 truncate", ativo ? "max-[420px]:sr-only" : "max-md:sr-only")}>{rotulo}</span>
           </Link>
         );
