@@ -1,9 +1,10 @@
 "use client";
 
-import { ChartColumn, ClipboardList, House, MessageSquareText, Users } from "lucide-react";
+import { ChartColumn, ClipboardList, House, LogOut, MessageSquareText, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { sair } from "./actions";
 
 const LINKS = [
   { href: "/painel", rotulo: "Início", Icone: House },
@@ -39,10 +40,22 @@ export function NavPainel() {
           >
             <Icone aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} />
             {/* No celular só o link ativo mostra o nome; os outros viram ícone (o nome segue para o leitor de tela) */}
-            <span className={cn("min-w-0 truncate", !ativo && "max-sm:sr-only")}>{rotulo}</span>
+            {/* Até 420px não cabe o nome do link ativo: fica só o ícone (aria-current continua valendo) */}
+            <span className={cn("min-w-0 truncate", ativo ? "max-[420px]:sr-only" : "max-sm:sr-only")}>{rotulo}</span>
           </Link>
         );
       })}
+
+      {/* Sair: último item do trilho, nunca fica "ativo". A linha fina à esquerda separa das páginas */}
+      <form action={sair} className="ml-0.5 flex shrink-0 border-l border-ameixa/15 pl-0.5 sm:ml-1 sm:pl-1">
+        <button
+          type="submit"
+          className="flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-ameixa/75 transition-[background-color,color,box-shadow,transform] duration-150 ease-out hover:bg-ameixa/[0.06] hover:text-ameixa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97] active:bg-ameixa/10 sm:gap-2 sm:px-4"
+        >
+          <LogOut aria-hidden="true" className="size-4 shrink-0" strokeWidth={2.25} />
+          <span className="max-sm:sr-only">Sair</span>
+        </button>
+      </form>
     </nav>
   );
 }
