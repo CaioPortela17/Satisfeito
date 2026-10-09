@@ -37,7 +37,7 @@ export function ResumoIa({
   const resumo = uso.ultimo;
 
   // Motivo de o botão estar desativado (intervalo entre resumos ou teto do dia)
-  const desativadoRotulo = bloqueio.ok
+  const motivoDesativado = bloqueio.ok
     ? undefined
     : bloqueio.motivo === "intervalo"
       ? `Disponível de novo em ${bloqueio.minutos} min`
@@ -55,59 +55,58 @@ export function ResumoIa({
     );
   }
 
-  // Ainda não tem resumo, mas já há textos suficientes
-  if (!resumo) {
-    return (
-      <section aria-labelledby="titulo-resumo" className={className}>
-        {titulo}
-        <p className="mt-1 text-sm text-muted-foreground">
-          Um resumo dos elogios, das reclamações e das sugestões que os clientes deixaram por escrito.
-        </p>
-        <div className="mt-4">
-          <BotaoResumo pesquisaId={pesquisaId} temResumo={false} desativadoRotulo={desativadoRotulo} />
-          <p className="mt-2 text-xs text-muted-foreground">{AVISO_PRIVACIDADE}</p>
-        </div>
-      </section>
-    );
-  }
-
-  const blocos = [
-    { titulo: "Elogios", itens: resumo.conteudo.positivos },
-    { titulo: "Reclamações", itens: resumo.conteudo.reclamacoes },
-    { titulo: "Sugestões", itens: resumo.conteudo.sugestoes },
-  ];
-  const n = resumo.respostas_lidas;
+  // Os dois casos (sem resumo / com resumo) usam o MESMO esqueleto: título, conteúdo e rodapé.
+  // O botão fica sempre no rodapé, na mesma posição da árvore. Assim o React não o recria
+  // quando o primeiro resumo aparece, e o aviso "Resumo gerado." para o leitor de tela não se perde.
+  const blocos = resumo
+    ? [
+        { titulo: "Elogios", itens: resumo.conteudo.positivos },
+        { titulo: "Reclamações", itens: resumo.conteudo.reclamacoes },
+        { titulo: "Sugestões", itens: resumo.conteudo.sugestoes },
+      ]
+    : [];
+  const n = resumo?.respostas_lidas ?? 0;
   // Com menos de 3 textos hoje (ex.: respostas descartadas) mostramos o resumo, mas não pedimos outro
-  const podePedirOutro = uso.textos >= MINIMO_TEXTOS;
+  const mostrarBotao = !resumo || uso.textos >= MINIMO_TEXTOS;
 
   return (
     <section aria-labelledby="titulo-resumo" className={className}>
       {titulo}
-      <div className="mt-4 space-y-3">
-        {blocos.map((bloco) => (
-          <div key={bloco.titulo} className="rounded-2xl bg-creme p-4">
-            <h3 className="font-semibold">{bloco.titulo}</h3>
-            {bloco.itens.length === 0 ? (
-              <p className="mt-1 text-sm text-muted-foreground">Nada a destacar</p>
-            ) : (
-              <ul className="mt-2 list-disc space-y-1.5 pl-5 marker:text-ameixa">
-                {bloco.itens.map((item, i) => (
-                  <li key={i} className="break-words">
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
+      <div>
+        {resumo ? (
+          <>
+            <div className="mt-4 space-y-3">
+              {blocos.map((bloco) => (
+                <div key={bloco.titulo} className="rounded-2xl bg-creme p-4">
+                  <h3 className="font-semibold">{bloco.titulo}</h3>
+                  {bloco.itens.length === 0 ? (
+                    <p className="mt-1 text-sm text-muted-foreground">Nada a destacar</p>
+                  ) : (
+                    <ul className="mt-2 list-disc space-y-1.5 pl-5 marker:text-ameixa">
+                      {bloco.itens.map((item, i) => (
+                        <li key={i} className="break-words">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+            <p className="numeros mt-4 text-sm text-muted-foreground">
+              Gerado em {formatarDataHora(resumo.created_at)}, com base em{" "}
+              {n === 1 ? "1 resposta escrita" : `${n} respostas escritas`}
+            </p>
+          </>
+        ) : (
+          <p className="mt-1 text-sm text-muted-foreground">
+            Um resumo dos elogios, das reclamações e das sugestões que os clientes deixaram por escrito.
+          </p>
+        )}
       </div>
-      <p className="numeros mt-4 text-sm text-muted-foreground">
-        Gerado em {formatarDataHora(resumo.created_at)}, com base em{" "}
-        {n === 1 ? "1 resposta escrita" : `${n} respostas escritas`}
-      </p>
-      {podePedirOutro && (
-        <div className="mt-3">
-          <BotaoResumo pesquisaId={pesquisaId} temResumo desativadoRotulo={desativadoRotulo} />
+      {mostrarBotao && (
+        <div className="mt-4">
+          <BotaoResumo pesquisaId={pesquisaId} temResumo={Boolean(resumo)} motivoDesativado={motivoDesativado} />
           <p className="mt-2 text-xs text-muted-foreground">{AVISO_PRIVACIDADE}</p>
         </div>
       )}

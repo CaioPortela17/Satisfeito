@@ -10,6 +10,17 @@ const lista = z.array(frase).max(MAX_FRASES);
 // O formato final que guardamos no banco
 export const esquemaResumo = z.object({ positivos: lista, reclamacoes: lista, sugestoes: lista });
 
+// Corta frase longa e põe "…" no fim, sem passar de 200 caracteres.
+// Se o corte caiu no meio de um emoji (par de "metades"), tiramos a metade solta,
+// porque o banco recusa texto com metade de emoji. Também tiramos espaço antes do "…".
+function cortarFrase(x: string): string {
+  if (x.length <= MAX_CARACTERES_FRASE) return x;
+  let corte = x.slice(0, MAX_CARACTERES_FRASE - 1);
+  const ultimo = corte.charCodeAt(corte.length - 1);
+  if (ultimo >= 0xd800 && ultimo <= 0xdbff) corte = corte.slice(0, -1);
+  return `${corte.trimEnd()}…`;
+}
+
 // Limpa a lista que a IA devolveu: só texto, sem espaços nas pontas, sem vazios,
 // frases longas cortadas e no máximo 6. Devolve null se não for uma lista de textos.
 function limparLista(bruto: unknown): string[] | null {
@@ -17,7 +28,7 @@ function limparLista(bruto: unknown): string[] | null {
   return bruto
     .map((x) => x.trim())
     .filter((x) => x.length > 0)
-    .map((x) => (x.length > MAX_CARACTERES_FRASE ? `${x.slice(0, MAX_CARACTERES_FRASE - 1)}…` : x))
+    .map(cortarFrase)
     .slice(0, MAX_FRASES);
 }
 

@@ -20,6 +20,19 @@ describe("limparResumo", () => {
     expect(r?.sugestoes[0].length).toBe(200);
     expect(r?.sugestoes[0].endsWith("…")).toBe(true);
   });
+  it("corte no meio de um emoji não deixa metade solta", () => {
+    const emoji = "\u{1F600}"; // 2 unidades: ocupa as posições 198 e 199
+    const frase = "a".repeat(198) + emoji + "b".repeat(100);
+    const s = limparResumo({ ...BOM, positivos: [frase] })?.positivos[0] ?? "";
+    expect(s.length).toBeLessThanOrEqual(200);
+    expect(s.endsWith("…")).toBe(true);
+    expect(s).not.toMatch(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/);
+  });
+  it("corte logo depois de um espaço não deixa espaço antes do …", () => {
+    const frase = "a".repeat(198) + " " + "b".repeat(100);
+    const s = limparResumo({ ...BOM, positivos: [frase] })?.positivos[0] ?? "";
+    expect(s).toBe("a".repeat(198) + "…");
+  });
   it("mantém só as 6 primeiras frases de cada lista", () => {
     const sete = ["1", "2", "3", "4", "5", "6", "7"];
     expect(limparResumo({ ...BOM, positivos: sete })?.positivos).toEqual(["1", "2", "3", "4", "5", "6"]);

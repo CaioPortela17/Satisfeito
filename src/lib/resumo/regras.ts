@@ -18,7 +18,9 @@ export type PodeGerar =
 export function podeGerar(uso: Pick<UsoResumos, "ultimo" | "hoje">, agora: Date): PodeGerar {
   if (uso.hoje >= TETO_DIARIO) return { ok: false, motivo: "teto" };
   if (uso.ultimo) {
-    const faltaMs = INTERVALO_MINUTOS * 60_000 - (agora.getTime() - Date.parse(uso.ultimo.created_at));
+    // O relógio do banco pode estar alguns segundos à frente do servidor: não deixamos o tempo passado ficar negativo
+    const passadoMs = Math.max(0, agora.getTime() - Date.parse(uso.ultimo.created_at));
+    const faltaMs = INTERVALO_MINUTOS * 60_000 - passadoMs;
     if (faltaMs > 0) return { ok: false, motivo: "intervalo", minutos: Math.ceil(faltaMs / 60_000) };
   }
   return { ok: true };

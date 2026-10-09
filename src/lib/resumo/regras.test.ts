@@ -32,6 +32,9 @@ describe("podeGerar", () => {
     expect(podeGerar({ ultimo: ultimoHa(9), hoje: 1 }, AGORA)).toEqual({ ok: false, motivo: "intervalo", minutos: 1 });
     expect(podeGerar({ ultimo: ultimoHa(0.5), hoje: 1 }, AGORA)).toEqual({ ok: false, motivo: "intervalo", minutos: 10 });
   });
+  it("relógio do banco adiantado (created_at no futuro) mostra no máximo 10 minutos", () => {
+    expect(podeGerar({ ultimo: ultimoHa(-0.05), hoje: 1 }, AGORA)).toEqual({ ok: false, motivo: "intervalo", minutos: 10 });
+  });
   it("libera com exatamente 10 minutos", () => {
     expect(podeGerar({ ultimo: ultimoHa(10), hoje: 1 }, AGORA)).toEqual({ ok: true });
   });
