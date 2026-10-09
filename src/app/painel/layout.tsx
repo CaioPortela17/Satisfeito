@@ -21,7 +21,7 @@ export default async function LayoutPainel({ children }: LayoutProps<"/painel">)
           </Link>
 
           {/* No celular, empresa e menu descem para uma linha própria */}
-          <div className="order-last flex w-full flex-wrap items-center gap-3 sm:order-none sm:w-auto">
+          <div className="order-last flex w-full flex-wrap items-center gap-3 md:order-none md:w-auto">
             {atual && <SeletorEmpresa empresas={empresas} atualId={atual.id} />}
             <NavPainel />
           </div>
