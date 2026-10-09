@@ -74,7 +74,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 | Banco e login | [Supabase](https://supabase.com) — Postgres + Auth, com RLS (Row Level Security) |
 | Gráficos | [Recharts](https://recharts.org) |
 | Anti-robô | [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) (invisível, sem usar IP) |
-| IA | API de IA chamada só pelo servidor *(etapa 7)* |
+| IA | [Claude](https://www.anthropic.com/claude) (API da Anthropic, SDK `@anthropic-ai/sdk`), chamada só pelo servidor |
 
 ---
 
@@ -88,7 +88,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile) e a coluna para descartar respostas
 - [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
 - [x] **Etapa 6B** — Lista de respostas, selo de respostas suspeitas e descarte
-- [ ] **Etapa 7** — Resumo com IA
+- [x] **Etapa 7** — Resumo com IA das respostas escritas (elogios, reclamações e sugestões)
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
 ### O que já existe
@@ -138,6 +138,14 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - A página Resultados mostra um aviso "N respostas suspeitas" com link para a aba Suspeitas
 - A regra e a lista saem de funções do banco (`envios_suspeitos` e `respostas_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê e descarta as próprias respostas
 
+**Resumo por IA**
+- Seção "O que os clientes escreveram" em `/painel/resultados`: o botão **Gerar resumo** manda as respostas de texto dos últimos 30 dias (sem as descartadas) para o Claude e mostra três listas curtas: elogios, reclamações e sugestões. O último resumo fica salvo (`resumos_ia`) e aparece de novo sem gastar outra chamada
+- Com menos de 3 respostas escritas a IA nem é chamada. **Limites de custo:** 10 minutos entre dois resumos da mesma pesquisa e no máximo 20 resumos por dia por empresa; no máximo 200 textos de até 1000 caracteres por pedido
+- **A chamada à IA acontece só no servidor** (Server Action); a chave `ANTHROPIC_API_KEY` nunca vai ao navegador. O banco só deixa o dono **ler** os resumos; quem grava é o servidor, depois de conferir que a pesquisa é do usuário (RLS)
+- **Privacidade:** o texto das respostas é enviado à Anthropic para gerar o resumo (isso aparece na tela, ao lado do botão). Não vão e-mail, IP, nome da empresa nem nome de funcionário
+- **Texto de cliente é dado, não instrução:** o pedido separa as instruções do conteúdo, neutraliza `<`, `>` e quebras de linha dos comentários, obriga a IA a responder por uma ferramenta com formato fixo e valida/limpa a resposta antes de salvar. A tela mostra tudo como texto puro
+- A lógica (regras, pedido, validação) é testada sem rede, com uma IA falsa: `npm test` não gasta dinheiro
+
 **Página pública, link e QR code**
 - Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
 - No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
@@ -157,8 +165,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 94 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql` e `rls_respostas_lista.sql`), que provam o isolamento entre empresas
+- 126 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas, regras e pedido do resumo por IA)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql` e `rls_resumos_ia.sql`), que provam o isolamento entre empresas
 
 ---
 
@@ -190,6 +198,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 | `SUPABASE_SECRET_KEY` | Chave secreta, **só no servidor** (nunca com `NEXT_PUBLIC_`): usada para gravar as respostas dos clientes |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Chave pública do widget Turnstile (Cloudflare). Em desenvolvimento, use as [chaves de teste](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) da Cloudflare |
 | `TURNSTILE_SECRET_KEY` | Chave secreta do Turnstile, **só no servidor** |
+| `ANTHROPIC_API_KEY` | Chave da API da Anthropic para o resumo por IA ([console.anthropic.com](https://console.anthropic.com), precisa de crédito), **só no servidor**. Sem ela, o resto funciona e o botão avisa que o resumo ainda não está configurado |
 | `CARIMBO_SEGREDO` | Segredo que assina o carimbo de tempo da pesquisa pública (gere com o comando do `.env.example`) |
 | `NEXT_PUBLIC_SITE_URL` | Endereço público do site, usado nos links dos e-mails (em desenvolvimento: `http://localhost:3000`) |
 
@@ -246,6 +255,7 @@ src/
     ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
     ├── respostas/            # Validação e montagem do envio do cliente; leitura da lista de respostas
+    ├── resumo/               # Regras, pedido, validação e chamada da IA (resumo das respostas escritas)
     ├── resultados/           # Tipos e formatação dos números da página Resultados
     ├── pesquisas/            # Validações, perguntas sugeridas e rótulos dos tipos
     └── supabase/             # Clientes do Supabase, proxy e tipos do banco
