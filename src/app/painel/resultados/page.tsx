@@ -5,10 +5,13 @@ import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { escolherPesquisaPadrao } from "@/lib/resultados/apresentacao";
 import type { Resultados } from "@/lib/resultados/tipos";
+import { podeGerar } from "@/lib/resumo/regras";
+import type { UsoResumos } from "@/lib/resumo/tipos";
 import { CartoesPerguntas } from "./cartoes-perguntas";
 import { CartoesTotais } from "./cartoes-totais";
 import { GraficoEvolucao } from "./grafico-evolucao";
 import { RankingEquipe } from "./ranking-equipe";
+import { ResumoIa } from "./resumo-ia";
 import { SeletorPesquisa } from "./seletor-pesquisa";
 import { Vazio } from "./vazio";
 
@@ -47,6 +50,19 @@ export default async function PaginaResultados({
 
   const { data: bruto, error } = await supabase.rpc("resultados_pesquisa", { p_pesquisa_id: escolhida });
   const resultados = bruto as unknown as Resultados | null; // Json do Supabase -> nosso tipo
+
+  // Uso do resumo por IA (só faz sentido com respostas). Se a consulta falhar, uso = null
+  // e a seção mostra um aviso, sem derrubar o resto da página.
+  let uso: UsoResumos | null = null;
+  if (!error && resultados && resultados.totais.geral > 0) {
+    try {
+      const { data: usoBruto } = await supabase.rpc("uso_resumos_ia", { p_pesquisa_id: escolhida });
+      uso = (usoBruto as unknown as UsoResumos | null) ?? null;
+    } catch {
+      uso = null;
+    }
+  }
+  const bloqueio = uso ? podeGerar(uso, new Date()) : { ok: true as const };
 
   const opcoes = pesquisas.map((p) => ({
     id: p.id,
@@ -94,6 +110,8 @@ export default async function PaginaResultados({
               <CartoesPerguntas perguntas={resultados.perguntas} />
             </div>
           </section>
+
+          <ResumoIa pesquisaId={escolhida} uso={uso} bloqueio={bloqueio} className={SECAO} />
 
           <section className={SECAO}>
             <h2 className="text-xl font-bold">Evolução nos últimos 30 dias</h2>

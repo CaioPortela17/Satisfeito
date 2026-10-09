@@ -221,6 +221,47 @@ export type Database = {
           },
         ]
       }
+      resumos_ia: {
+        Row: {
+          conteudo: Json
+          created_at: string
+          id: string
+          modelo: string
+          pesquisa_id: string
+          respostas_lidas: number
+          tokens_entrada: number | null
+          tokens_saida: number | null
+        }
+        Insert: {
+          conteudo: Json
+          created_at?: string
+          id?: string
+          modelo: string
+          pesquisa_id: string
+          respostas_lidas: number
+          tokens_entrada?: number | null
+          tokens_saida?: number | null
+        }
+        Update: {
+          conteudo?: Json
+          created_at?: string
+          id?: string
+          modelo?: string
+          pesquisa_id?: string
+          respostas_lidas?: number
+          tokens_entrada?: number | null
+          tokens_saida?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resumos_ia_pesquisa_id_fkey"
+            columns: ["pesquisa_id"]
+            isOneToOne: false
+            referencedRelation: "pesquisas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -245,9 +286,17 @@ export type Database = {
         Args: { p_fuso?: string; p_pesquisa_id: string }
         Returns: Json
       }
+      textos_para_resumo: {
+        Args: { p_dias?: number; p_fuso?: string; p_pesquisa_id: string }
+        Returns: Json
+      }
       trocar_ordem_perguntas: {
         Args: { a: string; b: string }
         Returns: undefined
+      }
+      uso_resumos_ia: {
+        Args: { p_fuso?: string; p_pesquisa_id: string }
+        Returns: Json
       }
     }
     Enums: {
