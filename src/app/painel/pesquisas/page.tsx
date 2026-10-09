@@ -63,7 +63,7 @@ export default async function PaginaPesquisas() {
                 <li key={p.id}>
                   <Link
                     href={`/painel/pesquisas/${p.id}`}
-                    className="-mx-3 flex min-h-16 items-center gap-3 rounded-2xl px-3 py-3 transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    className="-mx-3 grid min-h-16 grid-cols-[1fr_auto] items-center gap-x-3 gap-y-2 rounded-2xl sm:flex sm:gap-y-0 px-3 py-3 transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="font-semibold break-words">{p.titulo}</p>
@@ -82,13 +82,14 @@ export default async function PaginaPesquisas() {
                     </div>
                     <span
                       className={cn(
-                        "shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold",
+                        // No celular a pílula fica numa linha própria, embaixo do texto
+                        "row-start-2 shrink-0 justify-self-start rounded-full px-2.5 py-1 text-xs font-semibold sm:row-auto sm:justify-self-auto",
                         p.ativa ? "bg-menta-claro text-menta-texto" : "bg-manga-claro text-manga-texto",
                       )}
                     >
                       {p.ativa ? "Recebendo respostas" : "Pausada"}
                     </span>
-                    <ChevronRight aria-hidden="true" className="size-5 shrink-0 text-muted-foreground" />
+                    <ChevronRight aria-hidden="true" className="col-start-2 row-start-1 size-5 shrink-0 text-muted-foreground sm:col-auto sm:row-auto" />
                   </Link>
                 </li>
               );
