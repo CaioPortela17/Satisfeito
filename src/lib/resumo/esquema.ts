@@ -21,12 +21,20 @@ function cortarFrase(x: string): string {
   return `${corte.trimEnd()}…`;
 }
 
+// O Postgres (jsonb) recusa o caractere NUL e "metades de emoji" soltas.
+// Tiramos os dois; pares válidos (emoji inteiro) ficam.
+function limparCaracteresInvalidos(x: string): string {
+  return x
+    .replace(/\u0000/g, "")
+    .replace(/[\ud800-\udbff](?![\udc00-\udfff])|(?<![\ud800-\udbff])[\udc00-\udfff]/g, "");
+}
+
 // Limpa a lista que a IA devolveu: só texto, sem espaços nas pontas, sem vazios,
 // frases longas cortadas e no máximo 6. Devolve null se não for uma lista de textos.
 function limparLista(bruto: unknown): string[] | null {
   if (!Array.isArray(bruto) || !bruto.every((x) => typeof x === "string")) return null;
   return bruto
-    .map((x) => x.trim())
+    .map((x) => limparCaracteresInvalidos(x).trim())
     .filter((x) => x.length > 0)
     .map(cortarFrase)
     .slice(0, MAX_FRASES);

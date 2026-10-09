@@ -18,6 +18,13 @@ export async function gerarResumo(textos: TextoParaResumo[], chamarIA: ChamarIA)
     if (!resumo) return { ok: false, motivo: "formato" };
     return { ok: true, resumo, tokensEntrada: r.tokensEntrada, tokensSaida: r.tokensSaida };
   } catch (e) {
+    if (!(e instanceof ErroConfiguracaoIA)) {
+      // Registra só o NOME da classe do erro (e o status HTTP, se houver). Nunca a mensagem,
+      // o pedido ou os textos dos clientes, para não vazar dados nos logs.
+      const status = (e as { status?: unknown } | null)?.status;
+      const nome = e instanceof Error ? e.constructor.name : "ErroDesconhecido";
+      console.error(`resumo IA falhou: ${nome}${typeof status === "number" ? ` ${status}` : ""}`);
+    }
     return { ok: false, motivo: e instanceof ErroConfiguracaoIA ? "configuracao" : "ia" };
   }
 }

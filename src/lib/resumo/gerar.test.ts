@@ -23,6 +23,24 @@ describe("gerarResumo", () => {
     });
     expect(r).toEqual({ ok: false, motivo: "ia" });
   });
+  it("registra só a classe e o status do erro, nunca a mensagem", async () => {
+    const espiao = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      class ErroApi extends Error {
+        status = 401;
+      }
+      await gerarResumo(TEXTOS, async () => {
+        throw new ErroApi("segredo técnico 401");
+      });
+      expect(espiao).toHaveBeenCalledTimes(1);
+      const log = String(espiao.mock.calls[0][0]);
+      expect(log).toContain("ErroApi");
+      expect(log).toContain("401");
+      expect(log).not.toContain("segredo técnico 401");
+    } finally {
+      espiao.mockRestore();
+    }
+  });
   it("chave faltando vira 'configuracao'", async () => {
     const r = await gerarResumo(TEXTOS, async () => {
       throw new ErroConfiguracaoIA();

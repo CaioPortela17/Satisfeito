@@ -16,7 +16,7 @@ export const chamarClaude: ChamarIA = async ({ system, usuario }) => {
   const cliente = new Anthropic({ apiKey: chave, timeout: 25_000, maxRetries: 1 });
   const resposta = await cliente.messages.create({
     model: MODELO_RESUMO,
-    max_tokens: 1024,
+    max_tokens: 2048, // 3 listas x 6 frases x 200 caracteres pode passar de 1024
     system,
     messages: [{ role: "user", content: usuario }],
     tools: [
@@ -30,8 +30,10 @@ export const chamarClaude: ChamarIA = async ({ system, usuario }) => {
   });
 
   const bloco = resposta.content.find((b) => b.type === "tool_use");
+  // Se a resposta foi cortada por falta de espaço, a ferramenta veio incompleta: não confiamos nela
+  const cortada = resposta.stop_reason === "max_tokens";
   return {
-    entrada: bloco && bloco.type === "tool_use" ? bloco.input : null,
+    entrada: !cortada && bloco && bloco.type === "tool_use" ? bloco.input : null,
     tokensEntrada: resposta.usage.input_tokens,
     tokensSaida: resposta.usage.output_tokens,
   };

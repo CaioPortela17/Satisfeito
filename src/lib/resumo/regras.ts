@@ -6,6 +6,8 @@ export const MODELO_RESUMO = "claude-haiku-5-5";
 export const INTERVALO_MINUTOS = 10; // espera entre dois resumos da mesma pesquisa
 export const TETO_DIARIO = 20; // resumos por dia, somando todas as pesquisas da empresa
 export const MINIMO_TEXTOS = 3; // com menos respostas escritas que isso, não vale chamar a IA
+// MAX_TEXTOS e MAX_CARACTERES_TEXTO espelham os limites fixos na função SQL textos_para_resumo
+// (limit 200, left(..., 1000)): mude os dois lados juntos.
 export const MAX_TEXTOS = 200; // quantos textos no máximo vão para a IA
 export const MAX_CARACTERES_TEXTO = 1000; // cada texto é cortado aqui
 

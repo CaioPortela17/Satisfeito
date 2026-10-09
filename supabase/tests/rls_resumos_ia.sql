@@ -40,7 +40,8 @@ begin
   insert into public.respostas_itens (resposta_id, pergunta_id, valor_texto) values (r, qt, 'texto 29 dias');
   insert into public.respostas (pesquisa_id, created_at) values (pa, ((hoje - 30)::timestamp + interval '12 hours') at time zone 'America/Sao_Paulo') returning id into r;
   insert into public.respostas_itens (resposta_id, pergunta_id, valor_texto) values (r, qt, 'texto 30 dias (fora)');
-  -- 1 texto longo (1200 caracteres): deve voltar cortado em 1000
+  -- 1 texto longo: tem exatamente 1000 caracteres, o máximo que a tabela aceita em valor_texto
+  -- (o check da tabela limita a 1000, então não dá para semear 1200). Deve voltar inteiro.
   insert into public.respostas (pesquisa_id, created_at) values (pa, now() - interval '10 minutes') returning id into r;
   insert into public.respostas_itens (resposta_id, pergunta_id, valor_texto) values (r, qt, repeat('x', 1000));
   -- descartada: fora
@@ -147,7 +148,7 @@ begin
   if exists (select 1 from jsonb_array_elements(t->'textos') x where x->>'texto' like '%(fora)') then
     raise exception 'FALHOU: entrou texto que deveria estar fora';
   end if;
-  -- corte em 1000 caracteres (o texto longo tem 1000 x; teste o corte direto com período maior abaixo)
+  -- limite de 1000 caracteres: o texto semeado tem exatamente 1000 (o máximo da tabela) e deve voltar inteiro
   if not exists (select 1 from jsonb_array_elements(t->'textos') x where length(x->>'texto') = 1000) then
     raise exception 'FALHOU: texto de 1000 caracteres não voltou inteiro';
   end if;

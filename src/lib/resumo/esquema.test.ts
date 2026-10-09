@@ -45,6 +45,10 @@ describe("limparResumo", () => {
     expect(limparResumo("oi")).toBeNull();
     expect(limparResumo([])).toBeNull();
   });
+  it("tira NUL e metade solta de emoji, mas mantém emoji inteiro", () => {
+    const r = limparResumo({ ...BOM, positivos: ["ab\u0000cd\ud83def", "bom \u{1F600}"] });
+    expect(r?.positivos).toEqual(["abcdef", "bom \u{1F600}"]);
+  });
   it("o resultado sempre passa no zod", () => {
     const r = limparResumo({ ...BOM, positivos: ["x".repeat(500), "y"] });
     expect(esquemaResumo.safeParse(r).success).toBe(true);
