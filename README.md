@@ -1,5 +1,7 @@
 # Satisfeito
 
+[English](README.en.md) | **Português**
+
 > Pesquisa de satisfação simples e rápida para negócios locais — restaurantes, lanchonetes e lojas.
 
 O cliente escaneia um **QR code** na mesa, no balcão ou na nota fiscal, responde em menos de 30 segundos pelo celular, e o dono do negócio acompanha tudo num **painel** com médias, gráficos, ranking dos funcionários e um **resumo escrito por IA** do que os clientes estão dizendo.
@@ -113,7 +115,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Funciona pelo teclado e com leitor de tela: o foco nunca se perde, e erros e cadastros são anunciados
 
 **Pesquisas**
-- Página `/painel/pesquisas`: lista com o estado de cada pesquisa ("Recebendo respostas" ou "Pausada")
+- Página `/painel/pesquisas`: lista com o estado de cada pesquisa ("Recebendo respostas" ou "Pausada"); cada item mostra o final do link, o número de perguntas e as respostas recebidas (sem as descartadas), para distinguir pesquisas com o mesmo título
 - Criar pesquisa já com perguntas sugeridas: uma nota obrigatória, "Quem te atendeu?" (só se a empresa tiver funcionários ativos) e um comentário livre
 - Editor da pesquisa: título editável, Pausar/Retomar e Excluir com confirmação
 - Perguntas dos 3 tipos (nota, texto livre e "Quem te atendeu?"), cada uma com ícone próprio: subir/descer, tornar obrigatória/opcional, editar o texto, tirar da pesquisa e devolver depois
