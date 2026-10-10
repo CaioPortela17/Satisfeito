@@ -82,6 +82,7 @@ Consequência: o envio da resposta passa por uma Server Action (que aplica as re
 - Ao terminar uma etapa que funciona, sugira uma mensagem de commit
 - **Toda interface usa as skills de design** (pedido do Caio, 2026-10-04): `impeccable` (PRODUCT.md / DESIGN.md, direções, critique, polish, audit), `frontend-design`, `emil-design-eng`, `mobile-native`, `animate`, `design:ux-copy` e `design:accessibility-review`. Siga o `DESIGN.md` quando existir
 - **Sem emojis na interface**: pedido do Caio. Para cada ícone, criar um SVG próprio com as cores da marca em `src/components/icones/` (ex.: `IconeEmail`, `IconeOla`). Ícones genéricos de interface (setas, fechar, etc.) podem vir do `lucide-react`
+- O README existe em português (`README.md`) e em inglês (`README.en.md`): ao atualizar um, atualize o outro (nomes de telas do app ficam em português nos dois)
 - O projeto usa Next.js 16; siga as regras de @AGENTS.md (consultar `node_modules/next/dist/docs/` antes de escrever código)
 
 ## Status
