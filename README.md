@@ -8,6 +8,8 @@ O cliente escaneia um **QR code** na mesa, no balcão ou na nota fiscal, respond
 
 O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Satisfeito para outros negócios.
 
+**Demonstração online:** https://satisfeito.vercel.app
+
 > 🚧 **Em desenvolvimento.** Este README é atualizado a cada etapa concluída.
 
 ---
