@@ -8,6 +8,8 @@ The customer scans a **QR code** on the table, the counter or the receipt, answe
 
 The first customer is the snack bar **Bebelu**. Later, the plan is to offer Satisfeito to other businesses.
 
+**Live demo:** https://satisfeito.vercel.app
+
 > 🚧 **Work in progress.** This README is updated after each finished stage.
 
 > **Note:** the app itself (screens, buttons, messages) is in **Brazilian Portuguese**. UI names below appear in Portuguese with an English gloss where needed.
