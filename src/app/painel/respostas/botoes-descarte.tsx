@@ -58,14 +58,15 @@ export function BotaoDescarte({ id, descartada }: { id: string; descartada: bool
       <Button
         type="button"
         variant="outline"
-        className="min-h-11"
-        disabled={pendente}
-        onClick={() =>
+        className="min-h-11 aria-disabled:opacity-60"
+        aria-disabled={pendente}
+        onClick={() => {
+          if (pendente) return;
           executar(
             () => (descartada ? restaurarResposta(id) : descartarResposta(id)),
             descartada ? "Resposta restaurada." : "Resposta descartada.",
-          )
-        }
+          );
+        }}
       >
         {descartada
           ? pendente
@@ -95,14 +96,15 @@ export function BotaoDescartarSuspeitas({ ids }: { ids: string[] }) {
       <Button
         type="button"
         variant="outline"
-        className="min-h-11"
-        disabled={pendente}
-        onClick={() =>
+        className="min-h-11 aria-disabled:opacity-60"
+        aria-disabled={pendente}
+        onClick={() => {
+          if (pendente) return;
           executar(
             () => descartarVarias(ids),
             ids.length === 1 ? "1 resposta descartada." : `${ids.length} respostas descartadas.`,
-          )
-        }
+          );
+        }}
       >
         {pendente ? "Descartando…" : rotulo}
       </Button>
