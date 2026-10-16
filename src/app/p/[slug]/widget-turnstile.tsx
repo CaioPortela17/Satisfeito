@@ -27,7 +27,7 @@ export function WidgetTurnstile({ aoMudar }: { aoMudar: (token: string) => void 
   const [pronto, setPronto] = useState(false);
 
   useEffect(() => {
-    const chave = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+    const chave = process.env.NEXT_PUBLIC_TURNSTILE_SITE;
     if (!pronto || !chave || !caixa.current || !window.turnstile) return;
     const id = window.turnstile.render(caixa.current, {
       sitekey: chave,

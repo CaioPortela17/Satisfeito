@@ -200,7 +200,7 @@ Abra [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_SUPABASE_URL` | Endereço do projeto no Supabase |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave publicável — pode ir para o navegador, pois quem protege os dados é o RLS |
 | `SUPABASE_SECRET_KEY` | Chave secreta, **só no servidor** (nunca com `NEXT_PUBLIC_`): usada para gravar as respostas dos clientes |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Chave pública do widget Turnstile (Cloudflare). Em desenvolvimento, use as [chaves de teste](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) da Cloudflare |
+| `NEXT_PUBLIC_TURNSTILE_SITE` | Chave pública do widget Turnstile (Cloudflare). Em desenvolvimento, use as [chaves de teste](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) da Cloudflare |
 | `TURNSTILE_SECRET_KEY` | Chave secreta do Turnstile, **só no servidor** |
 | `ANTHROPIC_API_KEY` | Chave da API da Anthropic para o resumo por IA ([console.anthropic.com](https://console.anthropic.com), precisa de crédito), **só no servidor**. Sem ela, o resto funciona e o botão avisa que o resumo ainda não está configurado |
 | `CARIMBO_SEGREDO` | Segredo que assina o carimbo de tempo da pesquisa pública (gere com o comando do `.env.example`) |

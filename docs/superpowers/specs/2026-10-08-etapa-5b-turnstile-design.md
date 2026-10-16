@@ -43,7 +43,7 @@ verificarTurnstile(token, segredo, buscar = fetch) → "ok" | "invalido" | "indi
 
 | Variável | Onde | Observação |
 |---|---|---|
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | navegador | pública por natureza |
+| `NEXT_PUBLIC_TURNSTILE_SITE` | navegador | pública por natureza |
 | `TURNSTILE_SECRET_KEY` | só servidor | nunca com `NEXT_PUBLIC_` |
 
 Em desenvolvimento: site key `1x00000000000000000000AA` e secret `1x0000000000000000000000000000000AA` (sempre passam; também existem pares que sempre falham, úteis para testar a mensagem de erro). O Caio cria o widget real na conta gratuita da Cloudflare (Turnstile → Add widget, modo *Managed*, domínio `localhost` e depois o domínio real) antes de publicar. Os nomes entram no `.env.example` e a tabela do README é atualizada.
