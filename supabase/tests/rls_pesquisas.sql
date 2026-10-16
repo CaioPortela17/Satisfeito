@@ -114,6 +114,21 @@ begin
   exception when sqlstate 'SF002' then null;
   end;
 
+  -- ...nem entre duas pesquisas da MESMA empresa (as duas são visíveis, mas não são a mesma pesquisa)
+  declare
+    outra uuid;
+    pergunta_outra uuid;
+  begin
+    insert into public.pesquisas (empresa_id, titulo) values (minha_empresa, 'Outra mesa') returning id into outra;
+    insert into public.perguntas (pesquisa_id, texto, tipo, ordem) values (outra, 'Nota da outra', 'nota', 1)
+      returning id into pergunta_outra;
+    begin
+      perform public.trocar_ordem_perguntas(p1, pergunta_outra);
+      raise exception 'FALHOU: trocou ordem entre pesquisas diferentes da mesma empresa';
+    exception when sqlstate 'SF002' then null;
+    end;
+  end;
+
   -- Mexer em B não afeta nada (RLS esconde)
   update public.pesquisas set titulo = 'Hackeada' where id = current_setting('app.pesquisa_b')::uuid;
   delete from public.pesquisas where id = current_setting('app.pesquisa_b')::uuid;
