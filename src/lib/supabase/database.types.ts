@@ -225,6 +225,7 @@ export type Database = {
         Row: {
           conteudo: Json
           created_at: string
+          estado: string
           id: string
           modelo: string
           pesquisa_id: string
@@ -235,6 +236,7 @@ export type Database = {
         Insert: {
           conteudo: Json
           created_at?: string
+          estado?: string
           id?: string
           modelo: string
           pesquisa_id: string
@@ -245,6 +247,7 @@ export type Database = {
         Update: {
           conteudo?: Json
           created_at?: string
+          estado?: string
           id?: string
           modelo?: string
           pesquisa_id?: string
@@ -277,6 +280,16 @@ export type Database = {
       registrar_resposta: {
         Args: { p_itens: Json; p_pesquisa_id: string }
         Returns: string
+      }
+      reservar_resumo_ia: {
+        Args: {
+          p_dono: string
+          p_fuso?: string
+          p_intervalo_min: number
+          p_pesquisa_id: string
+          p_teto: number
+        }
+        Returns: Json
       }
       respostas_pesquisa: {
         Args: { p_aba?: string; p_pagina?: number; p_pesquisa_id: string }
