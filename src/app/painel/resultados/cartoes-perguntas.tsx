@@ -1,7 +1,9 @@
+import { variacaoMedia } from "@/lib/painel/apresentacao";
+import type { PerguntaPainel } from "@/lib/painel/tipos";
 import { faixaDaNota, type Faixa } from "@/lib/notas/faixa";
 import { formatarMedia, rotuloFaixa } from "@/lib/resultados/apresentacao";
-import type { PerguntaNota } from "@/lib/resultados/tipos";
 import { cn } from "@/lib/utils";
+import { LinhaVariacao } from "./variacao";
 
 const COR_FAIXA: Record<Faixa, string> = {
   boa: "bg-menta-claro text-menta-texto",
@@ -9,8 +11,10 @@ const COR_FAIXA: Record<Faixa, string> = {
   ruim: "bg-coral/15 text-coral-escuro",
 };
 
-// Média de cada pergunta de nota. A faixa vem escrita, não só em cor.
-export function CartoesPerguntas({ perguntas }: { perguntas: PerguntaNota[] }) {
+// Média de cada pergunta de nota, com a variação em relação ao período anterior.
+// A faixa vem escrita, não só em cor. enviosAnterior é o total de envios do período anterior
+// (o banco não separa a contagem por pergunta nesse período; serve de régua para "poucos dados").
+export function CartoesPerguntas({ perguntas, enviosAnterior }: { perguntas: PerguntaPainel[]; enviosAnterior: number }) {
   if (perguntas.length === 0) {
     return <p className="text-muted-foreground">Esta pesquisa não tem pergunta de nota.</p>;
   }
@@ -23,6 +27,11 @@ export function CartoesPerguntas({ perguntas }: { perguntas: PerguntaNota[] }) {
             <p className="numeros text-sm text-muted-foreground">
               {p.respostas === 1 ? "1 resposta" : `${p.respostas} respostas`}
             </p>
+            <LinhaVariacao
+              variacao={variacaoMedia(p.media, p.media_anterior, p.respostas, enviosAnterior)}
+              tipo="media"
+              ocultarPoucos
+            />
           </div>
           {p.media === null ? (
             <p className="shrink-0 text-sm font-medium text-muted-foreground">Sem respostas</p>

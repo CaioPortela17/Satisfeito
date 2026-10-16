@@ -1,7 +1,9 @@
+import { variacaoMedia } from "@/lib/painel/apresentacao";
+import type { MembroPainel } from "@/lib/painel/tipos";
 import { faixaDaNota, type Faixa } from "@/lib/notas/faixa";
 import { formatarMedia, ordenarEquipe, poucasAvaliacoes, rotuloFaixa } from "@/lib/resultados/apresentacao";
-import type { MembroEquipe } from "@/lib/resultados/tipos";
 import { cn } from "@/lib/utils";
+import { LinhaVariacao } from "./variacao";
 
 const COR_FAIXA: Record<Faixa, string> = {
   boa: "bg-menta-claro text-menta-texto",
@@ -10,8 +12,9 @@ const COR_FAIXA: Record<Faixa, string> = {
 };
 
 // Ranking da equipe por nota média. Quem tem poucas avaliações recebe um aviso,
-// porque uma média de 1 ou 2 clientes engana.
-export function RankingEquipe({ equipe }: { equipe: MembroEquipe[] }) {
+// porque uma média de 1 ou 2 clientes engana. A variação em relação ao período anterior só aparece
+// quando há dados para comparar (enviosAnterior é a régua de "poucos dados").
+export function RankingEquipe({ equipe, enviosAnterior }: { equipe: MembroPainel[]; enviosAnterior: number }) {
   const lista = ordenarEquipe(equipe);
   return (
     <ol className="space-y-3">
@@ -31,6 +34,13 @@ export function RankingEquipe({ equipe }: { equipe: MembroEquipe[] }) {
                 {f.avaliacoes === 1 ? "1 avaliação" : `${f.avaliacoes} avaliações`}
                 {poucas && <span className="ml-2 rounded-full bg-manga-claro px-2 py-0.5 text-xs font-semibold text-manga-texto">poucas avaliações</span>}
               </p>
+              {!poucas && (
+                <LinhaVariacao
+                  variacao={variacaoMedia(f.media, f.media_anterior, f.avaliacoes, enviosAnterior)}
+                  tipo="media"
+                  ocultarPoucos
+                />
+              )}
             </div>
             <div className="shrink-0 text-right">
               <p className="numeros text-2xl font-bold tracking-tight">{formatarMedia(f.media)}</p>

@@ -93,6 +93,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
 - [x] **Etapa 6B** — Lista de respostas, selo de respostas suspeitas e descarte
 - [x] **Etapa 7** — Resumo com IA das respostas escritas (elogios, reclamações e sugestões)
+- [x] **Etapa 6C** — Dashboard completo: período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, dia da semana e turno, destaques
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
 ### O que já existe
@@ -127,12 +128,15 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Resultados**
 - Página `/painel/resultados`: uma pesquisa por vez, com seletor quando a empresa tem mais de uma (a pesquisa mais recente com respostas abre primeiro)
-- Totais de respostas: hoje, últimos 7 dias e últimos 30 dias (no horário de São Paulo)
+- Seletor de período (7, 30 ou 90 dias, padrão 30; `?dias=` na URL) e cartões de respostas, nota média e NPS, cada um comparado com o período anterior ("poucos dados para comparar" com menos de 5 respostas)
+- NPS (só com 10 respostas com nota ou mais) e distribuição das notas em 4 faixas, sempre com número, porcentagem e palavra
+- Dia da semana e turno (manhã, tarde, noite, madrugada) com a nota média de cada um; célula com menos de 3 respostas aparece esmaecida
+- Destaques: pergunta mais bem avaliada e mais fraca, dia mais fraco e quem mais agradou (só aparecem com dados suficientes)
 - Nota média de cada pergunta, sempre com número e palavra ("Ótimo", "Pode melhorar", "Ruim"), nunca só cor
-- Gráfico da nota média por dia nos últimos 30 dias (eixo de tempo real), com tabela escondida para leitor de tela
+- Gráfico da nota média por dia no período escolhido (eixo de tempo real), com tabela escondida para leitor de tela
 - Ranking da equipe pela nota média dos clientes que escolheram cada pessoa; quem tem menos de 3 avaliações aparece depois, com a etiqueta "poucas avaliações"
 - Respostas descartadas não entram em nenhum número; pesquisa sem respostas mostra como receber a primeira
-- Os números saem de uma função do banco (`resultados_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê a própria pesquisa
+- Os números saem de uma função do banco (`painel_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê a própria pesquisa
 
 **Respostas, suspeitas e descarte**
 - Página `/painel/respostas`: lista as respostas de uma pesquisa, da mais recente para a mais antiga, 20 por página, com abas **Todas**, **Suspeitas** e **Descartadas** (cada uma com a quantidade)
