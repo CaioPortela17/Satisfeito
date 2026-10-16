@@ -202,7 +202,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | `NEXT_PUBLIC_SUPABASE_URL` | Address of the Supabase project |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key. Safe for the browser, since RLS protects the data |
 | `SUPABASE_SECRET_KEY` | Secret key, **server only** (never with `NEXT_PUBLIC_`): used to store customers' answers |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Public key of the Turnstile widget (Cloudflare). In development, use Cloudflare's [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) |
+| `NEXT_PUBLIC_TURNSTILE_SITE` | Public key of the Turnstile widget (Cloudflare). In development, use Cloudflare's [test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) |
 | `TURNSTILE_SECRET_KEY` | Turnstile secret key, **server only** |
 | `ANTHROPIC_API_KEY` | Anthropic API key for the AI summary ([console.anthropic.com](https://console.anthropic.com), needs credit), **server only**. Without it everything else works and the button says the summary is not configured yet |
 | `CARIMBO_SEGREDO` | Secret that signs the public survey's timestamp (generate it with the command in `.env.example`) |
