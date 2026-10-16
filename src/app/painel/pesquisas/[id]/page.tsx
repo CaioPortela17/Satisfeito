@@ -47,7 +47,8 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
     .select("id", { count: "exact", head: true })
     .eq("empresa_id", atual.id)
     .eq("ativo", true);
-  const semEquipe = temFuncionarioValendo && (funcionariosAtivos ?? 0) === 0;
+  // count vem null quando a consulta falha: nesse caso não mostramos o aviso (melhor calar do que errar)
+  const semEquipe = temFuncionarioValendo && funcionariosAtivos === 0;
   const semNota = !valendo.some((p) => p.tipo === "nota");
 
   return (

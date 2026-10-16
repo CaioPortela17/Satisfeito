@@ -100,7 +100,7 @@ export function CabecalhoPesquisa({ id, titulo, ativa }: Props) {
           }}
         >
           {ativa ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-          {ativa ? "Pausar" : "Retomar"}
+          {ativa ? (pendente ? "Pausando…" : "Pausar") : pendente ? "Retomando…" : "Retomar"}
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
