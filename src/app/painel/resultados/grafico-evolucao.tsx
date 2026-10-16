@@ -24,9 +24,9 @@ function dominioTempo(primeiro: number, ultimo: number): [number, number] {
   return primeiro === ultimo ? [primeiro - UM_DIA, ultimo + UM_DIA] : [primeiro, ultimo];
 }
 
-export function GraficoEvolucao({ dados }: { dados: PontoEvolucao[] }) {
+export function GraficoEvolucao({ dados, dias }: { dados: PontoEvolucao[]; dias: number }) {
   if (dados.length === 0) {
-    return <p className="text-muted-foreground">Ainda não há notas nos últimos 30 dias.</p>;
+    return <p className="text-muted-foreground">Ainda não há notas nos últimos {dias} dias.</p>;
   }
 
   const primeiro = dados[0];

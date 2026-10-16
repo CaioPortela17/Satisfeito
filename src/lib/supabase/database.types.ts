@@ -276,6 +276,21 @@ export type Database = {
           resposta_id: string
         }[]
       }
+      painel_envios: {
+        Args: { p_desde: string; p_fuso: string; p_pesquisa_id: string }
+        Returns: {
+          d: string
+          id: string
+          n_notas: number
+          nota_envio: number
+          soma: number
+          ts: string
+        }[]
+      }
+      painel_pesquisa: {
+        Args: { p_dias?: number; p_fuso?: string; p_pesquisa_id: string }
+        Returns: Json
+      }
       pesquisa_publica: { Args: { p_slug: string }; Returns: Json }
       registrar_resposta: {
         Args: { p_itens: Json; p_pesquisa_id: string }

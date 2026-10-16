@@ -95,6 +95,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - [x] **Stage 6A**: Results: totals, score of each question, evolution and staff ranking
 - [x] **Stage 6B**: answer list, "suspicious" answer badge and discarding
 - [x] **Stage 7**: AI summary of the written answers (praise, complaints and suggestions)
+- [x] **Stage 6C**: full dashboard: 7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, weekday and shift, highlights
 - [ ] **Stage 8**: real-world test at Bebelu and adjustments
 
 ### What already exists
@@ -129,12 +130,15 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Results**
 - `/painel/resultados` page: one survey at a time, with a selector when the business has more than one (the most recent survey with answers opens first)
-- Answer totals: today, last 7 days and last 30 days (São Paulo time)
+- Period selector (7, 30 or 90 days, default 30; `?dias=` in the URL) and cards for answers, average score and NPS, each compared with the previous period ("poucos dados para comparar" / too little data to compare under 5 answers)
+- NPS (only with 10 scored answers or more) and score distribution in 4 bands, always with a number, a percentage and a word
+- Weekday and shift (morning, afternoon, evening, late night) with the average score of each; a cell with fewer than 3 answers is dimmed
+- Highlights: best and weakest question, weakest day and who pleased customers most (shown only with enough data)
 - Average score of each question, always with a number and a word ("Ótimo" / great, "Pode melhorar" / can improve, "Ruim" / poor), never color alone
-- Chart of the average score per day over the last 30 days (real time axis), with a hidden table for screen readers
+- Chart of the average score per day over the chosen period (real time axis), with a hidden table for screen readers
 - Staff ranking by the average score of the customers who picked each person; anyone with fewer than 3 ratings shows after the others, with a "poucas avaliações" (few ratings) tag
 - Discarded answers count in no number; a survey without answers shows how to get the first one
-- The numbers come from a database function (`resultados_pesquisa`, `security invoker`), so RLS applies: each business only sees its own survey
+- The numbers come from a database function (`painel_pesquisa`, `security invoker`), so RLS applies: each business only sees its own survey
 
 **Answers, suspicious ones and discarding**
 - `/painel/respostas` page: lists the answers of a survey, newest first, 20 per page, with tabs **Todas** (all), **Suspeitas** (suspicious) and **Descartadas** (discarded), each with its count

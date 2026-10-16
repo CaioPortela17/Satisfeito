@@ -23,7 +23,7 @@ export function poucasAvaliacoes(avaliacoes: number): boolean {
 
 // Quem tem avaliações suficientes vem primeiro; dentro de cada grupo, maior média,
 // depois mais avaliações, depois ordem alfabética.
-export function ordenarEquipe(equipe: MembroEquipe[]): MembroEquipe[] {
+export function ordenarEquipe<T extends MembroEquipe>(equipe: T[]): T[] {
   return [...equipe].sort((a, b) => {
     const pa = poucasAvaliacoes(a.avaliacoes);
     const pb = poucasAvaliacoes(b.avaliacoes);
