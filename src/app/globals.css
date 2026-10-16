@@ -92,7 +92,7 @@
   --accent-foreground: var(--ameixa);
   --destructive: var(--coral-escuro);
   --border: #e9dcd6;
-  --input: #e9dcd6;
+  --input: #8f7f89; /* borda dos campos: 3,8:1 sobre branco (WCAG 1.4.11 pede 3:1) */
   --ring: var(--coral-texto);
 
   /* Gráficos (Etapa 6): boa, atenção, ruim, depois neutros */
