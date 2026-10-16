@@ -12,4 +12,11 @@ export type ResumoSalvo = {
 export type UsoResumos = { ultimo: ResumoSalvo | null; hoje: number; textos: number };
 
 export type TextoParaResumo = { pergunta: string; texto: string };
-export type TextosParaResumo = { total: number; textos: TextoParaResumo[] };
+// total = envios com texto nos últimos 30 dias; lidas = envios entre os textos enviados à IA (até 200 itens)
+export type TextosParaResumo = { total: number; lidas: number; textos: TextoParaResumo[] };
+
+// O que reservar_resumo_ia devolve: null (pesquisa não é do dono) ou o resultado da reserva
+export type ReservaResumo =
+  | { ok: true; id: string }
+  | { ok: false; motivo: "teto" }
+  | { ok: false; motivo: "intervalo"; minutos: number };
