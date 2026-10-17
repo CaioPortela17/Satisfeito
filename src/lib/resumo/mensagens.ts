@@ -6,7 +6,7 @@ export function mensagemResumo(motivo: MotivoErro, minutos?: number): string {
     case "configuracao":
       return "O resumo por IA ainda não está configurado.";
     case "poucas":
-      return "Ainda há poucas respostas escritas para resumir.";
+      return "Ainda há poucas respostas neste período para montar o relatório.";
     case "teto":
       return "Você já gerou muitos resumos hoje. Tente amanhã.";
     case "intervalo":

@@ -1,14 +1,20 @@
 import { describe, expect, it } from "vitest";
 import { ESQUEMA_FERRAMENTA, NOME_FERRAMENTA, esquemaResumo, limparResumo } from "./esquema";
 
-const BOM = { positivos: ["Atendimento rápido"], reclamacoes: ["Demora no fim de semana"], sugestoes: ["Mais opções sem glúten"] };
+const BOM = {
+  panorama: "O período foi bom, com nota estável.",
+  positivos: ["Atendimento rápido"],
+  reclamacoes: ["Demora no fim de semana"],
+  sugestoes: ["Mais opções sem glúten"],
+  acoes: ["Reforçar a equipe no fim de semana"],
+};
 
 describe("limparResumo", () => {
   it("aceita um resumo bom", () => {
     expect(limparResumo(BOM)).toEqual(BOM);
   });
   it("aceita listas vazias", () => {
-    const vazio = { positivos: [], reclamacoes: [], sugestoes: [] };
+    const vazio = { ...BOM, positivos: [], reclamacoes: [], sugestoes: [] };
     expect(limparResumo(vazio)).toEqual(vazio);
   });
   it("tira espaços e descarta frases vazias", () => {
@@ -59,7 +65,27 @@ describe("ferramenta", () => {
   it("o esquema da ferramenta pede as três listas", () => {
     expect(NOME_FERRAMENTA).toBe("registrar_resumo");
     expect(ESQUEMA_FERRAMENTA.type).toBe("object");
-    expect(ESQUEMA_FERRAMENTA.required).toEqual(["positivos", "reclamacoes", "sugestoes"]);
-    expect(Object.keys(ESQUEMA_FERRAMENTA.properties)).toEqual(["positivos", "reclamacoes", "sugestoes"]);
+    expect(ESQUEMA_FERRAMENTA.required).toEqual(["panorama", "positivos", "reclamacoes", "sugestoes", "acoes"]);
+    expect(Object.keys(ESQUEMA_FERRAMENTA.properties)).toEqual(["panorama", "positivos", "reclamacoes", "sugestoes", "acoes"]);
+  });
+  it("panorama e ações são obrigatórios; panorama vazio ou fora de texto é recusado", () => {
+    const { panorama: _p, ...semPanorama } = BOM;
+    void _p;
+    const { acoes: _a, ...semAcoes } = BOM;
+    void _a;
+    expect(limparResumo(semPanorama)).toBeNull();
+    expect(limparResumo(semAcoes)).toBeNull();
+    expect(limparResumo({ ...BOM, panorama: "   " })).toBeNull();
+    expect(limparResumo({ ...BOM, panorama: 5 })).toBeNull();
+    expect(limparResumo({ ...BOM, acoes: "fazer algo" })).toBeNull();
+  });
+  it("corta o panorama em 400 caracteres e mantém no máximo 3 ações", () => {
+    const r = limparResumo({ ...BOM, panorama: "p".repeat(500), acoes: ["1", "2", "3", "4"] });
+    expect(r?.panorama.length).toBe(400);
+    expect(r?.panorama.endsWith("…")).toBe(true);
+    expect(r?.acoes).toEqual(["1", "2", "3"]);
+  });
+  it("aceita nenhuma ação (lista vazia)", () => {
+    expect(limparResumo({ ...BOM, acoes: [] })?.acoes).toEqual([]);
   });
 });

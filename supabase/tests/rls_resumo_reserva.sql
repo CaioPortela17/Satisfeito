@@ -98,8 +98,12 @@ begin
   if jsonb_typeof(public.uso_resumos_ia(p1)->'ultimo') <> 'null' then raise exception 'FALHOU: reserva apareceu como resumo pronto'; end if;
 
   -- outras pesquisas do dono (inclusive de OUTRA empresa dele) usam o mesmo teto (3): p2 e p3 ok, a 4ª não
-  x := public.reservar_resumo_ia(p2, a, 10, 3);
+  x := public.reservar_resumo_ia(p2, a, 10, 3, 7, true);
   if (x->>'ok')::boolean is not true then raise exception 'FALHOU: reserva em p2 = %', x; end if;
+  -- a reserva guarda o período e se vai citar nomes
+  if not exists (select 1 from public.resumos_ia where id = (x->>'id')::uuid and dias = 7 and com_nomes and estado = 'gerando') then
+    raise exception 'FALHOU: reserva não guardou dias/com_nomes';
+  end if;
   x := public.reservar_resumo_ia(p3, a, 10, 3);
   if (x->>'ok')::boolean is not true then raise exception 'FALHOU: reserva em p3 (outra empresa do dono) = %', x; end if;
   x := public.reservar_resumo_ia(p3, a, 0, 3);

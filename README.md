@@ -34,7 +34,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Ranking dos funcionários por nota média
 - Total de respostas no dia, na semana e no mês
 - Respostas recentes
-- Resumo com IA: pontos positivos, reclamações e sugestões
+- Relatório para a equipe escrito por IA, pronto para copiar no WhatsApp: panorama, elogios, reclamações, sugestões e ações
 
 ---
 
@@ -93,6 +93,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
 - [x] **Etapa 6B** — Lista de respostas, selo de respostas suspeitas e descarte
 - [x] **Etapa 7** — Resumo com IA das respostas escritas (elogios, reclamações e sugestões)
+- [x] **Etapa 7B** — Relatório para a equipe (IA + texto pronto para o WhatsApp, com opção de citar nomes)
 - [x] **Etapa 6C** — Dashboard completo: período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, dia da semana e turno, destaques
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
@@ -147,8 +148,9 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - A regra e a lista saem de funções do banco (`envios_suspeitos` e `respostas_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê e descarta as próprias respostas
 
 **Resumo por IA**
-- Seção "O que os clientes escreveram" em `/painel/resultados`: o botão **Gerar resumo** manda as respostas de texto dos últimos 30 dias (sem as descartadas) para o Claude e mostra três listas curtas: elogios, reclamações e sugestões. O último resumo fica salvo (`resumos_ia`) e aparece de novo sem gastar outra chamada
-- Com menos de 3 respostas escritas a IA nem é chamada. **Limites de custo:** 10 minutos entre dois resumos da mesma pesquisa e no máximo 20 resumos por dia por empresa; no máximo 200 textos de até 1000 caracteres por pedido
+- Seção "Relatório para a equipe" em `/painel/resultados`: o botão **Gerar relatório** manda os números do período escolhido (7, 30 ou 90 dias) e as respostas de texto (sem as descartadas) para o Claude, que escreve a prosa: panorama, elogios, reclamações, sugestões e 2 ou 3 ações. O sistema monta o texto final para **WhatsApp** (negrito com `*`, listas curtas, sem emojis) com os números calculados pelo banco, e o botão **Copiar para WhatsApp** copia tudo. O último relatório fica salvo (`resumos_ia`, com o retrato dos números usados) e aparece de novo sem gastar outra chamada
+- A IA nunca escreve os números: se o panorama ou as ações citarem um número que não está nos dados, o servidor recusa e tenta de novo uma vez. A opção **Citar nomes e notas da equipe** vem desligada; desligada, nenhum nome de funcionário é enviado à IA nem aparece no texto
+- Com menos de 5 respostas no período a IA nem é chamada. **Limites de custo:** 10 minutos entre dois relatórios da mesma pesquisa e no máximo 20 por dia por dono (somando as empresas dele); no máximo 200 textos de até 1000 caracteres por pedido
 - **A chamada à IA acontece só no servidor** (Server Action); a chave `ANTHROPIC_API_KEY` nunca vai ao navegador. O banco só deixa o dono **ler** os resumos; quem grava é o servidor, depois de conferir que a pesquisa é do usuário (RLS)
 - **Privacidade:** o texto das respostas é enviado à Anthropic para gerar o resumo (isso aparece na tela, ao lado do botão). Não vão e-mail, IP, nome da empresa nem nome de funcionário
 - **Texto de cliente é dado, não instrução:** o pedido separa as instruções do conteúdo, neutraliza `<`, `>` e quebras de linha dos comentários, obriga a IA a responder por uma ferramenta com formato fixo e valida/limpa a resposta antes de salvar. A tela mostra tudo como texto puro
@@ -173,8 +175,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
 
 **Testes**
-- 126 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas, regras e pedido do resumo por IA)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql` e `rls_resumos_ia.sql`), que provam o isolamento entre empresas
+- 181 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas, regras e pedido do resumo por IA)
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` e `rls_suspeitas_borda.sql`), que provam o isolamento entre empresas
 
 ---
 
