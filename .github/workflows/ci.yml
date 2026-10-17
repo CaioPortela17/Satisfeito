@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Cancela a rodada antiga quando chega um commit novo no mesmo branch
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: Tipos, lint, testes e build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm run lint
+      - run: npm test
+      - name: Build
+        run: npm run build
+        env:
+          # Valores falsos: o build só precisa que as variáveis existam, nenhuma chamada real é feita
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: chave-falsa-para-o-build
+          SUPABASE_SECRET_KEY: chave-falsa-para-o-build
+          CARIMBO_SEGREDO: segredo-falso-para-o-build-0123456789
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          NEXT_PUBLIC_TURNSTILE_SITE: 1x00000000000000000000AA
+          TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+
+  banco:
+    name: Migrações e testes de segurança do banco
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      # Sobe um Supabase local (Postgres + auth) e aplica todas as migrações de supabase/migrations
+      - name: Iniciar o Supabase local
+        run: |
+          supabase init --force
+          supabase start -x studio,imgproxy,realtime,storage-api,inbucket,edge-runtime,vector,logflare,supavisor,postgres-meta
+      - name: Rodar os testes de segurança (supabase/tests)
+        run: |
+          set -e
+          for f in supabase/tests/*.sql; do
+            echo "== $f"
+            psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -q -f "$f"
+          done
