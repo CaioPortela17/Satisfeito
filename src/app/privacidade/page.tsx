@@ -44,7 +44,6 @@ export default function Privacidade() {
           itens={[
             "E-mail e senha da conta (a senha é guardada protegida, nunca em texto aberto).",
             "Nome do negócio, nomes dos funcionários que você cadastrar, pesquisas, perguntas e as respostas recebidas.",
-            "As opções de aviso por e-mail que você escolher.",
           ]}
         />
       </Secao>
@@ -54,7 +53,6 @@ export default function Privacidade() {
           itens={[
             "Mostrar ao dono as notas, os gráficos, o ranking da equipe e as respostas.",
             "Escrever o relatório para a equipe com ajuda de inteligência artificial (veja abaixo).",
-            "Avisar o dono por e-mail quando chega uma nota baixa, se ele deixar essa opção ligada.",
             "Proteger o serviço contra robôs, respostas falsas e abuso.",
           ]}
         />
@@ -77,7 +75,6 @@ export default function Privacidade() {
             "Vercel: hospedagem do site.",
             "Cloudflare: verificação anti-robô (Turnstile) na pesquisa pública.",
             "Anthropic: inteligência artificial do relatório (apenas quando o dono pede).",
-            "Resend: envio dos e-mails de aviso e do relatório semanal, quando ativados.",
           ]}
         />
         <p>Também podemos divulgar dados se a lei ou uma ordem da justiça exigir.</p>
