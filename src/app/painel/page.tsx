@@ -3,11 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IconeOla } from "@/components/icones/icone-ola";
-import { emailAtivo } from "@/lib/avisos/email";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { passosDoPainel, tudoPronto } from "@/lib/painel/primeiros-passos";
 import { cn } from "@/lib/utils";
-import { AvisosEmail } from "./avisos/avisos-email";
 import { ExcluirConta } from "./conta/excluir-conta";
 
 export const metadata: Metadata = { title: "Painel" };
@@ -19,11 +17,6 @@ export default async function PaginaPainel() {
   // mas a página confere de novo, verificando a assinatura do token.
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) redirect("/entrar");
-
-  // Opções de aviso por e-mail da empresa aberta (o RLS só devolve se for do usuário)
-  const { data: avisos } = atual
-    ? await supabase.from("empresas").select("aviso_nota_baixa, relatorio_semanal").eq("id", atual.id).maybeSingle()
-    : { data: null };
 
   // O que a empresa aberta já tem, para marcar os passos como feitos (o RLS só devolve o que é do usuário)
   const contar = async (consulta: PromiseLike<{ count: number | null }>) => (await consulta).count ?? 0;
@@ -86,16 +79,6 @@ export default async function PaginaPainel() {
           ))}
         </ol>
       </section>
-
-      {atual && avisos && (
-        <AvisosEmail
-          key={atual.id}
-          empresaId={atual.id}
-          notaBaixa={avisos.aviso_nota_baixa}
-          relatorioSemanal={avisos.relatorio_semanal}
-          emailAtivo={emailAtivo()}
-        />
-      )}
 
       <ExcluirConta />
     </div>
