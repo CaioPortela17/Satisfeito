@@ -22,7 +22,7 @@ function ListaBarras({ linhas, titulo, id }: { linhas: Linha[]; titulo: string; 
           const vazio = l.media === null;
           const poucos = !vazio && l.envios < MIN_CELULA;
           return (
-            <li key={l.chave} className={cn(poucos && "opacity-70")}>
+            <li key={l.chave}>
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <p className="font-medium">
                   {l.rotulo}

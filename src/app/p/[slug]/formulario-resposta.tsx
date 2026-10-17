@@ -200,7 +200,7 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
         )}
       </div>
       <WidgetTurnstile key={rodada} aoMudar={aoMudarToken} />
-      <p role="status" className="min-h-5 text-center text-sm text-muted-foreground">
+      <p role="status" className="min-h-5 text-center text-sm font-medium text-ameixa">
         {token ? (
           <span className="sr-only">Pronto para enviar</span>
         ) : demorou ? (
