@@ -1,5 +1,8 @@
 "use server";
 
+import { after } from "next/server";
+import { avisarSobreResposta } from "@/lib/avisos/avisar";
+import { ehRespostaRuim, mediaDasNotas } from "@/lib/avisos/regras";
 import { verificarCarimbo } from "@/lib/respostas/carimbo";
 import { lerResposta } from "@/lib/respostas/formulario";
 import { mensagemErroResposta, mensagemTurnstile } from "@/lib/respostas/mensagens";
@@ -45,11 +48,18 @@ export async function enviarResposta(_estado: EstadoEnvio, formData: FormData): 
   // 4. Grava pela função do banco, que confere tudo de novo.
   // Qualquer falha vira uma mensagem genérica: nada do erro técnico chega ao cliente.
   try {
-    const { error } = await criarClienteAdmin().rpc("registrar_resposta", {
+    const { data: respostaId, error } = await criarClienteAdmin().rpc("registrar_resposta", {
       p_pesquisa_id: pesquisa.id,
       p_itens: leitura.itens,
     });
     if (error) return { erro: mensagemErroResposta(error.code) };
+
+    // Resposta com nota baixa: avisa o dono por e-mail DEPOIS de responder ao cliente (after), sem atrasar nem
+    // quebrar o envio dele. O aviso nunca leva o que o cliente escreveu.
+    const media = mediaDasNotas(leitura.itens);
+    if (respostaId && ehRespostaRuim(media)) {
+      after(() => avisarSobreResposta({ pesquisaId: pesquisa.id, respostaId, media }));
+    }
   } catch {
     return { erro: mensagemErroResposta() };
   }

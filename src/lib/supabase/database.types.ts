@@ -14,24 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      avisos_enviados: {
+        Row: {
+          created_at: string
+          empresa_id: string
+          id: string
+          pesquisa_id: string | null
+          tipo: string
+        }
+        Insert: {
+          created_at?: string
+          empresa_id: string
+          id?: string
+          pesquisa_id?: string | null
+          tipo: string
+        }
+        Update: {
+          created_at?: string
+          empresa_id?: string
+          id?: string
+          pesquisa_id?: string | null
+          tipo?: string
+        }
+        Relationships: []
+      }
       empresas: {
         Row: {
+          aviso_nota_baixa: boolean
           created_at: string
           id: string
           nome: string
           owner_id: string
+          relatorio_semanal: boolean
         }
         Insert: {
+          aviso_nota_baixa?: boolean
           created_at?: string
           id?: string
           nome: string
           owner_id?: string
+          relatorio_semanal?: boolean
         }
         Update: {
+          aviso_nota_baixa?: boolean
           created_at?: string
           id?: string
           nome?: string
           owner_id?: string
+          relatorio_semanal?: boolean
         }
         Relationships: []
       }
@@ -308,6 +338,10 @@ export type Database = {
       registrar_resposta: {
         Args: { p_itens: Json; p_pesquisa_id: string }
         Returns: string
+      }
+      reservar_aviso: {
+        Args: { p_janela_min: number; p_pesquisa_id: string; p_teto_dia: number; p_tipo: string }
+        Returns: Json
       }
       reservar_resumo_ia: {
         Args: {
