@@ -45,6 +45,15 @@ export default function Inicio() {
 
         <PesquisaDeExemplo />
       </div>
+
+      <nav aria-label="Informações legais" className="mt-8 flex flex-wrap gap-x-6 text-sm font-semibold">
+        <Link href="/termos" className="inline-flex min-h-11 items-center underline underline-offset-4">
+          Termos de uso
+        </Link>
+        <Link href="/privacidade" className="inline-flex min-h-11 items-center underline underline-offset-4">
+          Política de privacidade
+        </Link>
+      </nav>
     </main>
   );
 }

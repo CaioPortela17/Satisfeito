@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Logo } from "@/components/marca/logo";
 import { criarCarimbo } from "@/lib/respostas/carimbo";
@@ -45,8 +46,14 @@ export default async function PaginaPesquisaPublica(props: PageProps<"/p/[slug]"
             <p className="mt-2 text-muted-foreground">Essa pesquisa está pausada no momento. Volte outra hora!</p>
           </section>
         )}
-        <footer className="mt-auto flex justify-center pt-8">
+        <footer className="mt-auto flex flex-col items-center gap-1 pt-8">
           <Logo className="text-base" />
+          <p className="text-center text-xs text-ameixa/80">
+            Resposta anônima. Não escreva dados pessoais.{" "}
+            <Link href="/privacidade" className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4">
+              Como usamos os dados
+            </Link>
+          </p>
         </footer>
       </div>
     </main>

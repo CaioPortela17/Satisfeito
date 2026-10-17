@@ -76,6 +76,18 @@ export function FormularioCadastro() {
         <ErroDoCampo id="senha-erro" erros={estado.erros?.senha} />
       </div>
 
+      <p className="text-sm text-muted-foreground">
+        Ao criar a conta, você aceita os{" "}
+        <Link href="/termos" className="font-semibold underline underline-offset-4">
+          termos de uso
+        </Link>{" "}
+        e a{" "}
+        <Link href="/privacidade" className="font-semibold underline underline-offset-4">
+          política de privacidade
+        </Link>
+        .
+      </p>
+
       <Button type="submit" size="lg" className="w-full" disabled={pendente}>
         {pendente ? "Criando conta…" : "Criar conta"}
       </Button>
