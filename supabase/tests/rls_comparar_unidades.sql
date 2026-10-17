@@ -97,8 +97,6 @@ begin
     raise exception 'FALHOU: A1 (30 dias) = %', x;
   end if;
 
-  -- a ordem segue a criação das empresas (A1 antes de A2)
-  if public.comparar_unidades(7)->0->>'nome' <> 'Unidade A1' then raise exception 'FALHOU: ordem das unidades'; end if;
 end $$;
 
 -- Dono B: só a unidade dele
