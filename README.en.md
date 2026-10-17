@@ -60,13 +60,17 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 |---|---|
 | ![Link, QR code and poster](docs/prints/painel-link-qr.jpg) | ![Question editor](docs/prints/painel-perguntas.jpg) |
 
-**Results** (totals, score of each question, evolution and staff ranking):
+**Results** (7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, highlights, weekday and shift, evolution and staff ranking):
 
-![Totals and score per question](docs/prints/resultados-numeros.jpg)
+![Summary cards and highlights](docs/prints/dashboard-topo.jpg)
 
-![Score evolution and staff ranking](docs/prints/resultados-grafico-ranking.jpg)
+![Score by weekday and shift](docs/prints/dashboard-dia-turno.jpg)
 
-> The numbers in these screenshots are examples created only for the demo.
+**Team report** (text ready to copy and send on WhatsApp):
+
+![Team report](docs/prints/relatorio-equipe.jpg)
+
+> The numbers in these screenshots are examples created only for the demo, and the AI text in the report was simulated (the real API was not called).
 
 ---
 

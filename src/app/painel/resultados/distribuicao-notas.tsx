@@ -23,7 +23,7 @@ export function DistribuicaoNotas({ distribuicao, nps }: { distribuicao: FaixaDi
           const info = FAIXAS[f.faixa];
           return (
             <li key={f.faixa}>
-              <div className="flex items-baseline justify-between gap-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <p className="font-semibold">{info.rotulo}</p>
                 <p className="numeros shrink-0 text-sm text-muted-foreground">
                   {f.envios === 1 ? "1 resposta" : `${f.envios} respostas`} ({pct}%)

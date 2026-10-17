@@ -58,13 +58,17 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 |---|---|
 | ![Link, QR code e cartaz](docs/prints/painel-link-qr.jpg) | ![Editor de perguntas](docs/prints/painel-perguntas.jpg) |
 
-**Resultados** (totais, nota de cada pergunta, evolução e ranking da equipe):
+**Resultados** (período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, destaques, dia da semana e turno, evolução e ranking da equipe):
 
-![Totais e nota por pergunta](docs/prints/resultados-numeros.jpg)
+![Cartões de resumo e destaques](docs/prints/dashboard-topo.jpg)
 
-![Evolução da nota e ranking da equipe](docs/prints/resultados-grafico-ranking.jpg)
+![Nota por dia da semana e por turno](docs/prints/dashboard-dia-turno.jpg)
 
-> Os números desses prints são de exemplo, criados só para a demonstração.
+**Relatório para a equipe** (texto pronto para copiar e mandar no WhatsApp):
+
+![Relatório para a equipe](docs/prints/relatorio-equipe.jpg)
+
+> Os números desses prints são de exemplo, criados só para a demonstração, e o texto da IA no relatório foi simulado (sem chamar a API de verdade).
 
 ---
 
