@@ -1,5 +1,7 @@
+import { Download } from "lucide-react";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { escolherPesquisaPadrao } from "@/lib/resultados/apresentacao";
@@ -69,6 +71,18 @@ export default async function PaginaRespostas({
       ) : (
         <AvisosDescarte aba={aba}>
           <Abas pesquisaId={escolhida} atual={aba} contagens={lista.contagens} />
+
+          {lista.contagens.todas > 0 && (
+            <div>
+              {/* Download direto (não é navegação do app): por isso <a> e não <Link> */}
+              <Button asChild variant="outline" className="min-h-11">
+                <a href={`/painel/respostas/exportar?pesquisa=${escolhida}&aba=${aba}`} download>
+                  <Download aria-hidden="true" />
+                  Baixar planilha (CSV)
+                </a>
+              </Button>
+            </div>
+          )}
 
           {aba === "suspeitas" && lista.envios.length > 0 && (
             <div className="space-y-3">
