@@ -8,7 +8,7 @@ describe("mensagemResumo", () => {
     expect(mensagemResumo("formato")).toMatch(/tente de novo/i);
     expect(mensagemResumo("configuracao")).toMatch(/ainda não está configurado/i);
     expect(mensagemResumo("teto")).toMatch(/amanhã/i);
-    expect(mensagemResumo("poucas")).toMatch(/poucas respostas escritas/i);
+    expect(mensagemResumo("poucas")).toMatch(/poucas respostas neste período/i);
   });
   it("o intervalo diz quantos minutos faltam", () => {
     expect(mensagemResumo("intervalo", 7)).toContain("7 min");

@@ -224,32 +224,41 @@ export type Database = {
       resumos_ia: {
         Row: {
           conteudo: Json
+          com_nomes: boolean
           created_at: string
+          dias: number
           estado: string
           id: string
           modelo: string
+          numeros: Json | null
           pesquisa_id: string
           respostas_lidas: number
           tokens_entrada: number | null
           tokens_saida: number | null
         }
         Insert: {
+          com_nomes?: boolean
           conteudo: Json
           created_at?: string
+          dias?: number
           estado?: string
           id?: string
           modelo: string
+          numeros?: Json | null
           pesquisa_id: string
           respostas_lidas: number
           tokens_entrada?: number | null
           tokens_saida?: number | null
         }
         Update: {
+          com_nomes?: boolean
           conteudo?: Json
           created_at?: string
+          dias?: number
           estado?: string
           id?: string
           modelo?: string
+          numeros?: Json | null
           pesquisa_id?: string
           respostas_lidas?: number
           tokens_entrada?: number | null
@@ -298,6 +307,8 @@ export type Database = {
       }
       reservar_resumo_ia: {
         Args: {
+          p_com_nomes?: boolean
+          p_dias?: number
           p_dono: string
           p_fuso?: string
           p_intervalo_min: number
@@ -323,7 +334,7 @@ export type Database = {
         Returns: undefined
       }
       uso_resumos_ia: {
-        Args: { p_fuso?: string; p_pesquisa_id: string }
+        Args: { p_dias?: number; p_fuso?: string; p_pesquisa_id: string }
         Returns: Json
       }
     }

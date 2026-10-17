@@ -137,7 +137,7 @@ Antes de salvar, o servidor procura números na prosa da IA (panorama, elogios, 
 
 ### Armazenamento
 
-Migração em `resumos_ia`: colunas novas `dias int not null default 30`, `com_nomes boolean not null default false`, `numeros jsonb` (retrato). O `conteudo` ganha `panorama` e `acoes` (opcionais, para os resumos antigos continuarem abrindo). A reserva de vaga, o intervalo de 10 minutos, o teto de 20 por dia por dono e o mínimo de 3 envios com texto **não mudam**.
+Migração em `resumos_ia`: colunas novas `dias int not null default 30`, `com_nomes boolean not null default false`, `numeros jsonb` (retrato). O `conteudo` ganha `panorama` e `acoes` (opcionais, para os resumos antigos continuarem abrindo). A reserva de vaga, o intervalo de 10 minutos e o teto de 20 por dia por dono **não mudam**. O mínimo para gerar passa a ser **5 envios no período** (decisão da implementação: o relatório cobre todos os dados, então não faz sentido exigir comentários; sem comentários, as listas saem vazias).
 
 ### Tela
 

@@ -5,7 +5,8 @@ export const MODELO_RESUMO = "claude-haiku-5-5";
 
 export const INTERVALO_MINUTOS = 10; // espera entre dois resumos da mesma pesquisa
 export const TETO_DIARIO = 20; // resumos por dia, somando todas as pesquisas de todas as empresas do mesmo dono
-export const MINIMO_TEXTOS = 3; // com menos respostas escritas que isso, não vale chamar a IA
+export const MINIMO_TEXTOS = 3; // (resumo antigo) mínimo de respostas escritas; o relatório novo usa MINIMO_ENVIOS_RELATORIO
+export const MINIMO_ENVIOS_RELATORIO = 5; // o relatório cobre todos os dados: com menos envios no período, não vale chamar a IA
 // MAX_TEXTOS e MAX_CARACTERES_TEXTO espelham os limites fixos na função SQL textos_para_resumo
 // (limit 200, left(..., 1000)): mude os dois lados juntos.
 // INTERVALO_MINUTOS e TETO_DIARIO valem no banco via reservar_resumo_ia (a action passa os dois como parâmetro).

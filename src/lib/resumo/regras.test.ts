@@ -9,6 +9,9 @@ function ultimoHa(minutos: number): ResumoSalvo {
     conteudo: { positivos: [], reclamacoes: [], sugestoes: [] },
     respostas_lidas: 5,
     modelo: MODELO_RESUMO,
+    dias: 30,
+    com_nomes: false,
+    numeros: null,
     created_at: new Date(AGORA.getTime() - minutos * 60_000).toISOString(),
   };
 }

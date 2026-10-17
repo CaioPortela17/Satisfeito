@@ -36,7 +36,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - Staff ranking by average score
 - Number of answers today, this week and this month
 - Recent answers
-- AI summary: praise, complaints and suggestions
+- Team report written by AI, ready to copy into WhatsApp: overview, praise, complaints, suggestions and actions
 
 ---
 
@@ -95,6 +95,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - [x] **Stage 6A**: Results: totals, score of each question, evolution and staff ranking
 - [x] **Stage 6B**: answer list, "suspicious" answer badge and discarding
 - [x] **Stage 7**: AI summary of the written answers (praise, complaints and suggestions)
+- [x] **Stage 7B**: team report (AI + WhatsApp-ready text, with an option to name staff)
 - [x] **Stage 6C**: full dashboard: 7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, weekday and shift, highlights
 - [ ] **Stage 8**: real-world test at Bebelu and adjustments
 
@@ -149,8 +150,9 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - The rule and the list come from database functions (`envios_suspeitos` and `respostas_pesquisa`, `security invoker`), so RLS applies: each business only sees and discards its own answers
 
 **AI summary**
-- "O que os clientes escreveram" (what customers wrote) section in `/painel/resultados`: the **Gerar resumo** (generate summary) button sends the text answers of the last 30 days (discarded ones excluded) to Claude and shows three short lists: praise, complaints and suggestions. The last summary is saved (`resumos_ia`) and shown again without another call
-- With fewer than 3 written answers the AI is not even called. **Cost limits:** 10 minutes between two summaries of the same survey, at most 20 summaries per day per business, and at most 200 texts of up to 1000 characters per request
+- "Relatório para a equipe" (team report) section in `/painel/resultados`: the **Gerar relatório** (generate report) button sends the numbers of the chosen period (7, 30 or 90 days) and the text answers (discarded ones excluded) to Claude, which writes the prose: overview, praise, complaints, suggestions and 2 or 3 actions. The system builds the final **WhatsApp** text (`*bold*`, short lists, no emojis) with the numbers computed by the database, and the **Copiar para WhatsApp** (copy to WhatsApp) button copies it all. The last report is saved (`resumos_ia`, with a snapshot of the numbers used) and shown again without another call
+- The AI never writes the numbers: if the overview or the actions mention a number that is not in the data, the server rejects it and retries once. The **Citar nomes e notas da equipe** (name staff and scores) option is off by default; when off, no staff name is sent to the AI or shown in the text
+- With fewer than 5 answers in the period the AI is not even called. **Cost limits:** 10 minutes between two reports of the same survey, at most 20 per day per owner (summing their businesses), and at most 200 texts of up to 1000 characters per request
 - **The AI call happens on the server only** (Server Action); the `ANTHROPIC_API_KEY` key never reaches the browser. The database only lets the owner **read** summaries; the server writes them, after checking that the survey belongs to the user (RLS)
 - **Privacy:** the text of the answers is sent to Anthropic to generate the summary (this is shown on screen, next to the button). No e-mail, IP, business name or staff name is sent
 - **Customer text is data, not instruction:** the request keeps the instructions apart from the content, neutralizes `<`, `>` and line breaks in comments, forces the AI to answer through a fixed-format tool, and validates/cleans the reply before saving. The screen shows everything as plain text
@@ -175,8 +177,8 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - Protection against redirects to fake sites, security headers (anti-clickjacking etc.) and server-side validation of every form with [zod](https://zod.dev)
 
 **Tests**
-- 126 automated tests with [Vitest](https://vitest.dev) (validations, safe redirect, score ranges, current business selection, slug, answer form, Turnstile, results presentation, answer list, AI summary rules and prompt)
-- Database security tests in `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql` and `rls_resumos_ia.sql`), which prove isolation between businesses
+- 181 automated tests with [Vitest](https://vitest.dev) (validations, safe redirect, score ranges, current business selection, slug, answer form, Turnstile, results presentation, answer list, AI summary rules and prompt)
+- Database security tests in `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` and `rls_suspeitas_borda.sql`), which prove isolation between businesses
 
 ---
 

@@ -70,7 +70,7 @@ export default async function PaginaResultados({
   let uso: UsoResumos | null = null;
   if (painel) {
     try {
-      const { data: usoBruto } = await supabase.rpc("uso_resumos_ia", { p_pesquisa_id: escolhida });
+      const { data: usoBruto } = await supabase.rpc("uso_resumos_ia", { p_pesquisa_id: escolhida, p_dias: dias });
       uso = (usoBruto as unknown as UsoResumos | null) ?? null;
     } catch {
       uso = null;
@@ -176,7 +176,14 @@ export default async function PaginaResultados({
             </section>
           )}
 
-          <ResumoIa pesquisaId={escolhida} uso={uso} bloqueio={bloqueio} className={SECAO} />
+          <ResumoIa
+            pesquisaId={escolhida}
+            uso={uso}
+            bloqueio={bloqueio}
+            dias={dias}
+            enviosNoPeriodo={painel.atual.envios}
+            className={SECAO}
+          />
         </>
       )}
     </div>
