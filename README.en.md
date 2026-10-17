@@ -66,6 +66,13 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 ![Score by weekday and shift](docs/prints/dashboard-dia-turno.jpg)
 
+**More dashboard features**
+- **Unidades** (units, `/painel/unidades`, only shown with more than one business): average score, answers and NPS of each business side by side, compared with the previous period
+- **Baixar planilha (CSV)** (download spreadsheet) on the Answers page: opens straight in Excel (`;` separator), protected against formulas typed by customers
+- **E-mail alerts** (card on the home page): low score and bad-score burst alerts, at most 1 every 30 minutes per survey and 10 per day per business; the e-mail never carries the customer's text. Uses Resend (`RESEND_API_KEY` and `EMAIL_REMETENTE`); off without the variables
+- Friendly error page and server errors logged as JSON (no URL parameters) in the host logs
+- CI on GitHub Actions: types, lint, tests, build and database security tests on a local Supabase, on every PR
+
 **Answers** (All, Suspicious and Discarded tabs, suspicious badge and Discard button):
 
 ![Answer list with suspicious answers](docs/prints/respostas.jpg)

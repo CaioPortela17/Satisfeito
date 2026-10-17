@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartColumn, ClipboardList, House, LogOut, MessageSquareText, Users } from "lucide-react";
+import { Building2, ChartColumn, ClipboardList, House, LogOut, MessageSquareText, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -14,13 +14,17 @@ const LINKS = [
   { href: "/painel/pesquisas", rotulo: "Pesquisas", Icone: ClipboardList },
 ];
 
-export function NavPainel() {
+// "Unidades" (comparar empresas) só aparece para quem tem mais de uma empresa
+const LINK_UNIDADES = { href: "/painel/unidades", rotulo: "Unidades", Icone: Building2 };
+
+export function NavPainel({ temVariasEmpresas = false }: { temVariasEmpresas?: boolean }) {
   const caminho = usePathname();
+  const links = temVariasEmpresas ? [...LINKS.slice(0, 2), LINK_UNIDADES, ...LINKS.slice(2)] : LINKS;
 
   return (
     // Trilho: um fundo creme único que agrupa os links, como um controle segmentado
     <nav aria-label="Painel" className="flex max-w-full min-w-0 gap-0 min-[360px]:gap-0.5 rounded-full border border-border bg-creme p-1">
-      {LINKS.map(({ href, rotulo, Icone }) => {
+      {links.map(({ href, rotulo, Icone }) => {
         // "Início" só fica ativo na própria página; os outros também nas subpáginas
         const ativo = href === "/painel" ? caminho === "/painel" : caminho.startsWith(href);
         return (

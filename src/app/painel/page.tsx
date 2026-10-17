@@ -3,8 +3,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { IconeOla } from "@/components/icones/icone-ola";
+import { emailAtivo } from "@/lib/avisos/email";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { cn } from "@/lib/utils";
+import { AvisosEmail } from "./avisos/avisos-email";
 
 export const metadata: Metadata = { title: "Painel" };
 
@@ -36,6 +38,11 @@ export default async function PaginaPainel() {
   // mas a página confere de novo, verificando a assinatura do token.
   const { data } = await supabase.auth.getClaims();
   if (!data?.claims) redirect("/entrar");
+
+  // Opções de aviso por e-mail da empresa aberta (o RLS só devolve se for do usuário)
+  const { data: avisos } = atual
+    ? await supabase.from("empresas").select("aviso_nota_baixa, relatorio_semanal").eq("id", atual.id).maybeSingle()
+    : { data: null };
 
   return (
     <div className="space-y-6">
@@ -89,6 +96,16 @@ export default async function PaginaPainel() {
           })}
         </ol>
       </section>
+
+      {atual && avisos && (
+        <AvisosEmail
+          key={atual.id}
+          empresaId={atual.id}
+          notaBaixa={avisos.aviso_nota_baixa}
+          relatorioSemanal={avisos.relatorio_semanal}
+          emailAtivo={emailAtivo()}
+        />
+      )}
     </div>
   );
 }
