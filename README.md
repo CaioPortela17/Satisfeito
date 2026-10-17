@@ -64,6 +64,13 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 ![Nota por dia da semana e por turno](docs/prints/dashboard-dia-turno.jpg)
 
+**Mais recursos do painel**
+- **Unidades** (`/painel/unidades`, só aparece com mais de uma empresa): nota média, respostas e NPS de cada empresa lado a lado, com comparação com o período anterior
+- **Baixar planilha (CSV)** na página Respostas: abre direto no Excel em português (separador `;`), com proteção contra fórmulas digitadas pelo cliente
+- **Avisos por e-mail** (cartão no Início): aviso de nota baixa e de rajada de notas ruins, no máximo 1 a cada 30 minutos por pesquisa e 10 por dia por empresa; o e-mail nunca leva o texto do cliente. Usa o Resend (`RESEND_API_KEY` e `EMAIL_REMETENTE`); sem as variáveis, desligado
+- Página de erro amigável e registro de erros do servidor em JSON (sem parâmetros de URL) nos logs da hospedagem
+- CI no GitHub Actions: tipos, lint, testes, build e testes de segurança do banco num Supabase local, a cada PR
+
 **Respostas** (abas Todas, Suspeitas e Descartadas, selo de suspeita e botão Descartar):
 
 ![Lista de respostas com respostas suspeitas](docs/prints/respostas.jpg)
