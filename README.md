@@ -64,6 +64,10 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 ![Nota por dia da semana e por turno](docs/prints/dashboard-dia-turno.jpg)
 
+**Respostas** (abas Todas, Suspeitas e Descartadas, selo de suspeita e botão Descartar):
+
+![Lista de respostas com respostas suspeitas](docs/prints/respostas.jpg)
+
 **Relatório para a equipe** (texto pronto para copiar e mandar no WhatsApp):
 
 ![Relatório para a equipe](docs/prints/relatorio-equipe.jpg)

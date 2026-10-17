@@ -66,6 +66,10 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 ![Score by weekday and shift](docs/prints/dashboard-dia-turno.jpg)
 
+**Answers** (All, Suspicious and Discarded tabs, suspicious badge and Discard button):
+
+![Answer list with suspicious answers](docs/prints/respostas.jpg)
+
 **Team report** (text ready to copy and send on WhatsApp):
 
 ![Team report](docs/prints/relatorio-equipe.jpg)
