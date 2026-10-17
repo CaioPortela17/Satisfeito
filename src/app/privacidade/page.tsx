@@ -86,8 +86,8 @@ export default function Privacidade() {
       <Secao titulo="Por quanto tempo guardamos">
         <p>
           Guardamos os dados enquanto a conta do dono existir. Ele pode descartar respostas no painel (o descarte é
-          reversível e tira a resposta dos números). Quando uma conta é encerrada a pedido, apagamos os dados dela, salvo o
-          que a lei exigir guardar.
+          reversível e tira a resposta dos números). O dono pode excluir a conta a qualquer momento, em Início &gt; Minha conta e
+          dados: isso apaga a conta e tudo que é dela (empresas, pesquisas, respostas e relatórios), sem volta.
         </p>
       </Secao>
 
