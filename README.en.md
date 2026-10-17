@@ -178,7 +178,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Tests**
 - 181 automated tests with [Vitest](https://vitest.dev) (validations, safe redirect, score ranges, current business selection, slug, answer form, Turnstile, results presentation, answer list, AI summary rules and prompt)
-- Database security tests in `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` and `rls_suspeitas_borda.sql`), which prove isolation between businesses
+- Database security tests in `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` and `rls_suspeitas_borda.sql`), which prove isolation between businesses
 
 ---
 

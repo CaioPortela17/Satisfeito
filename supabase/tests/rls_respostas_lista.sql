@@ -197,8 +197,8 @@ begin
   get diagnostics linhas = row_count;
   if linhas <> 0 then raise exception 'FALHOU: A descartou envio de B'; end if;
 
-  -- resultados_pesquisa conta as suspeitas
-  res := public.resultados_pesquisa(pa);
+  -- painel_pesquisa conta as suspeitas
+  res := public.painel_pesquisa(pa);
   if (res->>'suspeitas')::int <> 12 then raise exception 'FALHOU: resultados.suspeitas = %', res->>'suspeitas'; end if;
 
   -- A descarta 1 envio do g6: sobram 3 ruins, a rajada desfaz
@@ -208,7 +208,7 @@ begin
   if public.respostas_pesquisa(pa)->'contagens' <> '{"todas":28,"suspeitas":8,"descartadas":2}'::jsonb then
     raise exception 'FALHOU: contagens depois do descarte = %', public.respostas_pesquisa(pa)->'contagens';
   end if;
-  if (public.resultados_pesquisa(pa)->>'suspeitas')::int <> 8 then raise exception 'FALHOU: resultados.suspeitas depois do descarte'; end if;
+  if (public.painel_pesquisa(pa)->>'suspeitas')::int <> 8 then raise exception 'FALHOU: resultados.suspeitas depois do descarte'; end if;
 
   -- Restaurar: a rajada volta
   update public.respostas set descartada = false where id = current_setting('app.g6')::uuid;
