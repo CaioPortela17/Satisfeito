@@ -279,6 +279,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      comparar_unidades: {
+        Args: { p_dias?: number; p_fuso?: string }
+        Returns: Json
+      }
       envios_suspeitos: {
         Args: { p_pesquisa_id: string }
         Returns: {
