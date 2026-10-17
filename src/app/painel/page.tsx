@@ -7,6 +7,7 @@ import { emailAtivo } from "@/lib/avisos/email";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { cn } from "@/lib/utils";
 import { AvisosEmail } from "./avisos/avisos-email";
+import { ExcluirConta } from "./conta/excluir-conta";
 
 export const metadata: Metadata = { title: "Painel" };
 
@@ -106,6 +107,8 @@ export default async function PaginaPainel() {
           emailAtivo={emailAtivo()}
         />
       )}
+
+      <ExcluirConta />
     </div>
   );
 }
