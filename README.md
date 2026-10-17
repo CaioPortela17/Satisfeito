@@ -68,6 +68,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - **Unidades** (`/painel/unidades`, só aparece com mais de uma empresa): nota média, respostas e NPS de cada empresa lado a lado, com comparação com o período anterior
 - **Baixar planilha (CSV)** na página Respostas: abre direto no Excel em português (separador `;`), com proteção contra fórmulas digitadas pelo cliente
 - **Avisos por e-mail** (cartão no Início): aviso de nota baixa e de rajada de notas ruins, no máximo 1 a cada 30 minutos por pesquisa e 10 por dia por empresa; o e-mail nunca leva o texto do cliente. Usa o Resend (`RESEND_API_KEY` e `EMAIL_REMETENTE`); sem as variáveis, desligado
+- **Relatório semanal automático** (opcional, desligado por padrão): todo dia às 8h (horário de Brasília) a Vercel chama `/api/cron/relatorio-semanal` (`vercel.json`, protegida por `CRON_SECRET`), que manda por e-mail, às empresas que ligaram a opção, o relatório dos últimos 7 dias de cada pesquisa ativa que ainda não recebeu um nesta semana (sem nomes de funcionários; até 4 por execução)
 - Páginas **/termos** e **/privacidade** (LGPD) com links na home, no cadastro e na pesquisa pública. São um modelo inicial, **precisam de revisão de um advogado** antes de vender
 - Página de erro amigável e registro de erros do servidor em JSON (sem parâmetros de URL) nos logs da hospedagem
 - CI no GitHub Actions: tipos, lint, testes, build e testes de segurança do banco num Supabase local, a cada PR
