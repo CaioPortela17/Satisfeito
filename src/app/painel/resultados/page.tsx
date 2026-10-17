@@ -160,7 +160,7 @@ export default async function PaginaResultados({
           <section className={SECAO}>
             <h2 className="text-xl font-bold">Nota de cada pergunta</h2>
             <div className="mt-4">
-              <CartoesPerguntas perguntas={painel.perguntas} enviosAnterior={painel.anterior.envios} />
+              <CartoesPerguntas perguntas={painel.perguntas} />
             </div>
           </section>
 
@@ -171,7 +171,7 @@ export default async function PaginaResultados({
                 Média das notas dos clientes que escolheram cada pessoa em &ldquo;Quem te atendeu?&rdquo;.
               </p>
               <div className="mt-4">
-                <RankingEquipe equipe={painel.equipe} enviosAnterior={painel.anterior.envios} />
+                <RankingEquipe equipe={painel.equipe} />
               </div>
             </section>
           )}

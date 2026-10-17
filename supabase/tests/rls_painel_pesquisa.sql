@@ -143,6 +143,11 @@ begin
   end if;
 
   -- evolução: 2 dias (hoje-2: 6,4 com 5 envios; hoje-1: 9,3 com 5 envios com nota)
+  -- contagens do período anterior: Atendimento teve 5 respostas, Comida nenhuma
+  if (p->'perguntas'->0->>'respostas_anterior')::int <> 5 or (p->'perguntas'->1->>'respostas_anterior')::int <> 0 then
+    raise exception 'FALHOU: respostas_anterior = %', p->'perguntas';
+  end if;
+
   t := p->'evolucao';
   if jsonb_array_length(t) <> 2 or (t->0->>'media')::numeric <> 6.4 or (t->1->>'media')::numeric <> 9.3 then
     raise exception 'FALHOU: evolucao = %', t;
@@ -174,10 +179,12 @@ begin
   if (x->>'media')::numeric <> 10.0 or (x->>'avaliacoes')::int <> 4 or (x->>'media_anterior')::numeric <> 5.0 then
     raise exception 'FALHOU: Ana = %', x;
   end if;
+  if (x->>'avaliacoes_anterior')::int <> 5 then raise exception 'FALHOU: Ana avaliacoes_anterior = %', x; end if;
   x := (select e from jsonb_array_elements(t) e where e->>'nome' = 'Bia');
   if (x->>'media')::numeric <> 3.5 or (x->>'avaliacoes')::int <> 2 or jsonb_typeof(x->'media_anterior') <> 'null' then
     raise exception 'FALHOU: Bia = %', x;
   end if;
+  if (x->>'avaliacoes_anterior')::int <> 0 then raise exception 'FALHOU: Bia avaliacoes_anterior = %', x; end if;
 
   -- destaques: melhor pergunta Comida (8,3), pior Atendimento (7,4); dia mais fraco = hoje-2 (6,4); melhor funcionário Ana
   x := p->'destaques';

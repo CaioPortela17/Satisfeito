@@ -20,6 +20,7 @@ export type PerguntaPainel = {
   media: number | null; // null = ninguém respondeu no período
   respostas: number;
   media_anterior: number | null;
+  respostas_anterior: number; // quantas respostas a pergunta teve no período anterior
 };
 
 export type MembroPainel = {
@@ -29,6 +30,7 @@ export type MembroPainel = {
   media: number;
   avaliacoes: number;
   media_anterior: number | null;
+  avaliacoes_anterior: number; // quantas avaliações a pessoa teve no período anterior
 };
 
 export type DiaSemana = { dia: number; media: number | null; envios: number }; // dia: 1 = segunda ... 7 = domingo

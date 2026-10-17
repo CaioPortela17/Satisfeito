@@ -34,9 +34,9 @@ const PAINEL: Painel = {
     { turno: "madrugada", media: null, envios: 0 },
   ],
   equipe: [
-    { id: "a", nome: "Ana", ativo: true, media: 9, avaliacoes: 14, media_anterior: 8.5 },
-    { id: "b", nome: "Bia", ativo: true, media: 9.8, avaliacoes: 2, media_anterior: null },
-    { id: "c", nome: "Caio", ativo: false, media: 8.2, avaliacoes: 5, media_anterior: null },
+    { id: "a", nome: "Ana", ativo: true, media: 9, avaliacoes: 14, media_anterior: 8.5, avaliacoes_anterior: 10 },
+    { id: "b", nome: "Bia", ativo: true, media: 9.8, avaliacoes: 2, media_anterior: null, avaliacoes_anterior: 0 },
+    { id: "c", nome: "Caio", ativo: false, media: 8.2, avaliacoes: 5, media_anterior: null, avaliacoes_anterior: 0 },
   ],
   destaques: {
     melhor_pergunta: { id: "p1", texto: "Comida", media: 9 },

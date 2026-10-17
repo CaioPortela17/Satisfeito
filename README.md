@@ -176,7 +176,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Testes**
 - 181 testes automáticos com [Vitest](https://vitest.dev) (validações, redirecionamento seguro, faixas de nota, escolha da empresa atual, slug, formulário de resposta, Turnstile, apresentação dos resultados, lista de respostas, regras e pedido do resumo por IA)
-- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_resultados.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` e `rls_suspeitas_borda.sql`), que provam o isolamento entre empresas
+- Testes de segurança do banco em `supabase/tests/` (`rls_empresas.sql`, `rls_funcionarios.sql`, `rls_pesquisas.sql`, `rls_respostas.sql`, `rls_respostas_lista.sql`, `rls_resumos_ia.sql`, `rls_resumo_reserva.sql`, `rls_painel_pesquisa.sql` e `rls_suspeitas_borda.sql`), que provam o isolamento entre empresas
 
 ---
 

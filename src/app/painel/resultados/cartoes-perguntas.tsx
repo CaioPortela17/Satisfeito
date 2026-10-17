@@ -12,9 +12,8 @@ const COR_FAIXA: Record<Faixa, string> = {
 };
 
 // Média de cada pergunta de nota, com a variação em relação ao período anterior.
-// A faixa vem escrita, não só em cor. enviosAnterior é o total de envios do período anterior
-// (o banco não separa a contagem por pergunta nesse período; serve de régua para "poucos dados").
-export function CartoesPerguntas({ perguntas, enviosAnterior }: { perguntas: PerguntaPainel[]; enviosAnterior: number }) {
+// A faixa vem escrita, não só em cor. A variação só aparece com 5 respostas ou mais nos dois períodos.
+export function CartoesPerguntas({ perguntas }: { perguntas: PerguntaPainel[] }) {
   if (perguntas.length === 0) {
     return <p className="text-muted-foreground">Esta pesquisa não tem pergunta de nota.</p>;
   }
@@ -28,7 +27,7 @@ export function CartoesPerguntas({ perguntas, enviosAnterior }: { perguntas: Per
               {p.respostas === 1 ? "1 resposta" : `${p.respostas} respostas`}
             </p>
             <LinhaVariacao
-              variacao={variacaoMedia(p.media, p.media_anterior, p.respostas, enviosAnterior)}
+              variacao={variacaoMedia(p.media, p.media_anterior, p.respostas, p.respostas_anterior)}
               tipo="media"
               ocultarPoucos
             />

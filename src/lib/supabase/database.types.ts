@@ -321,10 +321,6 @@ export type Database = {
         Args: { p_aba?: string; p_pagina?: number; p_pesquisa_id: string }
         Returns: Json
       }
-      resultados_pesquisa: {
-        Args: { p_fuso?: string; p_pesquisa_id: string }
-        Returns: Json
-      }
       textos_para_resumo: {
         Args: { p_dias?: number; p_fuso?: string; p_pesquisa_id: string }
         Returns: Json
