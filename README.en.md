@@ -70,6 +70,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - **Unidades** (units, `/painel/unidades`, only shown with more than one business): average score, answers and NPS of each business side by side, compared with the previous period
 - **Baixar planilha (CSV)** (download spreadsheet) on the Answers page: opens straight in Excel (`;` separator), protected against formulas typed by customers
 - **E-mail alerts** (card on the home page): low score and bad-score burst alerts, at most 1 every 30 minutes per survey and 10 per day per business; the e-mail never carries the customer's text. Uses Resend (`RESEND_API_KEY` and `EMAIL_REMETENTE`); off without the variables
+- **Automatic weekly report** (optional, off by default): every day at 8am (Brasília time) Vercel calls `/api/cron/relatorio-semanal` (`vercel.json`, protected by `CRON_SECRET`), which e-mails businesses that turned it on the report for the last 7 days of each active survey that has not received one this week (no staff names; up to 4 per run)
 - **/termos** (terms) and **/privacidade** (privacy, LGPD) pages linked from the home page, sign-up and the public survey. They are a starting template and **need a lawyer's review** before selling
 - Friendly error page and server errors logged as JSON (no URL parameters) in the host logs
 - CI on GitHub Actions: types, lint, tests, build and database security tests on a local Supabase, on every PR
