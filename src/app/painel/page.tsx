@@ -11,8 +11,7 @@ import { ExcluirConta } from "./conta/excluir-conta";
 
 export const metadata: Metadata = { title: "Painel" };
 
-// O que falta para a empresa começar a receber avaliações.
-// Os passos ainda não construídos aparecem como "Em breve".
+// O que falta para a empresa começar a receber avaliações. Passo sem href aparece como "Em breve".
 const PASSOS = [
   {
     titulo: "Cadastre quem atende",
@@ -29,6 +28,8 @@ const PASSOS = [
   {
     titulo: "Espalhe o QR code",
     texto: "Na mesa, no balcão ou na nota fiscal. Aí é só esperar as respostas.",
+    href: "/painel/pesquisas",
+    acao: "Ver link e QR code",
   },
 ];
 
