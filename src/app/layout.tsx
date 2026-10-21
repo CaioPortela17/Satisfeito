@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque } from "next/font/google";
+import { BarraDeCarregamento } from "@/components/marca/barra-de-carregamento";
 import "./globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${bricolage.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
+        <BarraDeCarregamento />
         {children}
       </body>
     </html>
