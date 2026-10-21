@@ -6,7 +6,7 @@ export default function ErroGlobal({ retry }: { error: Error & { digest?: string
   return (
     <html lang="pt-BR">
       <body style={{ margin: 0, fontFamily: "system-ui, sans-serif", background: "#14b8a6", color: "#2a1f2d" }}>
-        <main style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
+        <main style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px" }}>
           <div role="alert" style={{ background: "#fff", borderRadius: 24, padding: 32, maxWidth: 420, textAlign: "center" }}>
             <h1 style={{ fontSize: 26, margin: "0 0 8px" }}>Algo deu errado por aqui</h1>
             <p style={{ margin: "0 0 24px", color: "#6b5f6e" }}>Não foi culpa sua. Tente de novo em instantes.</p>

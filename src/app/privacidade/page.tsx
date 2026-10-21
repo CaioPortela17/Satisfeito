@@ -43,7 +43,7 @@ export default function Privacidade() {
         <Lista
           itens={[
             "E-mail e senha da conta (a senha é guardada protegida, nunca em texto aberto).",
-            "Nome do negócio, nomes dos funcionários que você cadastrar, pesquisas, perguntas e as respostas recebidas.",
+            "Nome do negócio, pesquisas, perguntas e as respostas recebidas.",
           ]}
         />
       </Secao>

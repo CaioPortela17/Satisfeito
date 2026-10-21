@@ -21,6 +21,8 @@ function SeloNota({ nota }: { nota: number }) {
 
 // Uma resposta de cliente. Todo texto do cliente entra como texto comum do React (nunca como HTML).
 export function CartaoEnvio({ envio }: { envio: Envio }) {
+  // Respostas antigas podem ter o item "Quem te atendeu?", que não aparece mais
+  const itens = envio.itens.filter((item) => item.tipo !== "funcionario");
   return (
     <li
       className={cn(
@@ -58,11 +60,11 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
         )}
       </div>
 
-      {envio.itens.length === 0 ? (
+      {itens.length === 0 ? (
         <p className="mt-4 text-muted-foreground">Esta resposta não tem itens</p>
       ) : (
         <ul className="mt-4 space-y-3">
-          {envio.itens.map((item, i) => (
+          {itens.map((item, i) => (
             <li key={`${item.ordem}-${i}`} className={cn("rounded-2xl p-4", envio.descartada ? "bg-card" : "bg-creme")}>
               {item.tipo === "nota" && item.nota !== null && (
                 <div className="flex items-center gap-4">

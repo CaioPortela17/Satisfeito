@@ -15,7 +15,6 @@ export function CampoSenha(props: Omit<React.ComponentProps<typeof Input>, "type
       <button
         type="button"
         onClick={() => setVisivel((v) => !v)}
-        aria-pressed={visivel}
         aria-label={visivel ? "Ocultar senha" : "Mostrar senha"}
         className="absolute inset-y-0 right-0 flex w-11 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
       >

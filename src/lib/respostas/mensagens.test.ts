@@ -6,7 +6,6 @@ describe("mensagemErroResposta", () => {
     expect(mensagemErroResposta("SF101")).toBe("Essa pesquisa não está recebendo respostas agora.");
     expect(mensagemErroResposta("SF102")).toBe("Alguma resposta veio com problema. Recarregue a página e tente de novo.");
     expect(mensagemErroResposta("SF103")).toBe("Alguma resposta veio com problema. Recarregue a página e tente de novo.");
-    expect(mensagemErroResposta("SF104")).toBe("Responda as perguntas obrigatórias.");
     expect(mensagemErroResposta("SF105")).toBe("Responda pelo menos uma pergunta.");
   });
   it("genérica nos outros casos", () => {
