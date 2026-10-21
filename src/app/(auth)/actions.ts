@@ -57,6 +57,7 @@ export async function cadastrar(
     nomeEmpresa: texto(formData, "nomeEmpresa"),
     email: texto(formData, "email"),
     senha: texto(formData, "senha"),
+    confirmacao: texto(formData, "confirmacao"),
   };
   const valores = { nomeEmpresa: dados.nomeEmpresa, email: dados.email };
 

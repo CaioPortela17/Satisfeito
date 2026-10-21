@@ -22,11 +22,20 @@ export const esquemaNomeEmpresa = z
   .min(1, "Digite o nome do seu negócio.")
   .max(100, "O nome pode ter no máximo 100 caracteres.");
 
-export const esquemaCadastro = z.object({
-  nomeEmpresa: esquemaNomeEmpresa,
-  email,
-  senha: senhaNova,
-});
+// Digitar a senha duas vezes evita criar conta com um erro de digitação
+const senhasIguais = {
+  message: "As senhas não são iguais.",
+  path: ["confirmacao"],
+};
+
+export const esquemaCadastro = z
+  .object({
+    nomeEmpresa: esquemaNomeEmpresa,
+    email,
+    senha: senhaNova,
+    confirmacao: z.string("Repita a senha."),
+  })
+  .refine((dados) => dados.senha === dados.confirmacao, senhasIguais);
 
 export const esquemaEntrar = z.object({
   email,
@@ -37,7 +46,4 @@ export const esquemaEsqueciSenha = z.object({ email });
 
 export const esquemaRedefinirSenha = z
   .object({ senha: senhaNova, confirmacao: z.string() })
-  .refine((dados) => dados.senha === dados.confirmacao, {
-    message: "As senhas não são iguais.",
-    path: ["confirmacao"],
-  });
+  .refine((dados) => dados.senha === dados.confirmacao, senhasIguais);

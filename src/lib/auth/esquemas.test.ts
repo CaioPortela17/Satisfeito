@@ -21,17 +21,29 @@ describe("esquemaCadastro", () => {
       nomeEmpresa: "  Bebelu  ",
       email: "  Dono@Bebelu.com.BR ",
       senha: "senhaforte",
+      confirmacao: "senhaforte",
     });
     expect(r.success).toBe(true);
     expect(r.data).toEqual({
       nomeEmpresa: "Bebelu",
       email: "dono@bebelu.com.br",
       senha: "senhaforte",
+      confirmacao: "senhaforte",
     });
   });
 
+  it("recusa senhas diferentes", () => {
+    const r = esquemaCadastro.safeParse({
+      nomeEmpresa: "Bebelu",
+      email: "a@b.com",
+      senha: "senhaforte",
+      confirmacao: "senhaforte2",
+    });
+    expect(errosDos(r).confirmacao?.[0]).toBe("As senhas não são iguais.");
+  });
+
   it("recusa nome vazio, e-mail inválido e senha curta", () => {
-    const r = esquemaCadastro.safeParse({ nomeEmpresa: "   ", email: "nao-e-email", senha: "123" });
+    const r = esquemaCadastro.safeParse({ nomeEmpresa: "   ", email: "nao-e-email", senha: "123", confirmacao: "123" });
     expect(r.success).toBe(false);
     const erros = errosDos(r);
     expect(erros.nomeEmpresa?.[0]).toBe("Digite o nome do seu negócio.");
@@ -44,6 +56,7 @@ describe("esquemaCadastro", () => {
       nomeEmpresa: "a".repeat(101),
       email: "a@b.com",
       senha: "x".repeat(73),
+      confirmacao: "x".repeat(73),
     });
     const erros = errosDos(r);
     expect(erros.nomeEmpresa?.[0]).toBe("O nome pode ter no máximo 100 caracteres.");
@@ -51,7 +64,7 @@ describe("esquemaCadastro", () => {
   });
 
   it("recusa campos ausentes (ex.: formulário adulterado)", () => {
-    const r = esquemaCadastro.safeParse({ nomeEmpresa: null, email: null, senha: null });
+    const r = esquemaCadastro.safeParse({ nomeEmpresa: null, email: null, senha: null, confirmacao: null });
     expect(r.success).toBe(false);
   });
 });

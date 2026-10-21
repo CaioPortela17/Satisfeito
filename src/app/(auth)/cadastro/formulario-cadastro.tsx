@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { ErroDoCampo } from "@/components/formulario/erro-do-campo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CampoSenha } from "@/components/formulario/campo-senha";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cadastrar, type EstadoFormulario } from "../actions";
@@ -62,10 +63,9 @@ export function FormularioCadastro() {
             mínimo 8 caracteres
           </span>
         </div>
-        <Input
+        <CampoSenha
           id="senha"
           name="senha"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           maxLength={72}
@@ -74,6 +74,20 @@ export function FormularioCadastro() {
           aria-describedby={estado.erros?.senha ? "senha-erro senha-dica" : "senha-dica"}
         />
         <ErroDoCampo id="senha-erro" erros={estado.erros?.senha} />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="confirmacao">Repita a senha</Label>
+        <CampoSenha
+          id="confirmacao"
+          name="confirmacao"
+          autoComplete="new-password"
+          maxLength={72}
+          required
+          aria-invalid={Boolean(estado.erros?.confirmacao)}
+          aria-describedby={estado.erros?.confirmacao ? "confirmacao-erro" : undefined}
+        />
+        <ErroDoCampo id="confirmacao-erro" erros={estado.erros?.confirmacao} />
       </div>
 
       <p className="text-sm text-muted-foreground">

@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { ErroDoCampo } from "@/components/formulario/erro-do-campo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { CampoSenha } from "@/components/formulario/campo-senha";
 import { Label } from "@/components/ui/label";
 import { redefinirSenha, type EstadoFormulario } from "../actions";
 
@@ -23,10 +23,9 @@ export function FormularioRedefinirSenha() {
 
       <div className="space-y-2">
         <Label htmlFor="senha">Nova senha</Label>
-        <Input
+        <CampoSenha
           id="senha"
           name="senha"
-          type="password"
           autoComplete="new-password"
           minLength={8}
           maxLength={72}
@@ -45,10 +44,9 @@ export function FormularioRedefinirSenha() {
 
       <div className="space-y-2">
         <Label htmlFor="confirmacao">Repita a nova senha</Label>
-        <Input
+        <CampoSenha
           id="confirmacao"
           name="confirmacao"
-          type="password"
           autoComplete="new-password"
           required
           aria-invalid={Boolean(estado.erros?.confirmacao)}
