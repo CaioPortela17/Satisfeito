@@ -35,6 +35,28 @@ describe("lerResposta", () => {
       itens: [{ pergunta_id: NOTA, valor_nota: 7 }],
     });
   });
+  it("nota abaixo de 7 guarda o texto 'onde melhorar' junto da nota", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "6", [`melhorar:${NOTA}`]: "  Demorou  " }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 6, valor_texto: "Demorou" }],
+    });
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "6", [`melhorar:${NOTA}`]: "  " }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 6 }],
+    });
+  });
+  it("nota 7 ou mais ignora o texto 'onde melhorar'", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "7", [`melhorar:${NOTA}`]: "Demorou" }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 7 }],
+    });
+  });
+  it("texto 'onde melhorar' grande demais", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "3", [`melhorar:${NOTA}`]: "a".repeat(1001) }), perguntas)).toEqual({
+      ok: false,
+      erros: { [NOTA]: "Escreva no máximo 1000 caracteres." },
+    });
+  });
   it("obrigatória faltando", () => {
     expect(lerResposta(form({}), perguntas)).toEqual({
       ok: false,

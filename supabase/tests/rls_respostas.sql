@@ -199,6 +199,28 @@ begin
       jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
     raise exception 'FALHOU: aceitou nota como texto';
   exception when sqlstate 'SF103' then null; end;
+  -- texto "onde melhorar" junto da nota: só para nota menor que 7
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 7, 'valor_texto', 'Demorou'),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto junto de nota 7';
+  exception when sqlstate 'SF103' then null; end;
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', ' Demorou '),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto com espaços nas pontas';
+  exception when sqlstate 'SF103' then null; end;
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', 5),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto que não é string';
+  exception when sqlstate 'SF103' then null; end;
+  r := public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', 'Demorou'),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+  if not exists (select 1 from public.respostas_itens where resposta_id = r and valor_nota = 4 and valor_texto = 'Demorou') then
+    raise exception 'FALHOU: texto da nota baixa não foi gravado';
+  end if;
   begin perform public.registrar_resposta(pa, jsonb_build_array(
       jsonb_build_object('pergunta_id', nota, 'valor_nota', 7, 'valor_texto', 'extra'),
       jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));

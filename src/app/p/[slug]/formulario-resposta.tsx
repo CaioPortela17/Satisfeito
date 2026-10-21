@@ -4,7 +4,7 @@ import { startTransition, useActionState, useCallback, useEffect, useRef, useSta
 import { IconeObrigado } from "@/components/icones/icone-obrigado";
 import { Button } from "@/components/ui/button";
 import { faixaDaNota } from "@/lib/notas/faixa";
-import { LIMITE_TEXTO_RESPOSTA, type PerguntaPublica } from "@/lib/respostas/formulario";
+import { LIMITE_TEXTO_RESPOSTA, NOTA_MINIMA_SEM_MELHORAR, type PerguntaPublica } from "@/lib/respostas/formulario";
 import { cn } from "@/lib/utils";
 import { enviarResposta } from "./actions";
 import type { EstadoEnvio, FuncionarioPublico } from "./tipos";
@@ -167,7 +167,13 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
             </p>
 
             {p.tipo === "nota" && (
-              <CampoNota id={p.id} valor={valores[p.id]} aoEscolher={(v) => escolher(p.id, v)} />
+              <CampoNota
+                id={p.id}
+                valor={valores[p.id]}
+                aoEscolher={(v) => escolher(p.id, v)}
+                melhorar={valores[`melhorar:${p.id}`] ?? ""}
+                aoEscreverMelhorar={(v) => setValores((atuais) => ({ ...atuais, [`melhorar:${p.id}`]: v }))}
+              />
             )}
             {p.tipo === "funcionario" && (
               <CampoFuncionario id={p.id} funcionarios={funcionarios} valor={valores[p.id]} aoEscolher={(v) => escolher(p.id, v)} />
@@ -216,9 +222,22 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
   );
 }
 
-function CampoNota({ id, valor, aoEscolher }: { id: string; valor?: string; aoEscolher: (v: string) => void }) {
+function CampoNota({
+  id,
+  valor,
+  aoEscolher,
+  melhorar,
+  aoEscreverMelhorar,
+}: {
+  id: string;
+  valor?: string;
+  aoEscolher: (v: string) => void;
+  melhorar: string;
+  aoEscreverMelhorar: (v: string) => void;
+}) {
   const nota = valor ? Number(valor) : null;
   const faixa = nota ? faixaDaNota(nota) : null;
+  const pedirMelhoria = nota !== null && nota < NOTA_MINIMA_SEM_MELHORAR;
   return (
     <div className="mt-3">
       <div className="grid grid-cols-5 gap-2 sm:grid-cols-10 sm:gap-1.5">
@@ -242,6 +261,23 @@ function CampoNota({ id, valor, aoEscolher }: { id: string; valor?: string; aoEs
       <p role="status" className="mt-1 min-h-6 text-center font-semibold">
         {faixa ? `${nota}: ${ROTULO_FAIXA[faixa]}` : ""}
       </p>
+      {pedirMelhoria && (
+        <div className="entrada mt-3">
+          <label htmlFor={`melhorar-${id}`} className="font-semibold">
+            Onde podemos melhorar? <span className="font-normal text-muted-foreground">(opcional)</span>
+          </label>
+          <textarea
+            id={`melhorar-${id}`}
+            name={`melhorar:${id}`}
+            value={melhorar}
+            onChange={(e) => aoEscreverMelhorar(e.target.value)}
+            maxLength={LIMITE_TEXTO_RESPOSTA}
+            rows={3}
+            placeholder="Conte o que não foi bom, se quiser"
+            className="mt-2 w-full rounded-2xl border border-input bg-transparent p-3 text-base placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          />
+        </div>
+      )}
     </div>
   );
 }
