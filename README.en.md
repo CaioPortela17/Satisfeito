@@ -127,8 +127,9 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Business account**
 - Home page with "Criar conta" (sign up) and "Entrar" (sign in)
-- **Sign-up** on a single screen (business name, e-mail and password) with e-mail confirmation
+- **Sign-up** on a single screen (business name, e-mail and password typed twice) with e-mail confirmation
 - **Sign in**, **sign out** and **forgot password** (e-mail link, then a new password)
+- Every password field has an eye button to **show/hide** what was typed
 - Protected **dashboard** with the business greeting and first steps
 - **Several businesses per login** (e.g. two branches): selector at the top of the dashboard and "Adicionar empresa" (add business)
 - Error messages in Portuguese and forms that don't lose what was typed
@@ -141,9 +142,9 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Surveys**
 - `/painel/pesquisas` page: list with each survey's state ("Recebendo respostas" / receiving answers, or "Pausada" / paused). Each item shows the end of the survey link, the number of questions and the answers received (discarded ones not counted), so surveys with the same title can be told apart
-- Create a survey with suggested questions: one required score, "Quem te atendeu?" (only if the business has active staff) and a free comment
+- Create a survey with suggested questions: one score, "Quem te atendeu?" (only if the business has active staff) and the free question "Quer nos contar mais alguma coisa?"
 - Survey editor: editable title, Pause/Resume and Delete with confirmation
-- Questions of 3 types (score, free text and "Quem te atendeu?"), each with its own icon: move up/down, make required/optional, edit the text, remove from the survey and bring it back later
+- Questions of 3 types (score, free text and "Quem te atendeu?"), each with its own icon: move up/down, edit the text, remove from the survey and bring it back later
 - Limit of 10 questions and a single "Quem te atendeu?" per survey, also enforced in the database
 - Warnings when the score question is missing ("sem nota") or when there is no staff for the staff question ("sem equipe")
 - Works with keyboard and screen reader
@@ -181,8 +182,10 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - Each survey has its own link (`/p/<slug>`), with a slug suggested from the business name and editable (unique across the system; if it already exists, the screen warns)
 - In the editor: copy the link, download the QR code as SVG and open a poster ready to print
 - Customer page designed for phones: 1 to 10 score, free text and "Quem te atendeu?", with a thank-you screen
+- **No question is required**: customers answer only what they want (at least one thing)
+- **A low score (1 to 6)** opens an optional "Onde podemos melhorar?" (where can we improve?) box; the text is saved with the score and feeds the AI report and the answers list. With 7 or more the box goes away
 - A paused survey shows a notice instead of the form
-- Submission goes through a Server Action that uses the secret key on the server only; the database validates everything again (survey question, whole score from 1 to 10, active staff member of the same business, required questions)
+- Submission goes through a Server Action that uses the secret key on the server only; the database validates everything again (survey question, whole score from 1 to 10, active staff member of the same business, improvement text only for scores below 7)
 - Surveys or staff with answers cannot be deleted (pause or deactivate instead)
 - **Protection against fake answers:** a 3-second minimum time, an "already answered today" mark in the browser and an invisible Cloudflare Turnstile check. The server verifies the result with Cloudflare before saving; if verification fails, the answer is not accepted. **No IP-based signal is used**, because the venue's Wi-Fi is shared and that would hurt real customers
 
