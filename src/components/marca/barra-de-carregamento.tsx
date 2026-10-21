@@ -64,9 +64,10 @@ function Barra() {
       if (destinoDoClique(e)) comecar();
     };
     const t = timers.current; // o objeto é sempre o mesmo; só as propriedades mudam
-    document.addEventListener("click", aoClicar);
+    // Fase de captura: o <Link> do Next já chama preventDefault() no clique, e a captura roda antes dele
+    document.addEventListener("click", aoClicar, true);
     return () => {
-      document.removeEventListener("click", aoClicar);
+      document.removeEventListener("click", aoClicar, true);
       clearInterval(t.passo);
       clearTimeout(t.limite);
       clearTimeout(t.fim);
