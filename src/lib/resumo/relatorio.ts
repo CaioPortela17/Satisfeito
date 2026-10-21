@@ -50,6 +50,22 @@ export function montarRelatorioWhatsApp(n: NumerosRelatorio, r: Resumo): string 
   }
   blocos.push(panorama.join("\n"));
 
+  // Notas de 1 a 10: a prosa da IA e, logo abaixo, os envios por faixa de nota (calculados pelo banco)
+  const notas: string[] = ["*Sobre as notas*"];
+  if (r.notas && limpar(r.notas)) notas.push(limpar(r.notas));
+  const faixas = n.distribuicao ?? [];
+  if (faixas.some((f) => f.envios > 0)) {
+    const ordem = [
+      ["9-10", "9 a 10"],
+      ["7-8", "7 a 8"],
+      ["4-6", "4 a 6"],
+      ["1-3", "1 a 3"],
+    ] as const;
+    const partes = ordem.map(([faixa, rotulo]) => rotulo + ": " + (faixas.find((x) => x.faixa === faixa)?.envios ?? 0));
+    notas.push("Envios por nota: " + partes.join(" | "));
+  }
+  if (notas.length > 1) blocos.push(notas.join("\n"));
+
   const diasTurnos: string[] = [];
   if (n.melhor_dia && n.dia_mais_fraco) {
     diasTurnos.push(

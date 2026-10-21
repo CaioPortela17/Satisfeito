@@ -91,6 +91,7 @@ describe.skipIf(!temChave)("avaliação do relatório com a IA de verdade", () =
       // Estrutura e limites
       expect(r.resumo.acoes.length).toBeLessThanOrEqual(3);
       expect(r.resumo.panorama.length).toBeLessThanOrEqual(400);
+      expect(r.resumo.notas.length).toBeLessThanOrEqual(500);
       // Sem emojis nem markdown solto na prosa
       expect(texto).not.toMatch(/\p{Extended_Pictographic}/u);
       // Nomes de pessoas só quando a equipe veio nos números
