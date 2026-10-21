@@ -86,7 +86,7 @@ export default async function PaginaRespostas({
 
           {aba === "suspeitas" && lista.envios.length > 0 && (
             <div className="space-y-3">
-              <p className="text-muted-foreground">
+              <p className="font-medium text-ameixa">
                 Marcamos como suspeitas as respostas de uma rajada: 4 ou mais respostas com média 4 ou menos, enviadas em até 15
                 minutos. Só você decide: descartar tira a resposta dos números, e dá para restaurar.
               </p>
