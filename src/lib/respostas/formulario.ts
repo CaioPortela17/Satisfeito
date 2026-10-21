@@ -13,6 +13,8 @@ export type LeituraResposta =
   | { ok: false; erros: Record<string, string> };
 
 export const LIMITE_TEXTO_RESPOSTA = 1000;
+// Notas abaixo disso mostram a caixa "Onde podemos melhorar?" (o banco confere a mesma regra)
+export const NOTA_MINIMA_SEM_MELHORAR = 7;
 
 const nota = z.coerce.number().int().min(1).max(10);
 const id = z.uuid();
@@ -30,14 +32,24 @@ export function lerResposta(formData: FormData, perguntas: PerguntaPublica[]): L
 
   for (const p of perguntas) {
     const valor = campo(formData, `${p.tipo}:${p.id}`);
-    if (!valor) {
-      if (p.obrigatoria) erros[p.id] = "Responda esta pergunta.";
-      continue;
-    }
+    if (!valor) continue; // nenhuma pergunta é obrigatória
     if (p.tipo === "nota") {
       const r = nota.safeParse(valor);
-      if (r.success) itens.push({ pergunta_id: p.id, valor_nota: r.data });
-      else erros[p.id] = "Escolha uma nota de 1 a 10.";
+      if (!r.success) {
+        erros[p.id] = "Escolha uma nota de 1 a 10.";
+        continue;
+      }
+      const item: ItemResposta = { pergunta_id: p.id, valor_nota: r.data };
+      // Nota baixa: o cliente pode dizer onde melhorar (o texto fica junto da nota)
+      const melhorar = r.data < NOTA_MINIMA_SEM_MELHORAR ? campo(formData, `melhorar:${p.id}`) : "";
+      if (melhorar) {
+        if (melhorar.length > LIMITE_TEXTO_RESPOSTA) {
+          erros[p.id] = `Escreva no máximo ${LIMITE_TEXTO_RESPOSTA} caracteres.`;
+          continue;
+        }
+        item.valor_texto = melhorar;
+      }
+      itens.push(item);
     } else if (p.tipo === "texto") {
       if (valor.length <= LIMITE_TEXTO_RESPOSTA) itens.push({ pergunta_id: p.id, valor_texto: valor });
       else erros[p.id] = `Escreva no máximo ${LIMITE_TEXTO_RESPOSTA} caracteres.`;

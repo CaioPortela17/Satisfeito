@@ -8,10 +8,10 @@ export const TITULO_SUGERIDO = "Pesquisa de satisfação";
 // "Quem te atendeu?" só entra se houver alguém para escolher.
 export function perguntasSugeridas(temFuncionarios: boolean): PerguntaSugerida[] {
   return [
-    { texto: "Que nota você dá para o nosso atendimento?", tipo: "nota", obrigatoria: true },
+    { texto: "Que nota você dá para o nosso atendimento?", tipo: "nota", obrigatoria: false },
     ...(temFuncionarios
       ? [{ texto: "Quem te atendeu?", tipo: "funcionario" as const, obrigatoria: false }]
       : []),
-    { texto: "Onde podemos melhorar?", tipo: "texto", obrigatoria: false },
+    { texto: "Quer nos contar mais alguma coisa?", tipo: "texto", obrigatoria: false },
   ];
 }

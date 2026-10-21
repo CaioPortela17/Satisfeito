@@ -7,7 +7,7 @@ const QUEM = "33333333-3333-4333-8333-333333333333";
 const ANA = "44444444-4444-4444-8444-444444444444";
 
 const perguntas: PerguntaPublica[] = [
-  { id: NOTA, texto: "Nota?", tipo: "nota", obrigatoria: true },
+  { id: NOTA, texto: "Nota?", tipo: "nota", obrigatoria: false },
   { id: TEXTO, texto: "Melhorar?", tipo: "texto", obrigatoria: false },
   { id: QUEM, texto: "Quem?", tipo: "funcionario", obrigatoria: false },
 ];
@@ -35,10 +35,32 @@ describe("lerResposta", () => {
       itens: [{ pergunta_id: NOTA, valor_nota: 7 }],
     });
   });
-  it("obrigatória faltando", () => {
-    expect(lerResposta(form({}), perguntas)).toEqual({
+  it("nota abaixo de 7 guarda o texto 'onde melhorar' junto da nota", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "6", [`melhorar:${NOTA}`]: "  Demorou  " }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 6, valor_texto: "Demorou" }],
+    });
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "6", [`melhorar:${NOTA}`]: "  " }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 6 }],
+    });
+  });
+  it("nota 7 ou mais ignora o texto 'onde melhorar'", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "7", [`melhorar:${NOTA}`]: "Demorou" }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: NOTA, valor_nota: 7 }],
+    });
+  });
+  it("texto 'onde melhorar' grande demais", () => {
+    expect(lerResposta(form({ [`nota:${NOTA}`]: "3", [`melhorar:${NOTA}`]: "a".repeat(1001) }), perguntas)).toEqual({
       ok: false,
-      erros: { [NOTA]: "Responda esta pergunta." },
+      erros: { [NOTA]: "Escreva no máximo 1000 caracteres." },
+    });
+  });
+  it("perguntas em branco são puladas, nenhuma é obrigatória", () => {
+    expect(lerResposta(form({ [`texto:${TEXTO}`]: "Mais sal" }), perguntas)).toEqual({
+      ok: true,
+      itens: [{ pergunta_id: TEXTO, valor_texto: "Mais sal" }],
     });
   });
   it("valores inválidos", () => {
@@ -56,8 +78,8 @@ describe("lerResposta", () => {
     });
     expect(lerResposta(form({ [`nota:${NOTA}`]: "7.5" }), perguntas).ok).toBe(false);
   });
-  it("nada respondido numa pesquisa sem obrigatórias", () => {
-    expect(lerResposta(form({}), perguntas.slice(1))).toEqual({
+  it("nada respondido", () => {
+    expect(lerResposta(form({}), perguntas)).toEqual({
       ok: false,
       erros: { geral: "Responda pelo menos uma pergunta." },
     });

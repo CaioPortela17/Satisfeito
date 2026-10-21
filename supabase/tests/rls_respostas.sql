@@ -199,6 +199,28 @@ begin
       jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
     raise exception 'FALHOU: aceitou nota como texto';
   exception when sqlstate 'SF103' then null; end;
+  -- texto "onde melhorar" junto da nota: só para nota menor que 7
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 7, 'valor_texto', 'Demorou'),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto junto de nota 7';
+  exception when sqlstate 'SF103' then null; end;
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', ' Demorou '),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto com espaços nas pontas';
+  exception when sqlstate 'SF103' then null; end;
+  begin perform public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', 5),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+    raise exception 'FALHOU: aceitou texto que não é string';
+  exception when sqlstate 'SF103' then null; end;
+  r := public.registrar_resposta(pa, jsonb_build_array(
+      jsonb_build_object('pergunta_id', nota, 'valor_nota', 4, 'valor_texto', 'Demorou'),
+      jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
+  if not exists (select 1 from public.respostas_itens where resposta_id = r and valor_nota = 4 and valor_texto = 'Demorou') then
+    raise exception 'FALHOU: texto da nota baixa não foi gravado';
+  end if;
   begin perform public.registrar_resposta(pa, jsonb_build_array(
       jsonb_build_object('pergunta_id', nota, 'valor_nota', 7, 'valor_texto', 'extra'),
       jsonb_build_object('pergunta_id', quem, 'funcionario_id', ana)));
@@ -219,11 +241,9 @@ begin
     raise exception 'FALHOU: aceitou funcionário de outra empresa';
   exception when sqlstate 'SF103' then null; end;
 
-  -- SF104: obrigatória faltando
-  begin perform public.registrar_resposta(pa, jsonb_build_array(
-      jsonb_build_object('pergunta_id', texto, 'valor_texto', 'Só texto')));
-    raise exception 'FALHOU: aceitou sem as obrigatórias';
-  exception when sqlstate 'SF104' then null; end;
+  -- Nada é obrigatório: só texto, sem a nota, é aceito
+  perform public.registrar_resposta(pa, jsonb_build_array(
+    jsonb_build_object('pergunta_id', texto, 'valor_texto', 'Só texto')));
 
   -- Válido
   r := public.registrar_resposta(pa, ok_itens);
@@ -240,7 +260,7 @@ begin
   end if;
 end $$;
 
--- Sem equipe ativa, "Quem?" deixa de ser obrigatória
+-- Sem equipe ativa, a resposta continua sendo aceita
 reset role;
 update public.funcionarios set ativo = false where nome = 'Ana';
 set local role service_role;
@@ -261,11 +281,11 @@ select set_config('request.jwt.claims',
   '{"sub":"00000000-0000-0000-0000-0000000000a3","role":"authenticated"}', true);
 do $$
 begin
-  if (select count(*) from public.respostas) <> 3 then
-    raise exception 'FALHOU: A deveria ver exatamente as 3 respostas dele';
+  if (select count(*) from public.respostas) <> 5 then
+    raise exception 'FALHOU: A deveria ver exatamente as 5 respostas dele';
   end if;
-  if (select count(*) from public.respostas_itens) <> 6 then
-    raise exception 'FALHOU: A deveria ver os 6 itens dele';
+  if (select count(*) from public.respostas_itens) <> 9 then
+    raise exception 'FALHOU: A deveria ver os 9 itens dele';
   end if;
   begin
     update public.respostas set created_at = now();
