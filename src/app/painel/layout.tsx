@@ -16,7 +16,7 @@ export default async function LayoutPainel({ children }: LayoutProps<"/painel">)
       {/* Faixa branca de ponta a ponta, presa no topo ao rolar a página */}
       <header className="sticky top-0 z-10 print:hidden border-b border-ameixa/10 bg-card shadow-[0_2px_12px_rgba(42,31,45,0.08)]">
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-5 gap-y-3 px-4 py-3">
-          <Link href="/painel" className="rounded-md" aria-label="Painel">
+          <Link href="/painel" className="inline-flex min-h-11 items-center rounded-md" aria-label="Painel">
             <Logo className="text-2xl" />
           </Link>
 

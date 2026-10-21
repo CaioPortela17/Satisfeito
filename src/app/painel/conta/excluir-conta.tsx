@@ -36,7 +36,7 @@ export function ExcluirConta() {
         </summary>
         <div className="mt-3 space-y-3">
           <p className="text-muted-foreground">
-            Isto apaga <strong>para sempre</strong> a sua conta e tudo que é dela: empresas, funcionários, pesquisas, perguntas, todas as
+            Isto apaga <strong>para sempre</strong> a sua conta e tudo que é dela: empresas, pesquisas, perguntas, todas as
             respostas e os relatórios. Não dá para desfazer. Se quiser uma cópia antes, baixe a planilha na página Respostas.
           </p>
           <label htmlFor={id} className="block text-sm font-semibold">

@@ -31,7 +31,7 @@ export default async function PaginaPainel() {
   const pronto = tudoPronto(passos);
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl space-y-6">
       <div>
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight sm:text-4xl">
           Olá, {atual?.nome ?? "tudo bem"}

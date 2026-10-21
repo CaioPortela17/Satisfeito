@@ -5,7 +5,6 @@ const MENSAGENS: Record<string, string> = {
   SF101: "Essa pesquisa não está recebendo respostas agora.",
   SF102: PROBLEMA,
   SF103: PROBLEMA,
-  SF104: "Responda as perguntas obrigatórias.",
   SF105: "Responda pelo menos uma pergunta.",
 };
 

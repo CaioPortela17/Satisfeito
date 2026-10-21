@@ -215,7 +215,7 @@ export function LinhaPerguntaArquivada({
   podeDevolver,
 }: {
   pergunta: PerguntaEditor;
-  podeDevolver: boolean; // falso quando já há 10 perguntas ou outra de funcionário valendo
+  podeDevolver: boolean; // falso quando a pesquisa já está com 10 perguntas
 }) {
   const { erro, pendente, executar } = useExecutar();
   const bloqueado = !podeDevolver || pendente;

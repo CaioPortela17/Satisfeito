@@ -54,7 +54,6 @@ type Props = {
 export function FormularioResposta({ slug, pesquisaId, titulo, empresa, perguntas, carimbo }: Props) {
   const [estado, acao, pendente] = useActionState(enviarResposta, {} as EstadoEnvio);
   const [valores, setValores] = useState<Record<string, string>>({});
-  const [errosLocais, setErrosLocais] = useState<Record<string, string>>({});
   const jaRespondeu = useSyncExternalStore(nada, () => lerMarca(pesquisaId), () => false);
   const obrigado = useRef<HTMLHeadingElement>(null);
   const [token, setToken] = useState("");
@@ -75,7 +74,7 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
     return () => clearTimeout(timer);
   }, [token, rodada]);
 
-  const erros = { ...estado.erros, ...errosLocais };
+  const erros = estado.erros ?? {};
 
   useEffect(() => {
     if (estado.enviado) {
@@ -92,11 +91,6 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
 
   function escolher(perguntaId: string, valor: string) {
     setValores((v) => ({ ...v, [perguntaId]: valor }));
-    setErrosLocais((atuais) => {
-      const resto = { ...atuais };
-      delete resto[perguntaId];
-      return resto;
-    });
   }
 
   function enviar(e: React.FormEvent<HTMLFormElement>) {
@@ -244,13 +238,16 @@ function CampoNota({
           </label>
         ))}
       </div>
-      <p className="mt-2 flex justify-between text-sm text-muted-foreground" aria-hidden="true">
-        <span>1 = muito ruim</span>
-        <span>10 = perfeito</span>
-      </p>
-      <p role="status" className="mt-1 min-h-6 text-center font-semibold">
-        {faixa ? `${nota}: ${ROTULO_FAIXA[faixa]}` : ""}
-      </p>
+      <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-sm text-muted-foreground">
+        <span aria-hidden="true">1 = muito ruim</span>
+        <p role="status" className="min-w-20 text-center text-base font-semibold text-foreground">
+          {faixa ? `${nota}: ${ROTULO_FAIXA[faixa]}` : ""}
+          {pedirMelhoria && <span className="sr-only">. Abaixo, um campo opcional para dizer onde podemos melhorar.</span>}
+        </p>
+        <span aria-hidden="true" className="text-right">
+          10 = perfeito
+        </span>
+      </div>
       {pedirMelhoria && (
         <div className="entrada mt-3">
           <label htmlFor={`melhorar-${id}`} className="font-semibold">

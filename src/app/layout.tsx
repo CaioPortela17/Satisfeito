@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 // Cor da barra do navegador no celular: igual ao topo da tela (fundo menta)
-export const viewport: Viewport = { themeColor: "#14b8a6" };
+// interactiveWidget: no Android o teclado encolhe a tela em vez de cobrir o campo que a pessoa está digitando
+export const viewport: Viewport = { themeColor: "#14b8a6", interactiveWidget: "resizes-content" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

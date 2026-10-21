@@ -8,18 +8,18 @@ web
 
 ## Users
 
-- **Dono do negócio** (único com login): dono de lanchonete, restaurante ou loja de bairro; pode ter várias unidades/empresas na mesma conta (ex.: a dona de várias Bebelus). Usa o painel **no celular** (olhadas rápidas, no balcão) **e no computador** (análise com calma). Cadastra funcionários, cria pesquisas, imprime QR codes e acompanha resultados.
+- **Dono do negócio** (único com login): dono de lanchonete, restaurante ou loja de bairro; pode ter várias unidades/empresas na mesma conta (ex.: a dona de várias Bebelus). Usa o painel **no celular** (olhadas rápidas, no balcão) **e no computador** (análise com calma). Cria pesquisas, imprime QR codes e acompanha resultados.
 - **Cliente do negócio** (sem login): escaneia o QR code na mesa, no balcão ou na nota fiscal e responde no celular em menos de 30 segundos.
 
 ## Product Purpose
 
-Pesquisa de satisfação para negócios locais: o cliente responde rápido pelo QR code e o dono vê médias, evolução, ranking dos funcionários e um resumo escrito por IA do que os clientes dizem. Sucesso = o dono descobre o que melhorar sem esforço e o cliente responde sem desistir.
+Pesquisa de satisfação para negócios locais: o cliente responde rápido pelo QR code e o dono vê médias, evolução e um relatório escrito por IA do que os clientes dizem (notas e comentários). Sucesso = o dono descobre o que melhorar sem esforço e o cliente responde sem desistir.
 
 ## Positioning
 
 - **Simples e rápido:** qualquer dono de negócio entende sem treinamento; a pesquisa leva menos de 30 segundos.
-- **Ranking da equipe:** mostra quem atende melhor (pergunta "Quem te atendeu?").
-- **Resumo com IA:** pontos positivos, reclamações e sugestões lidos em um minuto.
+- **Notas e comentários:** nota de 1 a 10 e texto livre; nota baixa pede "onde podemos melhorar". Nada é obrigatório.
+- **Relatório com IA:** panorama, notas, elogios, reclamações, sugestões e ações, pronto para o WhatsApp, lido em um minuto.
 - Concorrente de referência: Falaê. Deve parecer um produto **profissional**, não um projeto amador.
 
 ## Operating Context
@@ -28,8 +28,8 @@ QR code impresso na mesa, no balcão ou na nota fiscal; Wi-Fi compartilhado do e
 
 ## Capabilities and Constraints
 
-- Feito: conta da empresa (cadastro, confirmação por e-mail, entrar, sair, recuperar senha), várias empresas por login com seletor, painel inicial, página 404.
-- Em construção: funcionários (Etapa 3). Depois: pesquisas e perguntas (nota 1–10, texto, funcionário), página pública + QR code, painel com gráficos, resumo com IA.
+- Feito: conta da empresa, várias empresas por login, pesquisas e perguntas (nota 1–10 e texto), página pública + QR code, painel com resultados, respostas suspeitas e relatório com IA.
+- Fora do produto (decisão de 2026-10-21): funcionários, "Quem te atendeu?" e ranking da equipe. Os dados antigos continuam no banco, sem aparecer.
 - Pesquisa sempre anônima; sem bloqueio por IP nem identificação obrigatória.
 - Interface e textos em português do Brasil.
 
@@ -52,7 +52,7 @@ Nenhum depoimento, cliente, número ou foto real ainda. A Bebelu é o primeiro c
 1. Rápido para o cliente, claro para o dono.
 2. Cada número vem com significado (faixa, palavra, contexto).
 3. Feito para negócio de bairro, com cara de produto profissional.
-4. A equipe aparece: reconhecer quem atende bem.
+4. Só o essencial: nota e texto escrito; nada obrigatório para o cliente.
 
 ## Accessibility & Inclusion
 

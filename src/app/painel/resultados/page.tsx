@@ -46,7 +46,7 @@ export default async function PaginaResultados({
   // Sem pesquisa nenhuma ainda
   if (!escolhida) {
     return (
-      <div className="max-w-2xl space-y-6">
+      <div className="max-w-4xl space-y-6">
         <Cabecalho />
         <section className={SECAO}>
           <p className="font-semibold">Nenhuma pesquisa ainda</p>
