@@ -35,20 +35,13 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
     .eq("pesquisa_id", pesquisa.id)
     .order("ordem");
 
-  const todas = (perguntas ?? []) as PerguntaEditor[];
+  // Perguntas "Quem te atendeu?" antigas (tipo funcionario) foram arquivadas e não aparecem mais
+  const todas = ((perguntas ?? []) as PerguntaEditor[]).filter((p) => p.tipo !== ("funcionario" as string));
   const valendo = todas.filter((p) => !p.arquivada);
   const tiradas = todas.filter((p) => p.arquivada);
-  const temFuncionarioValendo = valendo.some((p) => p.tipo === "funcionario");
   const noLimite = valendo.length >= LIMITE_PERGUNTAS;
 
-  // Avisos que ajudam o dono a não cair em armadilha
-  const { count: funcionariosAtivos } = await supabase
-    .from("funcionarios")
-    .select("id", { count: "exact", head: true })
-    .eq("empresa_id", atual.id)
-    .eq("ativo", true);
-  // count vem null quando a consulta falha: nesse caso não mostramos o aviso (melhor calar do que errar)
-  const semEquipe = temFuncionarioValendo && funcionariosAtivos === 0;
+  // Aviso que ajuda o dono a não cair em armadilha
   const semNota = !valendo.some((p) => p.tipo === "nota");
 
   return (
@@ -72,20 +65,8 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
         </h2>
         <p id="anuncio-perguntas" role="status" className="sr-only" />
 
-        {(semEquipe || semNota) && (
+        {semNota && (
           <ul className="mt-4 space-y-2">
-            {semEquipe && (
-              <li className="rounded-2xl bg-manga-claro p-3 text-sm font-medium text-manga-texto">
-                A pergunta &ldquo;Quem te atendeu?&rdquo; só aparece para o cliente quando houver
-                funcionários ativos.{" "}
-                <Link
-                  href="/painel/funcionarios"
-                  className="inline-flex min-h-11 items-center font-semibold underline underline-offset-4"
-                >
-                  Cadastrar a equipe
-                </Link>
-              </li>
-            )}
             {semNota && (
               <li className="rounded-2xl bg-manga-claro p-3 text-sm font-medium text-manga-texto">
                 Sem uma pergunta de nota, o painel não terá médias nem gráficos.
@@ -110,7 +91,7 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
           <h3 className="mb-4 text-lg font-bold">Adicionar pergunta</h3>
           <FormularioNovaPergunta
             pesquisaId={pesquisa.id}
-            tiposDisponiveis={TIPOS_PERGUNTA.filter((t) => t !== "funcionario" || !temFuncionarioValendo)}
+            tiposDisponiveis={[...TIPOS_PERGUNTA]}
             noLimite={noLimite}
           />
         </div>
@@ -133,7 +114,7 @@ export default async function PaginaEditorPesquisa(props: PageProps<"/painel/pes
                 <LinhaPerguntaArquivada
                   key={p.id}
                   pergunta={p}
-                  podeDevolver={!noLimite && !(p.tipo === "funcionario" && temFuncionarioValendo)}
+                  podeDevolver={!noLimite}
                 />
               ))}
             </ul>

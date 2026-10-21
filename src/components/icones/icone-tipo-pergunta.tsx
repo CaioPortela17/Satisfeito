@@ -19,14 +19,6 @@ export function IconeTipoPergunta({ tipo, className }: { tipo: TipoPergunta; cla
           <path d="M7.5 9h9M7.5 12.5h6" stroke="var(--ameixa)" strokeWidth="1.6" strokeLinecap="round" />
         </>
       )}
-      {tipo === "funcionario" && (
-        <>
-          {/* Pessoa com crachá (coral) */}
-          <circle cx="12" cy="8" r="3.5" fill="var(--creme)" stroke="var(--ameixa)" strokeWidth="1.6" />
-          <path d="M5 20.5v-1a7 7 0 0 1 14 0v1Z" fill="var(--coral)" stroke="var(--ameixa)" strokeWidth="1.6" strokeLinejoin="round" />
-          <rect x="13.5" y="15.5" width="3.5" height="2.5" rx=".8" fill="var(--creme)" />
-        </>
-      )}
     </svg>
   );
 }

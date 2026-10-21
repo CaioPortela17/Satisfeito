@@ -21,27 +21,18 @@ function montarItens(d: DadosDestaques): Item[] {
       valor: formatarMedia(d.dia_mais_fraco.media),
     });
   }
-  if (d.melhor_funcionario) {
-    itens.push({
-      chave: "equipe",
-      rotulo: "Quem mais agradou",
-      titulo: d.melhor_funcionario.nome,
-      detalhe: d.melhor_funcionario.avaliacoes === 1 ? "1 avaliação" : `${d.melhor_funcionario.avaliacoes} avaliações`,
-      valor: formatarMedia(d.melhor_funcionario.media),
-    });
-  }
   return itens;
 }
 
-// Até 4 cartões para ler de relance. O que não tem dados suficientes simplesmente não aparece.
+// Até 3 cartões para ler de relance. O que não tem dados suficientes simplesmente não aparece.
 export function Destaques({ destaques, className }: { destaques: DadosDestaques; className?: string }) {
   const itens = montarItens(destaques);
   if (itens.length === 0) return null;
   return (
     <section aria-labelledby="titulo-destaques" className={className}>
-      <h2 id="titulo-destaques" className="text-xl font-bold">
+      <h3 id="titulo-destaques" className="text-lg font-bold">
         Destaques do período
-      </h2>
+      </h3>
       <ul className="mt-4 grid gap-3 sm:grid-cols-2">
         {itens.map((i) => (
           <li key={i.chave} className="flex items-center gap-4 rounded-2xl bg-creme p-4">

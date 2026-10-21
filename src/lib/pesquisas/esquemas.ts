@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const TIPOS_PERGUNTA = ["nota", "texto", "funcionario"] as const;
+export const TIPOS_PERGUNTA = ["nota", "texto"] as const;
 export type TipoPergunta = (typeof TIPOS_PERGUNTA)[number];
 
 // Pesquisa curta = cliente responde em menos de 30 segundos
@@ -25,8 +25,6 @@ export const esquemaTipoPergunta = z.enum(TIPOS_PERGUNTA, "Escolha o tipo da per
 export const esquemaIdPesquisa = z.uuid("Item inválido.");
 
 const MENSAGENS: Record<string, string> = {
-  // unique_violation: índice "uma pergunta de funcionário por pesquisa"
-  "23505": "Essa pesquisa já tem a pergunta \u201CQuem te atendeu?\u201D.",
   // chave estrangeira restrict de respostas
   "23503": "Essa pesquisa já tem respostas. Pause em vez de excluir.",
   // erro próprio do trigger limitar_perguntas

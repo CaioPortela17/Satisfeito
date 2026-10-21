@@ -30,10 +30,6 @@ function numerosPermitidos(n: NumerosRelatorio): Set<number> {
     diferenca(p.media, p.media_anterior);
   }
   for (const f of n.distribuicao ?? []) add(f.envios);
-  for (const m of n.equipe ?? []) {
-    add(m.media);
-    add(m.avaliacoes);
-  }
   // Dia e mês das datas do período (ex.: "de 17/09 a 14/10")
   for (const iso of [n.periodo.inicio, n.periodo.fim]) {
     const [, mes, dia] = iso.split("-");

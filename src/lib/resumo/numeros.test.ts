@@ -33,16 +33,10 @@ const PAINEL: Painel = {
     { turno: "noite", media: 9.1, envios: 20 },
     { turno: "madrugada", media: null, envios: 0 },
   ],
-  equipe: [
-    { id: "a", nome: "Ana", ativo: true, media: 9, avaliacoes: 14, media_anterior: 8.5, avaliacoes_anterior: 10 },
-    { id: "b", nome: "Bia", ativo: true, media: 9.8, avaliacoes: 2, media_anterior: null, avaliacoes_anterior: 0 },
-    { id: "c", nome: "Caio", ativo: false, media: 8.2, avaliacoes: 5, media_anterior: null, avaliacoes_anterior: 0 },
-  ],
   destaques: {
     melhor_pergunta: { id: "p1", texto: "Comida", media: 9 },
     pior_pergunta: { id: "p2", texto: "Espera", media: 7.1 },
     dia_mais_fraco: { dia: 1, media: 7.2, envios: 6 },
-    melhor_funcionario: { id: "a", nome: "Ana", media: 9, avaliacoes: 14 },
   },
   suspeitas: 0,
 };
@@ -56,12 +50,12 @@ describe("montarNumeros", () => {
         { id: "b", texto: "Espera", ordem: 2, media: null, respostas: 0, media_anterior: null, respostas_anterior: 0 },
       ],
     };
-    const n = montarNumeros(painel, "Pesquisa X", false);
+    const n = montarNumeros(painel, "Pesquisa X");
     expect(n.perguntas).toEqual([{ texto: "Comida", media: 9, respostas: 40, media_anterior: 8.5 }]);
     expect(n.distribuicao).toEqual(PAINEL.atual.distribuicao);
   });
   it("copia os números do painel", () => {
-    const n = montarNumeros(PAINEL, "Pesquisa X", false);
+    const n = montarNumeros(PAINEL, "Pesquisa X");
     expect(n.pesquisa).toBe("Pesquisa X");
     expect(n.periodo).toEqual(PAINEL.periodo);
     expect([n.envios, n.envios_anterior, n.media, n.media_anterior, n.nps, n.nps_anterior]).toEqual([48, 36, 8.4, 8.1, 52, 44]);
@@ -70,29 +64,15 @@ describe("montarNumeros", () => {
   });
 
   it("dia e turno: só entram os com 3 envios ou mais; quarta (2 envios) não vira destaque", () => {
-    const n = montarNumeros(PAINEL, "X", false);
+    const n = montarNumeros(PAINEL, "X");
     expect(n.melhor_dia).toEqual({ dia: 6, media: 9.1 });
     expect(n.dia_mais_fraco).toEqual({ dia: 1, media: 7.2 });
     expect(n.melhor_turno).toEqual({ turno: "noite", media: 9.1 });
     expect(n.pior_turno).toEqual({ turno: "tarde", media: 7 });
   });
 
-  it("sem a opção de nomes, a equipe fica de fora (null)", () => {
-    expect(montarNumeros(PAINEL, "X", false).equipe).toBeNull();
-    expect(JSON.stringify(montarNumeros(PAINEL, "X", false))).not.toContain("Ana");
-  });
-
-  it("com a opção de nomes, entram só quem tem 3 avaliações ou mais, do melhor para o pior", () => {
-    const n = montarNumeros(PAINEL, "X", true);
-    expect(n.equipe).toEqual([
-      { nome: "Ana", media: 9, avaliacoes: 14 },
-      { nome: "Caio", media: 8.2, avaliacoes: 5 },
-    ]);
-  });
-
-  it("com a opção ligada mas ninguém com 3 avaliações, equipe é null", () => {
-    const pouco = { ...PAINEL, equipe: PAINEL.equipe.map((m) => ({ ...m, avaliacoes: 2 })) };
-    expect(montarNumeros(pouco, "X", true).equipe).toBeNull();
+  it("nenhum nome de funcionário vai nos números", () => {
+    expect(JSON.stringify(montarNumeros(PAINEL, "X"))).not.toContain("equipe");
   });
 
   it("sem dados suficientes de dia/turno, não há melhor nem pior", () => {
@@ -102,7 +82,7 @@ describe("montarNumeros", () => {
       turno: PAINEL.turno.map((t) => ({ ...t, envios: 1 })),
       destaques: { ...PAINEL.destaques, dia_mais_fraco: null },
     };
-    const n = montarNumeros(vazio, "X", false);
+    const n = montarNumeros(vazio, "X");
     expect([n.melhor_dia, n.dia_mais_fraco, n.melhor_turno, n.pior_turno]).toEqual([null, null, null, null]);
   });
 });

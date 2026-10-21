@@ -39,10 +39,11 @@ describe("esquemaTextoPergunta", () => {
 });
 
 describe("esquemaTipoPergunta", () => {
-  it("aceita os três tipos e recusa outros", () => {
-    for (const tipo of ["nota", "texto", "funcionario"]) {
+  it("aceita nota e texto e recusa outros (inclusive o antigo \"funcionario\")", () => {
+    for (const tipo of ["nota", "texto"]) {
       expect(esquemaTipoPergunta.safeParse(tipo).success).toBe(true);
     }
+    expect(esquemaTipoPergunta.safeParse("funcionario").success).toBe(false);
     expect(esquemaTipoPergunta.safeParse("estrelas").error?.issues[0].message).toBe(
       "Escolha o tipo da pergunta.",
     );
@@ -57,11 +58,6 @@ describe("esquemaIdPesquisa", () => {
 });
 
 describe("mensagemErroPesquisa", () => {
-  it("traduz a segunda pergunta de funcionário (23505)", () => {
-    expect(mensagemErroPesquisa("23505")).toBe(
-      "Essa pesquisa já tem a pergunta \u201CQuem te atendeu?\u201D.",
-    );
-  });
   it("traduz o limite de perguntas (SF001)", () => {
     expect(mensagemErroPesquisa("SF001")).toBe(
       "Pesquisas curtas recebem mais respostas. O limite é 10 perguntas.",

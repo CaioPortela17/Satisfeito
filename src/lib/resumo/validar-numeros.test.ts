@@ -48,10 +48,8 @@ describe("numerosDesconhecidos", () => {
     expect(numerosDesconhecidos(r, NUMEROS_EXEMPLO)).toEqual([]);
   });
 
-  it("números da equipe só valem quando a equipe vem nos dados", () => {
+  it("média de funcionário não está nos dados, então não vale", () => {
     const r = com({ acoes: ["Reconhecer a Ana, que teve 9,3 de média"] });
     expect(numerosDesconhecidos(r, NUMEROS_EXEMPLO)).toEqual(["9,3"]);
-    const comEquipe = { ...NUMEROS_EXEMPLO, equipe: [{ nome: "Ana", media: 9.3, avaliacoes: 14 }] };
-    expect(numerosDesconhecidos(r, comEquipe)).toEqual([]);
   });
 });

@@ -10,10 +10,9 @@ O projeto também é portfólio e estudo, então o desenvolvedor (Caio, estudant
 ### Lado da empresa (com login)
 - Cria conta e faz login
 - Cadastra funcionários (opcional)
-- Cria pesquisas com perguntas de três tipos:
+- Cria pesquisas com perguntas de dois tipos:
   - `nota`: escala de 1 a 10
   - `texto`: resposta livre
-  - `funcionario`: cliente escolhe quem o atendeu ("Quem te atendeu?")
 - Gera link e QR code da pesquisa para colocar na mesa, no balcão ou na nota fiscal
 - Acompanha os resultados no dashboard
 
@@ -25,7 +24,6 @@ O projeto também é portfólio e estudo, então o desenvolvedor (Caio, estudant
 
 ### Dashboard
 - Média de cada pergunta de nota e evolução ao longo do tempo
-- Ranking dos funcionários por nota média
 - Total de respostas no dia, na semana e no mês
 - Lista das respostas recentes
 - Resumo escrito gerado por IA a partir das respostas de texto (pontos positivos, reclamações, sugestões)
@@ -39,9 +37,9 @@ O projeto também é portfólio e estudo, então o desenvolvedor (Caio, estudant
 
 ## Banco de dados
 - `empresas`: id, nome, owner_id (usuário do Supabase Auth), created_at
-- `funcionarios`: id, empresa_id, nome, ativo, created_at
+- `funcionarios`: id, empresa_id, nome, ativo, created_at (legado: a tabela e os dados continuam, mas funcionários saíram do produto em 2026-10-21)
 - `pesquisas`: id, empresa_id, titulo, ativa, slug (usado no link público), created_at
-- `perguntas`: id, pesquisa_id, texto, tipo (`nota` | `texto` | `funcionario`), ordem, obrigatoria (legado: fica sempre `false`, nada é obrigatório)
+- `perguntas`: id, pesquisa_id, texto, tipo (`nota` | `texto`; `funcionario` só existe em perguntas antigas, todas arquivadas), ordem, obrigatoria (legado: fica sempre `false`, nada é obrigatório)
 - `respostas`: id, pesquisa_id, created_at (cada envio de um cliente)
 - `respostas_itens`: id, resposta_id, pergunta_id, valor_nota, valor_texto, funcionario_id
 
@@ -104,6 +102,7 @@ Consequência: o envio da resposta passa por uma Server Action (que aplica as re
 - [x] Melhorias de 2026-10-17: CI (GitHub Actions, `.github/workflows/ci.yml`, roda os testes de `supabase/tests` num Supabase local); página de erro e `instrumentation.ts`; exportar CSV; página Unidades (`comparar_unidades`); avisos por e-mail (`reservar_aviso`, `avisos_enviados`, colunas `empresas.aviso_nota_baixa` e `relatorio_semanal`; Resend via fetch, desligado sem `RESEND_API_KEY`/`EMAIL_REMETENTE`; testado de ponta a ponta com Resend falso). Páginas /termos e /privacidade criadas (modelo inicial; **revisar com advogado**, definir `NEXT_PUBLIC_EMAIL_CONTATO` e a razão social/CNPJ do responsável; excluir conta e dados feito em 2026-10-17: `apagarDadosDoDono` em `src/lib/conta/excluir.ts`, tela em Início > Minha conta e dados, testado com usuário descartável; `respostas` continua sem cascata com a pesquisa de propósito, por isso a exclusão apaga as respostas primeiro). **Pendências: criar a conta no Resend e verificar o domínio (sem isso nenhum e-mail sai); relatório semanal automático feito (`/api/cron/relatorio-semanal`, `vercel.json`, testado com IA e e-mail falsos): falta pôr `CRON_SECRET` na Vercel; a lógica de gerar o relatório agora está em `src/lib/resumo/pipeline.ts` (usada pela tela e pelo cron)**
 - [x] Ajustes de 2026-10-20 (PRs #35 e #36): caixa "Onde podemos melhorar?" para nota menor que 7 (migração `nota_baixa_melhorar`; `NOTA_MINIMA_SEM_MELHORAR` em `src/lib/respostas/formulario.ts`); **nenhuma pergunta é obrigatória** (migração `tudo_opcional` marcou todas como opcionais e `registrar_resposta` não confere mais; saiu o botão "Tornar obrigatória"; a coluna `obrigatoria` continua, sempre `false`); pergunta final sugerida vira "Quer nos contar mais alguma coisa?" (só pesquisas novas); cadastro pede a senha duas vezes e todo campo de senha tem botão de mostrar/ocultar (`src/components/formulario/campo-senha.tsx`). Pendência: conferir as telas no navegador/celular
 - [x] Ajustes de 2026-10-20/21 (PRs #38 a #43): cabeçalho do painel em uma linha do desktop (1024px) para cima, com o menu à direita e os nomes dos links inativos só a partir de 1180px (`layout.tsx`, `nav-painel.tsx`; painel em `max-w-6xl`; a saudação do Início ficou como antes); **relatório de IA também fala das notas**: `NumerosRelatorio` ganhou `perguntas` e `distribuicao` (opcionais, retratos antigos não têm), a IA devolve o campo `notas` (até 500 caracteres, conferido contra número inventado) e o WhatsApp mostra "Sobre as notas" + "Envios por nota" (`src/lib/resumo/*`); **funções da Vercel em São Paulo** (`vercel.json` com `regions: ["gru1"]`: rodavam em iad1 e cada consulta ao Supabase sa-east-1 cruzava os EUA; painel passou a responder em 0,2 a 0,4 s); **barra de carregamento** coral no topo ao clicar em links (`src/components/marca/barra-de-carregamento.tsx`, no layout raiz, ouve o clique na fase de captura porque o `Link` do Next já cancela o evento; não cobre redirecionamentos feitos pelo servidor). Pendências: testar o relatório com a chave real da Anthropic (texto de "Sobre as notas", custo); conferir o cabeçalho em tablet/celular
+- [x] **Funcionários saíram do produto (2026-10-21, decisão do Caio: só interessam notas e textos escritos)**: removidos a página `/painel/funcionarios` e o link do menu, o ranking da equipe e "Quem mais agradou" em Resultados, o passo "Cadastre quem atende" do Início, a pergunta "Quem te atendeu?" (tipo `funcionario`: some do formulário público, do editor, da lista de respostas e do CSV), a opção "Citar nomes e notas da equipe" e a equipe nos números/relatório de IA (a IA agora é mandada nunca citar nomes). **Nada foi apagado do banco**: tabela `funcionarios`, `respostas_itens.funcionario_id`, funções SQL e testes `rls_funcionarios.sql` continuam; a migração `tirar_funcionarios` só arquivou as 5 perguntas de funcionário que estavam valendo (dá para desarquivar). Se um dia quiser apagar de vez: dropar a tabela/coluna e as partes de `painel_pesquisa`/`respostas_pesquisa`/`reservar_resumo_ia` que ainda falam de equipe. Pendências: refazer o print `docs/prints/pesquisa-publica.jpg` (ainda mostra "Quem te atendeu?") e o de Resultados (ainda mostra o ranking); as telas `/painel/funcionarios` etc. não existem mais, então quem tiver o link salvo cai na página 404
 - Avaliação da IA: `npm run avaliar-ia` (`src/lib/resumo/avaliacao/relatorio.avaliacao.ts`, config `vitest.avaliacao.config.ts`); pula sem `ANTHROPIC_API_KEY`; o roteiro foi validado contra a IA falsa, falta rodar com a chave real e olhar os textos impressos
 - Auditoria de acessibilidade com axe-core (WCAG 2.1 A/AA + boas práticas) em 2026-10-17, injetado pelo navegador: home, /termos, Resultados, Respostas, Painel, Unidades e a pesquisa pública sem violações (depois de corrigir o texto "poucos dados" de dia/turno, que estava esmaecido, e o aviso do Turnstile, de contraste baixo). Aviso `region` do `#claude-static-indicator-container` é da extensão do Claude, não do app. Não auditadas: /entrar e /cadastro (o Chrome controlado está logado e redireciona), editor de pesquisas. Teste com leitor de tela de verdade continua pendente
 - **Decisão do Caio (2026-10-17): avisos por e-mail e relatório semanal ficam PARA DEPOIS e saíram do site** (cartão do Início removido, `registrar` não dispara mais aviso, `vercel.json` sem cron, política de privacidade sem menção a eles). O código continua no repositório e no banco, desligado: `src/lib/avisos/*`, `src/app/painel/avisos/*` (não usado), `src/app/api/cron/relatorio-semanal`, `reservar_aviso`, `avisos_enviados`, colunas `empresas.aviso_nota_baixa/relatorio_semanal`. Para religar: recolocar `<AvisosEmail>` em `/painel`, o `after(() => avisarSobreResposta(...))` em `enviarResposta` (`src/app/p/[slug]/actions.ts`), o cron em `vercel.json` (`{"crons":[{"path":"/api/cron/relatorio-semanal","schedule":"0 11 * * *"}]}`), a linha do Resend na política de privacidade, e criar `RESEND_API_KEY`, `EMAIL_REMETENTE` e `CRON_SECRET`.

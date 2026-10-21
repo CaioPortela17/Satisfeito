@@ -2,12 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   escolherPesquisaPadrao,
   formatarMedia,
-  ordenarEquipe,
-  poucasAvaliacoes,
   rotuloDia,
   rotuloFaixa,
 } from "./apresentacao";
-import type { MembroEquipe } from "./tipos";
 
 describe("formatarMedia", () => {
   it("usa vírgula e uma casa decimal", () => {
@@ -27,33 +24,6 @@ describe("rotuloFaixa", () => {
     expect(rotuloFaixa(7)).toBe("Pode melhorar");
     expect(rotuloFaixa(6)).toBe("Pode melhorar");
     expect(rotuloFaixa(5.9)).toBe("Ruim");
-  });
-});
-
-describe("poucasAvaliacoes", () => {
-  it("menos de 3 é pouco", () => {
-    expect(poucasAvaliacoes(2)).toBe(true);
-    expect(poucasAvaliacoes(3)).toBe(false);
-  });
-});
-
-describe("ordenarEquipe", () => {
-  const m = (nome: string, media: number, avaliacoes: number): MembroEquipe => ({
-    id: nome, nome, ativo: true, media, avaliacoes,
-  });
-
-  it("quem tem 3 ou mais avaliações vem antes, mesmo com média menor", () => {
-    const r = ordenarEquipe([m("Pouca", 10, 1), m("Firme", 7, 5)]);
-    expect(r.map((x) => x.nome)).toEqual(["Firme", "Pouca"]);
-  });
-  it("dentro do grupo: maior média primeiro, empate pelo maior número de avaliações, depois pelo nome", () => {
-    const r = ordenarEquipe([m("Caio", 8, 4), m("Ana", 8, 9), m("Bia", 9, 3), m("Abel", 8, 4)]);
-    expect(r.map((x) => x.nome)).toEqual(["Bia", "Ana", "Abel", "Caio"]);
-  });
-  it("não altera a lista original", () => {
-    const original = [m("B", 5, 3), m("A", 9, 3)];
-    ordenarEquipe(original);
-    expect(original.map((x) => x.nome)).toEqual(["B", "A"]);
   });
 });
 

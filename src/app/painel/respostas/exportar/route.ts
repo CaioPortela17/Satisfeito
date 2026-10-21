@@ -27,9 +27,8 @@ export async function GET(request: NextRequest) {
   const { data: pesquisa } = await supabase.from("pesquisas").select("id, slug").eq("id", id.data).maybeSingle();
   if (!pesquisa) return new Response("Pesquisa não encontrada.", { status: 404 });
 
-  const [{ data: perguntas }, { data: funcionarios }, { data: suspeitosBruto }] = await Promise.all([
+  const [{ data: perguntas }, { data: suspeitosBruto }] = await Promise.all([
     supabase.from("perguntas").select("id, texto, tipo, ordem, arquivada").eq("pesquisa_id", pesquisa.id),
-    supabase.from("funcionarios").select("id, nome"),
     supabase.rpc("envios_suspeitos", { p_pesquisa_id: pesquisa.id }),
   ]);
 
@@ -37,7 +36,7 @@ export async function GET(request: NextRequest) {
   for (let pagina = 0; pagina < MAX_PAGINAS; pagina++) {
     const { data, error } = await supabase
       .from("respostas")
-      .select("id, created_at, descartada, respostas_itens(pergunta_id, valor_nota, valor_texto, funcionario_id)")
+      .select("id, created_at, descartada, respostas_itens(pergunta_id, valor_nota, valor_texto)")
       .eq("pesquisa_id", pesquisa.id)
       .order("created_at", { ascending: false })
       .order("id")
@@ -50,7 +49,6 @@ export async function GET(request: NextRequest) {
   const linhas = montarLinhasRespostas(
     (perguntas ?? []) as PerguntaExportar[],
     respostas,
-    new Map((funcionarios ?? []).map((f) => [f.id, f.nome])),
     new Set((suspeitosBruto ?? []).map((s) => s.resposta_id)),
     aba,
   );

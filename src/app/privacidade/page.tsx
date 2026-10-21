@@ -26,7 +26,7 @@ export default function Privacidade() {
       <Secao titulo="O que coletamos do cliente que responde">
         <Lista
           itens={[
-            "As notas e os textos que o cliente escolher escrever, e, se a pesquisa perguntar, quem o atendeu.",
+            "As notas e os textos que o cliente escolher escrever.",
             "O dia e a hora da resposta.",
             "Não pedimos nome, e-mail, telefone nem login para responder. A pesquisa é anônima.",
             "Não gravamos o endereço IP do cliente no nosso banco de dados. A hospedagem e a Cloudflare (proteção contra robôs) processam dados técnicos, como o IP, só para o site funcionar e se proteger de abuso.",
@@ -51,7 +51,7 @@ export default function Privacidade() {
       <Secao titulo="Para que usamos os dados">
         <Lista
           itens={[
-            "Mostrar ao dono as notas, os gráficos, o ranking da equipe e as respostas.",
+            "Mostrar ao dono as notas, os gráficos e as respostas.",
             "Escrever o relatório para a equipe com ajuda de inteligência artificial (veja abaixo).",
             "Proteger o serviço contra robôs, respostas falsas e abuso.",
           ]}
@@ -63,7 +63,7 @@ export default function Privacidade() {
         <p>
           Quando o dono gera um relatório, enviamos à Anthropic (empresa de inteligência artificial, nos Estados Unidos) os{" "}
           <strong>números do período</strong> e os <strong>textos que os clientes escreveram</strong>, sem nome nem contato
-          deles. Os nomes dos funcionários só vão se o dono ligar a opção &ldquo;Citar nomes e notas da equipe&rdquo;. Isso
+          deles. Isso
           é uma transferência internacional de dados. O resultado é guardado na conta do dono.
         </p>
       </Secao>

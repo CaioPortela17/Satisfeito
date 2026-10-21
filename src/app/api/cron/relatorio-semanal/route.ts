@@ -52,7 +52,6 @@ export async function GET(request: NextRequest) {
         donoId: empresa.owner_id,
         pesquisaId: pesquisa.id,
         dias: 7,
-        comNomes: false, // sem nomes: o relatório automático nunca expõe pessoas sem o dono ter conferido
       });
       if (!r.ok) continue; // poucas respostas na semana, limite de uso etc.: simplesmente pula
       gerados++;

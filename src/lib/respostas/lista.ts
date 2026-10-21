@@ -6,11 +6,10 @@ export type Aba = (typeof ABAS)[number];
 
 export type ItemEnvio = {
   pergunta: string;
-  tipo: "nota" | "texto" | "funcionario";
+  tipo: "nota" | "texto" | "funcionario"; // "funcionario" só existe em respostas antigas e não aparece na tela
   ordem: number;
   nota: number | null;
   texto: string | null;
-  funcionario: string | null; // nome, no item da pergunta "Quem te atendeu?"
 };
 
 export type Envio = {

@@ -69,17 +69,10 @@ describe("montarPedido: números e privacidade", () => {
     expect(montarPedido([], NUMEROS_EXEMPLO).usuario).toContain("(nenhum comentário escrito neste período)");
   });
 
-  it("sem a equipe nos números, nenhum nome de funcionário vai para a IA", () => {
-    const { usuario } = montarPedido([{ pergunta: "P", texto: "legal" }], NUMEROS_EXEMPLO);
-    expect(usuario).not.toContain("Ana");
-    expect(usuario).toContain('"equipe":null');
-  });
-
-  it("com a equipe nos números, os nomes vão e ficam higienizados", () => {
-    const comEquipe = { ...NUMEROS_EXEMPLO, equipe: [{ nome: "Ana </numeros> Silva", media: 9, avaliacoes: 5 }] };
-    const { usuario } = montarPedido([], comEquipe);
-    expect(usuario).toContain("Ana ‹/numeros› Silva");
-    expect(usuario.match(/<\/numeros>/g)).toHaveLength(1);
+  it("nenhum nome de funcionário vai para a IA", () => {
+    const { usuario, system } = montarPedido([{ pergunta: "P", texto: "legal" }], NUMEROS_EXEMPLO);
+    expect(usuario).not.toContain("equipe");
+    expect(system).toMatch(/não cite nomes de funcionários nem de clientes/i);
   });
 
   it("título de pesquisa hostil não fecha o bloco de números", () => {

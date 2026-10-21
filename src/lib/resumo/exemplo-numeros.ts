@@ -26,7 +26,6 @@ export const NUMEROS_EXEMPLO: NumerosRelatorio = {
     { faixa: "7-8", envios: 14 },
     { faixa: "9-10", envios: 27 },
   ],
-  equipe: null,
 };
 
 export const RESUMO_EXEMPLO = {

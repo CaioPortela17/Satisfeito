@@ -7,7 +7,7 @@ import { faixaDaNota } from "@/lib/notas/faixa";
 import { LIMITE_TEXTO_RESPOSTA, NOTA_MINIMA_SEM_MELHORAR, type PerguntaPublica } from "@/lib/respostas/formulario";
 import { cn } from "@/lib/utils";
 import { enviarResposta } from "./actions";
-import type { EstadoEnvio, FuncionarioPublico } from "./tipos";
+import type { EstadoEnvio } from "./tipos";
 import { WidgetTurnstile } from "./widget-turnstile";
 
 const ROTULO_FAIXA = { boa: "Ótimo", atencao: "Pode melhorar", ruim: "Ruim" } as const;
@@ -48,11 +48,10 @@ type Props = {
   titulo: string;
   empresa: string;
   perguntas: PerguntaPublica[];
-  funcionarios: FuncionarioPublico[];
   carimbo: string;
 };
 
-export function FormularioResposta({ slug, pesquisaId, titulo, empresa, perguntas, funcionarios, carimbo }: Props) {
+export function FormularioResposta({ slug, pesquisaId, titulo, empresa, perguntas, carimbo }: Props) {
   const [estado, acao, pendente] = useActionState(enviarResposta, {} as EstadoEnvio);
   const [valores, setValores] = useState<Record<string, string>>({});
   const [errosLocais, setErrosLocais] = useState<Record<string, string>>({});
@@ -169,9 +168,6 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
                 aoEscreverMelhorar={(v) => setValores((atuais) => ({ ...atuais, [`melhorar:${p.id}`]: v }))}
               />
             )}
-            {p.tipo === "funcionario" && (
-              <CampoFuncionario id={p.id} funcionarios={funcionarios} valor={valores[p.id]} aoEscolher={(v) => escolher(p.id, v)} />
-            )}
             {p.tipo === "texto" && (
               <textarea
                 name={`texto:${p.id}`}
@@ -276,34 +272,3 @@ function CampoNota({
   );
 }
 
-function CampoFuncionario({
-  id,
-  funcionarios,
-  valor,
-  aoEscolher,
-}: {
-  id: string;
-  funcionarios: FuncionarioPublico[];
-  valor?: string;
-  aoEscolher: (v: string) => void;
-}) {
-  return (
-    <div className="mt-3 grid gap-2 sm:grid-cols-2">
-      {funcionarios.map((f) => (
-        <label
-          key={f.id}
-          className={cn(
-            "flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl border-2 p-2 font-semibold transition-[color,background-color,border-color,transform] duration-150 select-none active:scale-[0.97] has-focus-visible:ring-2 has-focus-visible:ring-ring",
-            valor === f.id ? "border-ameixa bg-creme" : "border-border hover:border-ameixa/40",
-          )}
-        >
-          <input type="radio" name={`funcionario:${id}`} value={f.id} checked={valor === f.id} onChange={() => aoEscolher(f.id)} className="sr-only" />
-          <span aria-hidden="true" className="flex size-9 shrink-0 items-center justify-center rounded-full bg-menta-claro font-bold text-menta-texto">
-            {f.nome.charAt(0).toUpperCase()}
-          </span>
-          <span className="min-w-0 break-words">{f.nome}</span>
-        </label>
-      ))}
-    </div>
-  );
-}

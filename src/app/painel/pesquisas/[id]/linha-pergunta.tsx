@@ -244,9 +244,7 @@ export function LinhaPerguntaArquivada({
       </div>
       {!podeDevolver && (
         <p className="mt-1 pl-8 text-sm text-muted-foreground">
-          {pergunta.tipo === "funcionario"
-            ? "Já existe uma pergunta \u201CQuem te atendeu?\u201D valendo."
-            : "A pesquisa já está com o máximo de perguntas."}
+          A pesquisa já está com o máximo de perguntas.
         </p>
       )}
       <div role="alert">

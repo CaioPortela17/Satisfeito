@@ -2,7 +2,7 @@ import { formatarDataHora } from "@/lib/respostas/lista";
 import type { Celula } from "./csv";
 
 export type PerguntaExportar = { id: string; texto: string; tipo: string; ordem: number; arquivada: boolean };
-export type ItemExportar = { pergunta_id: string; valor_nota: number | null; valor_texto: string | null; funcionario_id: string | null };
+export type ItemExportar = { pergunta_id: string; valor_nota: number | null; valor_texto: string | null };
 export type RespostaExportar = { id: string; created_at: string; descartada: boolean; respostas_itens: ItemExportar[] };
 
 export type AbaExportar = "todas" | "suspeitas" | "descartadas";
@@ -23,11 +23,11 @@ function mediaDasNotas(itens: ItemExportar[]): string {
 export function montarLinhasRespostas(
   perguntas: PerguntaExportar[],
   respostas: RespostaExportar[],
-  nomesFuncionarios: Map<string, string>,
   suspeitos: Set<string>,
   aba: AbaExportar,
 ): Celula[][] {
-  const ordenadas = [...perguntas].sort((a, b) => a.ordem - b.ordem);
+  // Perguntas antigas de funcionário ("Quem te atendeu?") ficam fora da planilha
+  const ordenadas = perguntas.filter((p) => p.tipo !== "funcionario").sort((a, b) => a.ordem - b.ordem);
   const cabecalho: Celula[] = [
     "Data e hora",
     "Situação",
@@ -47,7 +47,6 @@ export function montarLinhasRespostas(
       const item = porPergunta.get(p.id);
       if (!item) return "";
       if (p.tipo === "nota") return item.valor_nota;
-      if (p.tipo === "funcionario") return item.funcionario_id ? (nomesFuncionarios.get(item.funcionario_id) ?? "") : "";
       return item.valor_texto;
     });
     return [formatarDataHora(r.created_at), situacao(r, suspeitos), mediaDasNotas(r.respostas_itens), ...celulas];

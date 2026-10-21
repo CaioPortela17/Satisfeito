@@ -1,8 +1,4 @@
 import { faixaDaNota, type Faixa } from "@/lib/notas/faixa";
-import type { MembroEquipe } from "./tipos";
-
-// Com menos avaliações que isso, a média da pessoa ainda não diz muito
-export const MINIMO_AVALIACOES = 3;
 
 // 8,4 (vírgula, uma casa). Sem média: travessão.
 export function formatarMedia(media: number | null): string {
@@ -15,23 +11,6 @@ const ROTULOS: Record<Faixa, string> = { boa: "Ótimo", atencao: "Pode melhorar"
 // A palavra que acompanha a cor da nota (a cor sozinha não basta)
 export function rotuloFaixa(nota: number): string {
   return ROTULOS[faixaDaNota(nota)];
-}
-
-export function poucasAvaliacoes(avaliacoes: number): boolean {
-  return avaliacoes < MINIMO_AVALIACOES;
-}
-
-// Quem tem avaliações suficientes vem primeiro; dentro de cada grupo, maior média,
-// depois mais avaliações, depois ordem alfabética.
-export function ordenarEquipe<T extends MembroEquipe>(equipe: T[]): T[] {
-  return [...equipe].sort((a, b) => {
-    const pa = poucasAvaliacoes(a.avaliacoes);
-    const pb = poucasAvaliacoes(b.avaliacoes);
-    if (pa !== pb) return pa ? 1 : -1;
-    if (b.media !== a.media) return b.media - a.media;
-    if (b.avaliacoes !== a.avaliacoes) return b.avaliacoes - a.avaliacoes;
-    return a.nome.localeCompare(b.nome, "pt-BR");
-  });
 }
 
 // "2026-10-08" -> "08/10"

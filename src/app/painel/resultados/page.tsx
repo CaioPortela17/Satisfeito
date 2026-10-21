@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { ChevronDown } from "lucide-react";
+import { buscarTextosRecentes } from "@/lib/painel/textos-recentes";
 import { obterContextoEmpresa } from "@/lib/empresas/contexto";
 import { listarPesquisasParaSeletor } from "@/lib/pesquisas/para-seletor";
 import { lerDias } from "@/lib/painel/periodo";
@@ -14,7 +16,7 @@ import { Destaques } from "./destaques";
 import { DiaETurno } from "./dia-e-turno";
 import { DistribuicaoNotas } from "./distribuicao-notas";
 import { GraficoEvolucao } from "./grafico-evolucao";
-import { RankingEquipe } from "./ranking-equipe";
+import { PerguntasTexto } from "./perguntas-texto";
 import { ResumoIa } from "./resumo-ia";
 import { SeletorPeriodo } from "./seletor-periodo";
 import { SeletorPesquisa } from "./seletor-pesquisa";
@@ -76,6 +78,7 @@ export default async function PaginaResultados({
       uso = null;
     }
   }
+  const textos = painel ? await buscarTextosRecentes(supabase, escolhida, painel.periodo.inicio).catch(() => null) : null;
   const bloqueio = uso ? podeGerar(uso, new Date()) : { ok: true as const };
 
   const opcoes = pesquisas.map((p) => ({
@@ -128,15 +131,12 @@ export default async function PaginaResultados({
 
           <CartoesResumo painel={painel} />
 
-          <Destaques destaques={painel.destaques} className={SECAO} />
-
           <section className={SECAO}>
-            <h2 className="text-xl font-bold">Como as notas se distribuem</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Cada resposta conta pela média das notas que o cliente deu.
-            </p>
-            <div className="mt-4">
-              <DistribuicaoNotas distribuicao={painel.atual.distribuicao} nps={painel.atual.nps} />
+            <h2 className="text-xl font-bold">Perguntas</h2>
+            <p className="mt-1 text-sm text-muted-foreground">A nota média de cada pergunta e o que os clientes escreveram.</p>
+            <div className="mt-4 space-y-3">
+              {painel.perguntas.length > 0 && <CartoesPerguntas perguntas={painel.perguntas} />}
+              <PerguntasTexto perguntas={textos} pesquisaId={escolhida} />
             </div>
           </section>
 
@@ -147,35 +147,6 @@ export default async function PaginaResultados({
             </div>
           </section>
 
-          <section className={SECAO}>
-            <h2 className="text-xl font-bold">Quando o cliente está mais satisfeito</h2>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Nota média por dia da semana e por turno. Com menos de 3 respostas, o número ainda não diz muito.
-            </p>
-            <div className="mt-4">
-              <DiaETurno diaSemana={painel.dia_semana} turno={painel.turno} />
-            </div>
-          </section>
-
-          <section className={SECAO}>
-            <h2 className="text-xl font-bold">Nota de cada pergunta</h2>
-            <div className="mt-4">
-              <CartoesPerguntas perguntas={painel.perguntas} />
-            </div>
-          </section>
-
-          {painel.equipe.length > 0 && (
-            <section className={SECAO}>
-              <h2 className="text-xl font-bold">Ranking da equipe</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Média das notas dos clientes que escolheram cada pessoa em &ldquo;Quem te atendeu?&rdquo;.
-              </p>
-              <div className="mt-4">
-                <RankingEquipe equipe={painel.equipe} />
-              </div>
-            </section>
-          )}
-
           <ResumoIa
             pesquisaId={escolhida}
             uso={uso}
@@ -184,6 +155,36 @@ export default async function PaginaResultados({
             enviosNoPeriodo={painel.atual.envios}
             className={SECAO}
           />
+
+          <details className={`${SECAO} group`}>
+            <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 text-xl font-bold [&::-webkit-details-marker]:hidden">
+              Mais detalhes
+              <ChevronDown aria-hidden className="size-5 shrink-0 transition-transform group-open:rotate-180" />
+            </summary>
+            <div className="mt-6 space-y-8">
+              <Destaques destaques={painel.destaques} />
+
+              <section>
+                <h3 className="text-lg font-bold">Como as notas se distribuem</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Cada resposta conta pela média das notas que o cliente deu.
+                </p>
+                <div className="mt-4">
+                  <DistribuicaoNotas distribuicao={painel.atual.distribuicao} nps={painel.atual.nps} />
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-bold">Quando o cliente está mais satisfeito</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Nota média por dia da semana e por turno. Com menos de 3 respostas, o número ainda não diz muito.
+                </p>
+                <div className="mt-4">
+                  <DiaETurno diaSemana={painel.dia_semana} turno={painel.turno} />
+                </div>
+              </section>
+            </div>
+          </details>
         </>
       )}
     </div>

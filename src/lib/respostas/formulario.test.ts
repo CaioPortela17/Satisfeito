@@ -3,13 +3,10 @@ import { lerResposta, type PerguntaPublica } from "./formulario";
 
 const NOTA = "11111111-1111-4111-8111-111111111111";
 const TEXTO = "22222222-2222-4222-8222-222222222222";
-const QUEM = "33333333-3333-4333-8333-333333333333";
-const ANA = "44444444-4444-4444-8444-444444444444";
 
 const perguntas: PerguntaPublica[] = [
   { id: NOTA, texto: "Nota?", tipo: "nota", obrigatoria: false },
   { id: TEXTO, texto: "Melhorar?", tipo: "texto", obrigatoria: false },
-  { id: QUEM, texto: "Quem?", tipo: "funcionario", obrigatoria: false },
 ];
 
 function form(campos: Record<string, string>) {
@@ -21,13 +18,12 @@ function form(campos: Record<string, string>) {
 describe("lerResposta", () => {
   it("monta os itens respondidos e pula os vazios", () => {
     expect(
-      lerResposta(form({ [`nota:${NOTA}`]: "9", [`texto:${TEXTO}`]: "  Mais sal  ", [`funcionario:${QUEM}`]: ANA }), perguntas),
+      lerResposta(form({ [`nota:${NOTA}`]: "9", [`texto:${TEXTO}`]: "  Mais sal  " }), perguntas),
     ).toEqual({
       ok: true,
       itens: [
         { pergunta_id: NOTA, valor_nota: 9 },
         { pergunta_id: TEXTO, valor_texto: "Mais sal" },
-        { pergunta_id: QUEM, funcionario_id: ANA },
       ],
     });
     expect(lerResposta(form({ [`nota:${NOTA}`]: "7", [`texto:${TEXTO}`]: "   " }), perguntas)).toEqual({
@@ -65,7 +61,7 @@ describe("lerResposta", () => {
   });
   it("valores inválidos", () => {
     const r = lerResposta(
-      form({ [`nota:${NOTA}`]: "11", [`texto:${TEXTO}`]: "x".repeat(1001), [`funcionario:${QUEM}`]: "ana" }),
+      form({ [`nota:${NOTA}`]: "11", [`texto:${TEXTO}`]: "x".repeat(1001) }),
       perguntas,
     );
     expect(r).toEqual({
@@ -73,7 +69,6 @@ describe("lerResposta", () => {
       erros: {
         [NOTA]: "Escolha uma nota de 1 a 10.",
         [TEXTO]: "Escreva no máximo 1000 caracteres.",
-        [QUEM]: "Escolha quem te atendeu.",
       },
     });
     expect(lerResposta(form({ [`nota:${NOTA}`]: "7.5" }), perguntas).ok).toBe(false);
