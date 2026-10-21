@@ -102,12 +102,7 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
 
   function enviar(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); // sem reset automático do formulário: as escolhas ficam se der erro
-    const faltando = perguntas.filter((p) => p.obrigatoria && !valores[p.id]?.trim());
-    if (faltando.length > 0) {
-      setErrosLocais(Object.fromEntries(faltando.map((p) => [p.id, "Responda esta pergunta."])));
-      document.getElementById(`pergunta-${faltando[0].id}`)?.focus();
-      return;
-    }
+    // Nenhuma pergunta é obrigatória; o servidor só pede pelo menos uma resposta
     const dados = new FormData(e.currentTarget);
     // Cada token vale uma vez só: depois de enviar, pede um novo ao widget
     setToken("");
@@ -159,11 +154,10 @@ export function FormularioResposta({ slug, pesquisaId, titulo, empresa, pergunta
           >
             <legend id={idTitulo} className="sr-only">
               {p.texto}
-              {p.obrigatoria ? " (obrigatória)" : " (opcional)"}
+              {" (opcional)"}
             </legend>
             <p aria-hidden="true" className="text-lg font-semibold text-balance">
               {p.texto}
-              {p.obrigatoria && <span className="ml-2 text-sm font-semibold text-coral-escuro">Obrigatória</span>}
             </p>
 
             {p.tipo === "nota" && (

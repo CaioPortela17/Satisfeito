@@ -210,24 +210,6 @@ export async function editarTextoPergunta(_estado: EstadoAcao, formData: FormDat
   return { ok: Date.now() };
 }
 
-export async function alterarObrigatoria(idRecebido: string, obrigatoria: boolean): Promise<EstadoAcao> {
-  const id = esquemaIdPesquisa.safeParse(idRecebido);
-  if (!id.success || typeof obrigatoria !== "boolean") return ERRO;
-
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("perguntas")
-    .update({ obrigatoria })
-    .eq("id", id.data)
-    .select("id");
-  if (error) return { erro: mensagemErroPesquisa(error.code) };
-  // O RLS esconde linhas de outras empresas: nada mudou = id inválido
-  if (!data?.length) return ERRO;
-
-  atualizarTelas();
-  return { ok: Date.now(), anuncio: obrigatoria ? "Agora é obrigatória." : "Agora é opcional." };
-}
-
 // Tirar da pesquisa (arquivada = true) ou devolver (false, vai para o fim)
 export async function arquivarPergunta(idRecebido: string, arquivada: boolean): Promise<EstadoAcao> {
   const id = esquemaIdPesquisa.safeParse(idRecebido);

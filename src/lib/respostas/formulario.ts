@@ -32,10 +32,7 @@ export function lerResposta(formData: FormData, perguntas: PerguntaPublica[]): L
 
   for (const p of perguntas) {
     const valor = campo(formData, `${p.tipo}:${p.id}`);
-    if (!valor) {
-      if (p.obrigatoria) erros[p.id] = "Responda esta pergunta.";
-      continue;
-    }
+    if (!valor) continue; // nenhuma pergunta é obrigatória
     if (p.tipo === "nota") {
       const r = nota.safeParse(valor);
       if (!r.success) {

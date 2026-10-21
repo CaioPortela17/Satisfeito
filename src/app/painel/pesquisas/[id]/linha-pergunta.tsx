@@ -14,7 +14,6 @@ import { Input } from "@/components/ui/input";
 import type { TipoPergunta } from "@/lib/pesquisas/esquemas";
 import { ROTULO_TIPO } from "@/lib/pesquisas/tipos";
 import {
-  alterarObrigatoria,
   arquivarPergunta,
   editarTextoPergunta,
   moverPergunta,
@@ -141,11 +140,6 @@ export function LinhaPergunta({
           <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm font-semibold text-muted-foreground">
             <IconeTipoPergunta tipo={pergunta.tipo} className="size-5 shrink-0" />
             {ROTULO_TIPO[pergunta.tipo]}
-            {pergunta.obrigatoria && (
-              <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-xs text-coral-escuro">
-                Obrigatória
-              </span>
-            )}
           </p>
           <p className="mt-0.5 font-medium break-words">{pergunta.texto}</p>
         </div>
@@ -191,14 +185,6 @@ export function LinhaPergunta({
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuItem className="min-h-11" onSelect={() => setEditando(true)}>
                 Editar texto
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="min-h-11"
-                onSelect={() => {
-                  if (!pendente) executar(() => alterarObrigatoria(pergunta.id, !pergunta.obrigatoria));
-                }}
-              >
-                {pergunta.obrigatoria ? "Tornar opcional" : "Tornar obrigatória"}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="min-h-11"
