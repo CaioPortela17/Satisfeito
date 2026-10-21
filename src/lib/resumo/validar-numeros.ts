@@ -1,6 +1,6 @@
 import type { NumerosRelatorio, Resumo } from "./tipos";
 
-// Todo número que a IA pode citar no panorama e nas ações: os que demos a ela e as diferenças entre eles.
+// Todo número que a IA pode citar no panorama, nas notas e nas ações: os que demos a ela e as diferenças entre eles.
 function numerosPermitidos(n: NumerosRelatorio): Set<number> {
   const set = new Set<number>();
   const add = (v: number | null | undefined) => {
@@ -23,6 +23,13 @@ function numerosPermitidos(n: NumerosRelatorio): Set<number> {
   for (const x of [n.melhor_dia, n.dia_mais_fraco, n.melhor_turno, n.pior_turno, n.melhor_pergunta, n.pior_pergunta]) {
     if (x) add(x.media);
   }
+  for (const p of n.perguntas ?? []) {
+    add(p.media);
+    add(p.respostas);
+    add(p.media_anterior);
+    diferenca(p.media, p.media_anterior);
+  }
+  for (const f of n.distribuicao ?? []) add(f.envios);
   for (const m of n.equipe ?? []) {
     add(m.media);
     add(m.avaliacoes);
@@ -46,7 +53,7 @@ const NUMERO = /\d+(?:[.,]\d+)?/g;
 // ter número ("esperei 40 minutos"). Devolve os números que não deveriam estar lá.
 export function numerosDesconhecidos(resumo: Resumo, numeros: NumerosRelatorio): string[] {
   const permitidos = numerosPermitidos(numeros);
-  const textos = [resumo.panorama ?? "", ...(resumo.acoes ?? [])];
+  const textos = [resumo.panorama ?? "", resumo.notas ?? "", ...(resumo.acoes ?? [])];
   const achados: string[] = [];
   for (const texto of textos) {
     for (const token of texto.match(NUMERO) ?? []) {

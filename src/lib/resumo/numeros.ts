@@ -44,6 +44,10 @@ export function montarNumeros(painel: Painel, titulo: string, comNomes: boolean)
     pior_turno: turno(turnos.pior),
     melhor_pergunta: d.melhor_pergunta ? { texto: d.melhor_pergunta.texto, media: d.melhor_pergunta.media } : null,
     pior_pergunta: d.pior_pergunta ? { texto: d.pior_pergunta.texto, media: d.pior_pergunta.media } : null,
+    perguntas: painel.perguntas
+      .filter((p) => p.media !== null)
+      .map((p) => ({ texto: p.texto, media: p.media as number, respostas: p.respostas, media_anterior: p.media_anterior })),
+    distribuicao: painel.atual.distribuicao,
     equipe: equipe && equipe.length > 0 ? equipe : null,
   };
 }

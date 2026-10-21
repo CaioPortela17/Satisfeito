@@ -48,6 +48,18 @@ const PAINEL: Painel = {
 };
 
 describe("montarNumeros", () => {
+  it("leva a média de cada pergunta (sem as que ninguém respondeu) e a distribuição das notas", () => {
+    const painel: Painel = {
+      ...PAINEL,
+      perguntas: [
+        { id: "a", texto: "Comida", ordem: 1, media: 9, respostas: 40, media_anterior: 8.5, respostas_anterior: 30 },
+        { id: "b", texto: "Espera", ordem: 2, media: null, respostas: 0, media_anterior: null, respostas_anterior: 0 },
+      ],
+    };
+    const n = montarNumeros(painel, "Pesquisa X", false);
+    expect(n.perguntas).toEqual([{ texto: "Comida", media: 9, respostas: 40, media_anterior: 8.5 }]);
+    expect(n.distribuicao).toEqual(PAINEL.atual.distribuicao);
+  });
   it("copia os números do painel", () => {
     const n = montarNumeros(PAINEL, "Pesquisa X", false);
     expect(n.pesquisa).toBe("Pesquisa X");

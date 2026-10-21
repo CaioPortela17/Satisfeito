@@ -3,6 +3,7 @@ import { ESQUEMA_FERRAMENTA, NOME_FERRAMENTA, esquemaResumo, limparResumo } from
 
 const BOM = {
   panorama: "O período foi bom, com nota estável.",
+  notas: "A nota média ficou em 8, com a maioria dos envios entre 9 e 10.",
   positivos: ["Atendimento rápido"],
   reclamacoes: ["Demora no fim de semana"],
   sugestoes: ["Mais opções sem glúten"],
@@ -62,11 +63,11 @@ describe("limparResumo", () => {
 });
 
 describe("ferramenta", () => {
-  it("o esquema da ferramenta pede as três listas", () => {
+  it("o esquema da ferramenta pede panorama, notas, as três listas e as ações", () => {
     expect(NOME_FERRAMENTA).toBe("registrar_resumo");
     expect(ESQUEMA_FERRAMENTA.type).toBe("object");
-    expect(ESQUEMA_FERRAMENTA.required).toEqual(["panorama", "positivos", "reclamacoes", "sugestoes", "acoes"]);
-    expect(Object.keys(ESQUEMA_FERRAMENTA.properties)).toEqual(["panorama", "positivos", "reclamacoes", "sugestoes", "acoes"]);
+    expect(ESQUEMA_FERRAMENTA.required).toEqual(["panorama", "notas", "positivos", "reclamacoes", "sugestoes", "acoes"]);
+    expect(Object.keys(ESQUEMA_FERRAMENTA.properties)).toEqual(["panorama", "notas", "positivos", "reclamacoes", "sugestoes", "acoes"]);
   });
   it("panorama e ações são obrigatórios; panorama vazio ou fora de texto é recusado", () => {
     const { panorama: _p, ...semPanorama } = BOM;
@@ -84,6 +85,15 @@ describe("ferramenta", () => {
     expect(r?.panorama.length).toBe(400);
     expect(r?.panorama.endsWith("…")).toBe(true);
     expect(r?.acoes).toEqual(["1", "2", "3"]);
+  });
+  it("o comentário sobre as notas é obrigatório e vai até 500 caracteres", () => {
+    const { notas: _n, ...semNotas } = BOM;
+    void _n;
+    expect(limparResumo(semNotas)).toBeNull();
+    expect(limparResumo({ ...BOM, notas: "  " })).toBeNull();
+    const r = limparResumo({ ...BOM, notas: "n".repeat(600) });
+    expect(r?.notas.length).toBe(500);
+    expect(r?.notas.endsWith("…")).toBe(true);
   });
   it("aceita nenhuma ação (lista vazia)", () => {
     expect(limparResumo({ ...BOM, acoes: [] })?.acoes).toEqual([]);

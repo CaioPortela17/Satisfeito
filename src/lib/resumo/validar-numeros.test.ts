@@ -5,6 +5,11 @@ import { numerosDesconhecidos } from "./validar-numeros";
 const com = (extra: Partial<typeof RESUMO_EXEMPLO>) => ({ ...RESUMO_EXEMPLO, ...extra });
 
 describe("numerosDesconhecidos", () => {
+  it("números de notas por pergunta e de envios por faixa são permitidos; número fora dos dados não", () => {
+    const ok = com({ notas: "A comida teve 9,0 (antes 8,8), a espera 7,1 e foram 27 envios de 9 a 10 e 14 de 7 a 8." });
+    expect(numerosDesconhecidos(ok, NUMEROS_EXEMPLO)).toEqual([]);
+    expect(numerosDesconhecidos(com({ notas: "A espera caiu para 6,3." }), NUMEROS_EXEMPLO)).toEqual(["6,3"]);
+  });
   it("o resumo de exemplo não tem número inventado", () => {
     expect(numerosDesconhecidos(RESUMO_EXEMPLO, NUMEROS_EXEMPLO)).toEqual([]);
   });

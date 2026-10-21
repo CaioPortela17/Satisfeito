@@ -5,6 +5,7 @@ const MAX_FRASES = 6;
 const MAX_CARACTERES_FRASE = 200;
 const MAX_ACOES = 3;
 const MAX_CARACTERES_PANORAMA = 400;
+const MAX_CARACTERES_NOTAS = 500;
 
 const frase = z.string().min(1).max(MAX_CARACTERES_FRASE);
 const lista = z.array(frase).max(MAX_FRASES);
@@ -17,6 +18,7 @@ export const esquemaResumo = z.object({
   reclamacoes: lista,
   sugestoes: lista,
   panorama,
+  notas: z.string().min(1).max(MAX_CARACTERES_NOTAS),
   acoes: z.array(frase).max(MAX_ACOES),
 });
 
@@ -50,11 +52,11 @@ function limparLista(bruto: unknown, maximo = MAX_FRASES): string[] | null {
     .slice(0, maximo);
 }
 
-// O panorama é um texto só (até 400 caracteres), com a mesma limpeza das frases
-function limparPanorama(bruto: unknown): string | null {
+// Panorama (até 400 caracteres) e notas (até 500) são um texto só, com a mesma limpeza das frases
+function limparTextoLongo(bruto: unknown, max: number): string | null {
   if (typeof bruto !== "string") return null;
   const texto = limparCaracteresInvalidos(bruto).trim();
-  return texto.length > 0 ? cortarFrase(texto, MAX_CARACTERES_PANORAMA) : null;
+  return texto.length > 0 ? cortarFrase(texto, max) : null;
 }
 
 // A resposta da IA é "dado de fora": limpamos e só então conferimos com o zod.
@@ -65,9 +67,10 @@ export function limparResumo(bruto: unknown): ResumoRelatorio | null {
   const reclamacoes = limparLista(o.reclamacoes);
   const sugestoes = limparLista(o.sugestoes);
   const acoes = limparLista(o.acoes, MAX_ACOES);
-  const resumoPanorama = limparPanorama(o.panorama);
-  if (!positivos || !reclamacoes || !sugestoes || !acoes || !resumoPanorama) return null;
-  const r = esquemaResumo.safeParse({ positivos, reclamacoes, sugestoes, panorama: resumoPanorama, acoes });
+  const resumoPanorama = limparTextoLongo(o.panorama, MAX_CARACTERES_PANORAMA);
+  const resumoNotas = limparTextoLongo(o.notas, MAX_CARACTERES_NOTAS);
+  if (!positivos || !reclamacoes || !sugestoes || !acoes || !resumoPanorama || !resumoNotas) return null;
+  const r = esquemaResumo.safeParse({ positivos, reclamacoes, sugestoes, panorama: resumoPanorama, notas: resumoNotas, acoes });
   return r.success ? r.data : null;
 }
 
@@ -87,6 +90,10 @@ export const ESQUEMA_FERRAMENTA = {
       type: "string",
       description: `Como foi o período, em 2 a 4 frases (no máximo ${MAX_CARACTERES_PANORAMA} caracteres), usando só os números do bloco <numeros>.`,
     },
+    notas: {
+      type: "string",
+      description: `Comentário sobre as notas de 1 a 10 do período, em 2 a 4 frases (no máximo ${MAX_CARACTERES_NOTAS} caracteres): nota média, melhor e pior pergunta e quantos envios deram notas altas e baixas, usando só os números do bloco <numeros>.`,
+    },
     positivos: listaDeFrases("O que os clientes elogiam."),
     reclamacoes: listaDeFrases("O que os clientes reclamam."),
     sugestoes: listaDeFrases("O que os clientes pedem ou sugerem."),
@@ -96,5 +103,5 @@ export const ESQUEMA_FERRAMENTA = {
       description: `2 ou 3 ações práticas para a equipe fazer, baseadas só nos dados. No máximo ${MAX_ACOES} frases curtas.`,
     },
   },
-  required: ["panorama", "positivos", "reclamacoes", "sugestoes", "acoes"],
+  required: ["panorama", "notas", "positivos", "reclamacoes", "sugestoes", "acoes"],
 };

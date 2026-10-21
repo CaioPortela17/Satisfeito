@@ -8,6 +8,7 @@ export type Resumo = {
   reclamacoes: string[];
   sugestoes: string[];
   panorama?: string;
+  notas?: string; // comentário da IA sobre as notas de 1 a 10 (só nos relatórios feitos depois de 2026-10-20)
   acoes?: string[];
 };
 export type ResumoRelatorio = Required<Resumo>;
@@ -29,6 +30,9 @@ export type NumerosRelatorio = {
   pior_turno: { turno: NomeTurno; media: number } | null;
   melhor_pergunta: { texto: string; media: number } | null;
   pior_pergunta: { texto: string; media: number } | null;
+  // Média de cada pergunta de nota no período (retratos antigos não têm) e quantos envios caíram em cada faixa de nota
+  perguntas?: { texto: string; media: number; respostas: number; media_anterior: number | null }[];
+  distribuicao?: { faixa: "1-3" | "4-6" | "7-8" | "9-10"; envios: number }[];
   // Só vem preenchida quando o dono liga "Citar nomes e notas"; senão é null e nenhum nome sai do servidor
   equipe: { nome: string; media: number; avaliacoes: number }[] | null;
 };
