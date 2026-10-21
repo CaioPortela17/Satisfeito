@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { ErroDoCampo } from "@/components/formulario/erro-do-campo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CampoSenha } from "@/components/formulario/campo-senha";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { entrar, type EstadoFormulario } from "../actions";
@@ -49,10 +50,9 @@ export function FormularioEntrar({ next }: { next?: string }) {
             Esqueci minha senha
           </Link>
         </div>
-        <Input
+        <CampoSenha
           id="senha"
           name="senha"
-          type="password"
           autoComplete="current-password"
           required
           aria-invalid={Boolean(estado.erros?.senha)}
