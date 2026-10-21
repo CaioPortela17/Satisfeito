@@ -12,7 +12,6 @@ export type EstadoResumo = { erro?: string; ok?: boolean };
 const esquemaPedido = z.object({
   pesquisaId: z.uuid(),
   dias: z.union([z.literal(7), z.literal(30), z.literal(90)]),
-  comNomes: z.boolean(),
 });
 
 // Gera o relatório da pesquisa. Os números e textos são lidos com o cliente do usuário (o RLS garante que a
@@ -21,9 +20,8 @@ const esquemaPedido = z.object({
 export async function gerarResumoAction(
   pesquisaIdRecebido: string,
   diasRecebido: number,
-  comNomesRecebido: boolean,
 ): Promise<EstadoResumo> {
-  const pedido = esquemaPedido.safeParse({ pesquisaId: pesquisaIdRecebido, dias: diasRecebido, comNomes: comNomesRecebido });
+  const pedido = esquemaPedido.safeParse({ pesquisaId: pesquisaIdRecebido, dias: diasRecebido });
   if (!pedido.success) return { erro: mensagemResumo("geral") };
 
   const supabase = await createClient();
@@ -36,7 +34,6 @@ export async function gerarResumoAction(
     donoId: sessao.claims.sub,
     pesquisaId: pedido.data.pesquisaId,
     dias: pedido.data.dias,
-    comNomes: pedido.data.comNomes,
   });
   if (!resultado.ok) return { erro: resultado.erro };
 

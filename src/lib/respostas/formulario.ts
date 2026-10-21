@@ -6,7 +6,6 @@ export type ItemResposta = {
   pergunta_id: string;
   valor_nota?: number;
   valor_texto?: string;
-  funcionario_id?: string;
 };
 export type LeituraResposta =
   | { ok: true; itens: ItemResposta[] }
@@ -17,7 +16,6 @@ export const LIMITE_TEXTO_RESPOSTA = 1000;
 export const NOTA_MINIMA_SEM_MELHORAR = 7;
 
 const nota = z.coerce.number().int().min(1).max(10);
-const id = z.uuid();
 
 function campo(formData: FormData, nome: string) {
   const valor = formData.get(nome);
@@ -53,10 +51,6 @@ export function lerResposta(formData: FormData, perguntas: PerguntaPublica[]): L
     } else if (p.tipo === "texto") {
       if (valor.length <= LIMITE_TEXTO_RESPOSTA) itens.push({ pergunta_id: p.id, valor_texto: valor });
       else erros[p.id] = `Escreva no máximo ${LIMITE_TEXTO_RESPOSTA} caracteres.`;
-    } else {
-      const r = id.safeParse(valor);
-      if (r.success) itens.push({ pergunta_id: p.id, funcionario_id: r.data });
-      else erros[p.id] = "Escolha quem te atendeu.";
     }
   }
 

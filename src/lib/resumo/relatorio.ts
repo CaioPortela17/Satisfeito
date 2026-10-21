@@ -89,17 +89,6 @@ export function montarRelatorioWhatsApp(n: NumerosRelatorio, r: Resumo): string 
     );
   }
 
-  if (n.equipe && n.equipe.length > 0) {
-    blocos.push(
-      [
-        "*Equipe*",
-        ...n.equipe.map(
-          (m) => `- ${limpar(m.nome)}: ${formatarMedia(m.media)} (${m.avaliacoes === 1 ? "1 avaliação" : `${m.avaliacoes} avaliações`})`,
-        ),
-      ].join("\n"),
-    );
-  }
-
   for (const bloco of [
     lista("O que os clientes elogiaram", r.positivos),
     lista("O que os clientes reclamaram", r.reclamacoes),

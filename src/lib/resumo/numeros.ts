@@ -1,24 +1,12 @@
 import { extremos } from "@/lib/painel/apresentacao";
 import type { Painel } from "@/lib/painel/tipos";
-import { MINIMO_AVALIACOES, ordenarEquipe } from "@/lib/resultados/apresentacao";
 import type { NumerosRelatorio } from "./tipos";
 
-const MAX_NOMES = 10;
-
 // Do painel (calculado pelo banco) para o retrato de números do relatório.
-// Equipe: só entra com a opção ligada e só quem tem 3 avaliações ou mais; sem a opção, vira null
-// e nenhum nome de funcionário chega à IA nem ao texto.
-export function montarNumeros(painel: Painel, titulo: string, comNomes: boolean): NumerosRelatorio {
+export function montarNumeros(painel: Painel, titulo: string): NumerosRelatorio {
   const dias = extremos(painel.dia_semana);
   const turnos = extremos(painel.turno);
   const d = painel.destaques;
-
-  const equipe = comNomes
-    ? ordenarEquipe(painel.equipe)
-        .filter((m) => m.avaliacoes >= MINIMO_AVALIACOES)
-        .slice(0, MAX_NOMES)
-        .map((m) => ({ nome: m.nome, media: m.media, avaliacoes: m.avaliacoes }))
-    : null;
 
   const dia = (i: number | null) =>
     i === null || painel.dia_semana[i].media === null
@@ -48,6 +36,5 @@ export function montarNumeros(painel: Painel, titulo: string, comNomes: boolean)
       .filter((p) => p.media !== null)
       .map((p) => ({ texto: p.texto, media: p.media as number, respostas: p.respostas, media_anterior: p.media_anterior })),
     distribuicao: painel.atual.distribuicao,
-    equipe: equipe && equipe.length > 0 ? equipe : null,
   };
 }

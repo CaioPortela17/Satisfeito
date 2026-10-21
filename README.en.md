@@ -4,7 +4,7 @@
 
 > Simple, fast customer satisfaction surveys for local businesses: restaurants, snack bars and shops.
 
-The customer scans a **QR code** on the table, the counter or the receipt, answers in under 30 seconds on their phone, and the business owner follows everything in a **dashboard** with averages, charts, a staff ranking and an **AI-written summary** of what customers are saying.
+The customer scans a **QR code** on the table, the counter or the receipt, answers in under 30 seconds on their phone, and the business owner follows everything in a **dashboard** with averages, charts and an **AI-written summary** of what customers are saying.
 
 The first customer is the snack bar **Bebelu**. Later, the plan is to offer Satisfeito to other businesses.
 
@@ -20,11 +20,9 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **For the business (with login)**
 - Creates an account and enters the dashboard
-- Registers staff members (optional)
 - Builds surveys with three question types:
   - **Score**: a 1 to 10 scale
   - **Text**: free answer
-  - **Staff member**: "Quem te atendeu?" ("Who served you?")
 - Generates the survey link and QR code
 - Follows the results in the dashboard
 
@@ -33,7 +31,6 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Dashboard**
 - Average of each score question and its evolution over time
-- Staff ranking by average score
 - Number of answers today, this week and this month
 - Recent answers
 - Team report written by AI, ready to copy into WhatsApp: overview, praise, complaints, suggestions and actions
@@ -52,15 +49,15 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Business dashboard** (with login):
 
-| Staff (Funcionários) | Surveys (Pesquisas) |
+| Surveys (Pesquisas) |
 |---|---|
-| ![Staff list](docs/prints/painel-funcionarios.jpg) | ![Survey list](docs/prints/painel-pesquisas.jpg) |
+| ![Survey list](docs/prints/painel-pesquisas.jpg) |
 
 | Survey link and QR code | Survey questions |
 |---|---|
 | ![Link, QR code and poster](docs/prints/painel-link-qr.jpg) | ![Question editor](docs/prints/painel-perguntas.jpg) |
 
-**Results** (7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, highlights, weekday and shift, evolution and staff ranking):
+**Results** (7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, highlights, weekday and shift, evolution):
 
 ![Summary cards and highlights](docs/prints/dashboard-topo.jpg)
 
@@ -111,10 +108,10 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - [x] **Stage 4**: creating surveys and questions
 - [x] **Stage 5A**: public survey page, link, QR code and printable poster
 - [x] **Stage 5B**: bot protection (Cloudflare Turnstile) and the column used to discard answers
-- [x] **Stage 6A**: Results: totals, score of each question, evolution and staff ranking
+- [x] **Stage 6A**: Results: totals, score of each question and evolution
 - [x] **Stage 6B**: answer list, "suspicious" answer badge and discarding
 - [x] **Stage 7**: AI summary of the written answers (praise, complaints and suggestions)
-- [x] **Stage 7B**: team report (AI + WhatsApp-ready text, with an option to name staff)
+- [x] **Stage 7B**: team report (AI + WhatsApp-ready text)
 - [x] **Stage 6C**: full dashboard: 7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, weekday and shift, highlights
 - [ ] **Stage 8**: real-world test at Bebelu and adjustments
 
@@ -129,6 +126,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - Home page with "Criar conta" (sign up) and "Entrar" (sign in)
 - **Sign-up** on a single screen (business name, e-mail and password typed twice) with e-mail confirmation
 - **Sign in**, **sign out** and **forgot password** (e-mail link, then a new password)
+- **Staff and the staff ranking were removed** (decision of 2026-10-21: the focus is now on scores and written text). Nothing was deleted from the database: the `funcionarios` table and old answers are still there, and the old "Quem te atendeu?" questions were only archived
 - Every password field has an eye button to **show/hide** what was typed
 - **Panel:** from desktop width (1024px) up, logo, current business and menu share one row; on phones the menu drops to its own row. A thin coral bar at the top shows loading when changing page (own component, no library)
 - **Performance:** the Vercel functions run in São Paulo (`vercel.json`, region `gru1`), next to the Supabase database. They used to run in the US and every database query crossed the continent, which made page changes slow
@@ -136,19 +134,13 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - **Several businesses per login** (e.g. two branches): selector at the top of the dashboard and "Adicionar empresa" (add business)
 - Error messages in Portuguese and forms that don't lose what was typed
 
-**Staff**
-- `/painel/funcionarios` page: add several in a row (the field stays focused), rename, deactivate, reactivate and delete with confirmation
-- Unique name per business, case-insensitive ("Ana" and "ana" are the same), with a hint on how to tell them apart
-- Inactive staff disappear from the survey, but their history is kept
-- Works with keyboard and screen reader: focus is never lost, and errors and additions are announced
-
 **Surveys**
 - `/painel/pesquisas` page: list with each survey's state ("Recebendo respostas" / receiving answers, or "Pausada" / paused). Each item shows the end of the survey link, the number of questions and the answers received (discarded ones not counted), so surveys with the same title can be told apart
-- Create a survey with suggested questions: one score, "Quem te atendeu?" (only if the business has active staff) and the free question "Quer nos contar mais alguma coisa?"
+- Create a survey with suggested questions: one score and the free question "Quer nos contar mais alguma coisa?"
 - Survey editor: editable title, Pause/Resume and Delete with confirmation
-- Questions of 3 types (score, free text and "Quem te atendeu?"), each with its own icon: move up/down, edit the text, remove from the survey and bring it back later
-- Limit of 10 questions and a single "Quem te atendeu?" per survey, also enforced in the database
-- Warnings when the score question is missing ("sem nota") or when there is no staff for the staff question ("sem equipe")
+- Questions of 2 types (score and free text), each with its own icon: move up/down, edit the text, remove from the survey and bring it back later
+- Limit of 10 questions per survey, also enforced in the database
+- Warning when the score question is missing ("sem nota")
 - Works with keyboard and screen reader
 
 **Results**
@@ -159,13 +151,12 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - Highlights: best and weakest question, weakest day and who pleased customers most (shown only with enough data)
 - Average score of each question, always with a number and a word ("Ótimo" / great, "Pode melhorar" / can improve, "Ruim" / poor), never color alone
 - Chart of the average score per day over the chosen period (real time axis), with a hidden table for screen readers
-- Staff ranking by the average score of the customers who picked each person; anyone with fewer than 3 ratings shows after the others, with a "poucas avaliações" (few ratings) tag
 - Discarded answers count in no number; a survey without answers shows how to get the first one
 - The numbers come from a database function (`painel_pesquisa`, `security invoker`), so RLS applies: each business only sees its own survey
 
 **Answers, suspicious ones and discarding**
 - `/painel/respostas` page: lists the answers of a survey, newest first, 20 per page, with tabs **Todas** (all), **Suspeitas** (suspicious) and **Descartadas** (discarded), each with its count
-- Each answer shows date and time (São Paulo time), scores with number and word, free text and the person chosen in "Quem te atendeu?". Customer text is always shown as plain text
+- Each answer shows date and time (São Paulo time), scores with number and word, free text. Customer text is always shown as plain text
 - **"Suspeita" badge:** an answer is bad when the average of its scores is 4 or less; 4 or more bad answers within 15 minutes, in the same survey, form a burst and all of them get the badge. The badge only warns: the owner decides. No IP or identification is used
 - **Descartar** (discard) and **Restaurar** (restore) buttons (reversible) and, in the Suspicious tab, "Descartar as suspeitas desta página" (discard this page's suspicious answers). Discarding removes the answer from every number in Results; the page announces the result to screen readers
 - The Results page shows a "N respostas suspeitas" notice linking to the Suspicious tab
@@ -174,7 +165,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 **AI summary**
 - "Relatório para a equipe" (team report) section in `/painel/resultados`: the **Gerar relatório** (generate report) button sends the numbers of the chosen period (7, 30 or 90 days) and the text answers (discarded ones excluded) to Claude, which writes the prose: overview, praise, complaints, suggestions and 2 or 3 actions. The system builds the final **WhatsApp** text (`*bold*`, short lists, no emojis) with the numbers computed by the database, and the **Copiar para WhatsApp** (copy to WhatsApp) button copies it all. The last report is saved (`resumos_ia`, with a snapshot of the numbers used) and shown again without another call
 - The report also comments on the **1 to 10 scores**: the AI receives the average of each score question and the submissions per band (9-10, 7-8, 4-6, 1-3) and writes the "Sobre as notas" (about the scores) section; right below it the system adds "Envios por nota" (submissions per score) with the database numbers. The text goes through the same invented-number check. Reports saved earlier do not have this section
-- The AI never writes the numbers: if the overview or the actions mention a number that is not in the data, the server rejects it and retries once. The **Citar nomes e notas da equipe** (name staff and scores) option is off by default; when off, no staff name is sent to the AI or shown in the text
+- The AI never writes the numbers: if the overview or the actions mention a number that is not in the data, the server rejects it and retries once. No staff name is sent to the AI or shown in the text
 - With fewer than 5 answers in the period the AI is not even called. **Cost limits:** 10 minutes between two reports of the same survey, at most 20 per day per owner (summing their businesses), and at most 200 texts of up to 1000 characters per request
 - **The AI call happens on the server only** (Server Action); the `ANTHROPIC_API_KEY` key never reaches the browser. The database only lets the owner **read** summaries; the server writes them, after checking that the survey belongs to the user (RLS)
 - **Privacy:** the text of the answers is sent to Anthropic to generate the summary (this is shown on screen, next to the button). No e-mail, IP, business name or staff name is sent
@@ -184,19 +175,18 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 **Public page, link and QR code**
 - Each survey has its own link (`/p/<slug>`), with a slug suggested from the business name and editable (unique across the system; if it already exists, the screen warns)
 - In the editor: copy the link, download the QR code as SVG and open a poster ready to print
-- Customer page designed for phones: 1 to 10 score, free text and "Quem te atendeu?", with a thank-you screen
+- Customer page designed for phones: 1 to 10 score and free text, with a thank-you screen
 - **No question is required**: customers answer only what they want (at least one thing)
 - **A low score (1 to 6)** opens an optional "Onde podemos melhorar?" (where can we improve?) box; the text is saved with the score and feeds the AI report and the answers list. With 7 or more the box goes away
 - A paused survey shows a notice instead of the form
-- Submission goes through a Server Action that uses the secret key on the server only; the database validates everything again (survey question, whole score from 1 to 10, active staff member of the same business, improvement text only for scores below 7)
-- Surveys or staff with answers cannot be deleted (pause or deactivate instead)
+- Submission goes through a Server Action that uses the secret key on the server only; the database validates everything again (survey question, whole score from 1 to 10, improvement text only for scores below 7)
+- Surveys with answers cannot be deleted (pause instead)
 - **Protection against fake answers:** a 3-second minimum time, an "already answered today" mark in the browser and an invisible Cloudflare Turnstile check. The server verifies the result with Cloudflare before saving; if verification fails, the answer is not accepted. **No IP-based signal is used**, because the venue's Wi-Fi is shared and that would hurt real customers
 
 **Security**
 - Column `respostas.descartada`: the owner can discard answers of their own surveys (and can only change that column); the discard screen is the Answers page
 - Tables `respostas` and `respostas_itens`: only the business owner reads; the public never does. Public reading of the survey goes through the `pesquisa_publica` function (returns only what is needed) and writing goes through the `registrar_resposta` function, which only the server can call
 - Table `empresas` created automatically at sign-up (database trigger) and protected by **RLS**: each account only sees and edits its own businesses; a visitor without login sees nothing
-- Table `funcionarios` also with **RLS**: the owner only touches the staff of their own businesses, and nobody can move a staff member to another business
 - Tables `pesquisas` and `perguntas` also with **RLS**: the owner only touches their own; a question's type, survey and business don't change after creation; questions are archived, not deleted; reordering is atomic, in a `security invoker` function
 - Cookie session verified on the server (`getClaims`), refreshed by a *proxy* that also blocks pages for anyone not logged in
 - Protection against redirects to fake sites, security headers (anti-clickjacking etc.) and server-side validation of every form with [zod](https://zod.dev)
@@ -276,9 +266,8 @@ src/
 │   ├── auth/confirm/         # Receives the click on the e-mail link and creates the session
 │   └── painel/               # Logged-in area (menu and business selector)
 │       ├── empresas/         # Switch and add business
-│       ├── funcionarios/     # Staff list, form and actions
 │       ├── pesquisas/        # List, actions, editor (`[id]/`) and poster of the surveys
-│       ├── resultados/       # Totals, scores, chart and staff ranking
+│       ├── resultados/       # Totals, scores and chart
 │       ├── respostas/        # Answer list, tabs, suspicious badge and discarding
 │   └── p/[slug]/             # Public survey page (customer, no login)
 ├── components/
@@ -289,7 +278,6 @@ src/
 └── lib/
     ├── auth/                 # Validations (zod), error messages, safe redirect
     ├── empresas/             # Which business is open in the dashboard
-    ├── funcionarios/         # Staff name validation
     ├── notas/                # Score ranges (good / attention / bad)
     ├── respostas/            # Validation and assembly of the customer's submission; answer list reading
     ├── resumo/               # Rules, prompt, validation and AI call (summary of written answers)

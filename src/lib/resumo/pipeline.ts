@@ -18,7 +18,6 @@ export type EntradaRelatorio = {
   donoId: string;
   pesquisaId: string;
   dias: Periodo;
-  comNomes: boolean;
 };
 
 export type ResultadoRelatorio =
@@ -31,7 +30,7 @@ export type ResultadoRelatorio =
 // 6) chama a IA com os números e os textos; 7) grava o relatório na vaga reservada.
 // Se a IA falhar, a reserva é apagada para não gastar o intervalo nem o teto à toa.
 export async function gerarRelatorio(e: EntradaRelatorio): Promise<ResultadoRelatorio> {
-  const { leitura, admin, pesquisaId, dias, comNomes } = e;
+  const { leitura, admin, pesquisaId, dias } = e;
   const falha = (erro: string): ResultadoRelatorio => ({ ok: false, erro });
 
   const { data: painelBruto } = await leitura.rpc("painel_pesquisa", { p_pesquisa_id: pesquisaId, p_dias: dias });
@@ -54,7 +53,7 @@ export async function gerarRelatorio(e: EntradaRelatorio): Promise<ResultadoRela
     return falha(mensagemResumo(permissao.motivo, permissao.motivo === "intervalo" ? permissao.minutos : undefined));
   }
 
-  const numeros = montarNumeros(painel, pesquisa.titulo, comNomes);
+  const numeros = montarNumeros(painel, pesquisa.titulo);
 
   // A chave secreta só reserva depois de o banco conferir que a pesquisa é do dono
   const { data: reservaBruta, error: erroReserva } = await admin.rpc("reservar_resumo_ia", {
@@ -63,7 +62,7 @@ export async function gerarRelatorio(e: EntradaRelatorio): Promise<ResultadoRela
     p_intervalo_min: INTERVALO_MINUTOS,
     p_teto: TETO_DIARIO,
     p_dias: dias,
-    p_com_nomes: comNomes,
+    p_com_nomes: false, // citar nomes da equipe saiu do produto; a coluna continua no banco
   });
   const reserva = reservaBruta as unknown as ReservaResumo | null;
   if (erroReserva || !reserva) return falha(mensagemResumo("geral"));

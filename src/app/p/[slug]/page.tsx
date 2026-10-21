@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Logo } from "@/components/marca/logo";
+import { TIPOS_PERGUNTA } from "@/lib/pesquisas/esquemas";
 import { criarCarimbo } from "@/lib/respostas/carimbo";
 import { createClient } from "@/lib/supabase/server";
 import { FormularioResposta } from "./formulario-resposta";
@@ -36,8 +37,7 @@ export default async function PaginaPesquisaPublica(props: PageProps<"/p/[slug]"
             pesquisaId={pesquisa.id}
             titulo={pesquisa.titulo}
             empresa={pesquisa.empresa}
-            perguntas={pesquisa.perguntas}
-            funcionarios={pesquisa.funcionarios}
+            perguntas={pesquisa.perguntas.filter((p) => TIPOS_PERGUNTA.includes(p.tipo))}
             carimbo={novoCarimbo()}
           />
         ) : (

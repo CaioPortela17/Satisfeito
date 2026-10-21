@@ -79,11 +79,6 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
                   <p className="mt-1 break-words whitespace-pre-wrap">{item.texto}</p>
                 </>
               )}
-              {item.tipo === "funcionario" && item.funcionario && (
-                <p className="break-words">
-                  Atendido por <span className="font-semibold">{item.funcionario}</span>
-                </p>
-              )}
             </li>
           ))}
         </ul>

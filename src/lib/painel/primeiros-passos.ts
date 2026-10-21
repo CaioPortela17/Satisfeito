@@ -1,8 +1,8 @@
 // Os "Primeiros passos" do Início: cada passo sabe se já foi feito, olhando o que a empresa tem no banco.
-export type EstadoEmpresa = { funcionarios: number; pesquisas: number; respostas: number };
+export type EstadoEmpresa = { pesquisas: number; respostas: number };
 
 export type Passo = {
-  chave: "equipe" | "pesquisa" | "qr";
+  chave: "pesquisa" | "qr";
   titulo: string;
   texto: string;
   href: string;
@@ -13,17 +13,9 @@ export type Passo = {
 export function passosDoPainel(e: EstadoEmpresa): Passo[] {
   return [
     {
-      chave: "equipe",
-      titulo: "Cadastre quem atende",
-      texto: "Seus clientes vão poder dizer quem atendeu eles.",
-      href: "/painel/funcionarios",
-      acao: e.funcionarios > 0 ? "Ver funcionários" : "Cadastrar funcionários",
-      feito: e.funcionarios > 0,
-    },
-    {
       chave: "pesquisa",
       titulo: "Monte sua pesquisa",
-      texto: "Escolha as perguntas: nota de 1 a 10, texto livre e quem atendeu.",
+      texto: "Escolha as perguntas: nota de 1 a 10 e texto livre.",
       href: "/painel/pesquisas",
       acao: e.pesquisas > 0 ? "Ver pesquisas" : "Montar pesquisa",
       feito: e.pesquisas > 0,

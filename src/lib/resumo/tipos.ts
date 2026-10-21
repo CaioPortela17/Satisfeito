@@ -33,8 +33,6 @@ export type NumerosRelatorio = {
   // Média de cada pergunta de nota no período (retratos antigos não têm) e quantos envios caíram em cada faixa de nota
   perguntas?: { texto: string; media: number; respostas: number; media_anterior: number | null }[];
   distribuicao?: { faixa: "1-3" | "4-6" | "7-8" | "9-10"; envios: number }[];
-  // Só vem preenchida quando o dono liga "Citar nomes e notas"; senão é null e nenhum nome sai do servidor
-  equipe: { nome: string; media: number; avaliacoes: number }[] | null;
 };
 
 export type ResumoSalvo = {

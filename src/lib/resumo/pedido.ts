@@ -12,7 +12,7 @@ Regras:
 - "notas": 2 a 4 frases (até 500 caracteres) sobre as NOTAS de 1 a 10 do período, não sobre os comentários: diga a nota média e se subiu ou caiu, quais perguntas foram melhor e pior (lista "perguntas" de <numeros>) e como as notas se espalham ("distribuicao": quantos envios deram notas altas, 9-10 e 7-8, e quantos deram notas baixas, 4-6 e 1-3). Use só os números de <numeros>; não faça porcentagens nem contas novas.
 - "positivos": o que os clientes elogiam. "reclamacoes": o que reclamam. "sugestoes": o que pedem ou sugerem. Agrupe comentários parecidos e priorize o que mais se repete. No máximo 6 frases por lista, até 200 caracteres cada; use lista vazia se não houver comentários sobre isso.
 - "acoes": 2 ou 3 ações práticas e simples que a equipe pode fazer nos próximos dias, ligadas ao que aparece nos dados e nos comentários. Se quase não há dados, sugira ações gerais de acompanhamento em vez de inventar problemas.
-- Nomes de pessoas: só cite alguém se a pessoa estiver na lista "equipe" de <numeros>, e apenas para reconhecer um bom trabalho. Nunca critique uma pessoa pelo nome. Nunca cite dados pessoais de clientes.
+- Nomes de pessoas: não cite nomes de funcionários nem de clientes. Nunca critique uma pessoa pelo nome e nunca cite dados pessoais de clientes.
 - Entregue o resultado chamando a ferramenta registrar_resumo.`;
 
 // Tudo que pode virar quebra de linha ou ficar invisível: espaços, caracteres de controle
@@ -30,7 +30,7 @@ export function higienizar(texto: string): string {
     .replace(/[>＞]/g, "›");
 }
 
-// Os números vão como JSON. O título da pesquisa, os nomes e os textos das perguntas passam pela mesma
+// Os números vão como JSON. O título da pesquisa e os textos das perguntas passam pela mesma
 // higienização dos comentários (são texto livre digitado por pessoas).
 function numerosParaPedido(n: NumerosRelatorio): string {
   const limpo = {
@@ -39,7 +39,6 @@ function numerosParaPedido(n: NumerosRelatorio): string {
     melhor_pergunta: n.melhor_pergunta && { ...n.melhor_pergunta, texto: higienizar(n.melhor_pergunta.texto) },
     pior_pergunta: n.pior_pergunta && { ...n.pior_pergunta, texto: higienizar(n.pior_pergunta.texto) },
     perguntas: n.perguntas && n.perguntas.map((p) => ({ ...p, texto: higienizar(p.texto) })),
-    equipe: n.equipe && n.equipe.map((m) => ({ ...m, nome: higienizar(m.nome) })),
   };
   return JSON.stringify(limpo);
 }

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 
 const DIFERENCIAIS = [
   "Pesquisa rapidinha: o cliente responde em 30 segundos",
-  "Ranking da equipe: descubra quem atende melhor",
   "Resumo com IA: elogios e reclamações lidos em 1 minuto",
 ];
 

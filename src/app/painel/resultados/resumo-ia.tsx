@@ -7,7 +7,7 @@ import { BotaoCopiar } from "./botao-copiar";
 import { BotaoResumo } from "./botao-resumo";
 
 const AVISO_PRIVACIDADE =
-  "Os números do período e o texto das respostas são enviados a um serviço de IA para escrever o relatório. Nomes de funcionários só vão se você ligar a opção acima.";
+  "Os números do período e o texto das respostas são enviados a um serviço de IA para escrever o relatório.";
 
 // Resumos antigos (antes do relatório) têm só as três listas
 function ListasAntigas({ conteudo }: { conteudo: Resumo }) {
@@ -112,8 +112,7 @@ export function ResumoIa({
         {relatorio && resumo ? (
           <>
             <p className="numeros mt-1 text-sm text-muted-foreground">
-              Gerado em {formatarDataHora(resumo.created_at)}, com os últimos {resumo.dias} dias
-              {resumo.com_nomes ? ", citando a equipe" : ""}. Confira antes de enviar.
+              Gerado em {formatarDataHora(resumo.created_at)}, com os últimos {resumo.dias} dias. Confira antes de enviar.
             </p>
             {/* Texto puro: whitespace-pre-wrap preserva as quebras de linha do WhatsApp */}
             <div

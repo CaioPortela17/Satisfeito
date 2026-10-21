@@ -46,12 +46,11 @@ export default function Termos() {
         />
       </Secao>
 
-      <Secao titulo="Os dados dos seus clientes e dos seus funcionários">
+      <Secao titulo="Os dados dos seus clientes">
         <p>
           Sobre as respostas dos seus clientes, você é o responsável pelo tratamento e nós somos o operador. Avise seus
-          clientes de que a pesquisa existe e para que ela serve. Antes de cadastrar funcionários e usar o ranking da equipe,
-          converse com eles: as notas são sobre o atendimento, e o uso delas é uma decisão sua. Use o relatório com cuidado,
-          principalmente a opção de citar nomes.
+          clientes de que a pesquisa existe e para que ela serve. Use o relatório com cuidado: as notas são sobre o
+          atendimento, e o uso delas é uma decisão sua.
         </p>
       </Secao>
 

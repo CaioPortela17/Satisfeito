@@ -4,7 +4,7 @@
 
 > Pesquisa de satisfação simples e rápida para negócios locais — restaurantes, lanchonetes e lojas.
 
-O cliente escaneia um **QR code** na mesa, no balcão ou na nota fiscal, responde em menos de 30 segundos pelo celular, e o dono do negócio acompanha tudo num **painel** com médias, gráficos, ranking dos funcionários e um **resumo escrito por IA** do que os clientes estão dizendo.
+O cliente escaneia um **QR code** na mesa, no balcão ou na nota fiscal, responde em menos de 30 segundos pelo celular, e o dono do negócio acompanha tudo num **painel** com médias, gráficos e um **resumo escrito por IA** do que os clientes estão dizendo.
 
 O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Satisfeito para outros negócios.
 
@@ -22,7 +22,6 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Monta pesquisas com três tipos de pergunta:
   - **Nota** — escala de 1 a 10
   - **Texto** — resposta livre
-  - **Funcionário** — "Quem te atendeu?"
 - Gera o link e o QR code da pesquisa
 - Acompanha os resultados no painel
 
@@ -31,7 +30,6 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Painel**
 - Média de cada pergunta de nota e evolução ao longo do tempo
-- Ranking dos funcionários por nota média
 - Total de respostas no dia, na semana e no mês
 - Respostas recentes
 - Relatório para a equipe escrito por IA, pronto para copiar no WhatsApp: panorama, elogios, reclamações, sugestões e ações
@@ -46,19 +44,19 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Pesquisa que o cliente responde pelo celular** (a página abre pelo QR code, sem login):
 
-![Pesquisa pública com nota, "Quem te atendeu?" e comentário](docs/prints/pesquisa-publica.jpg)
+![Pesquisa pública com nota e comentário](docs/prints/pesquisa-publica.jpg)
 
 **Painel da empresa** (com login):
 
-| Funcionários | Pesquisas |
-|---|---|
-| ![Lista de funcionários](docs/prints/painel-funcionarios.jpg) | ![Lista de pesquisas](docs/prints/painel-pesquisas.jpg) |
+| Pesquisas |
+|---|
+| ![Lista de pesquisas](docs/prints/painel-pesquisas.jpg) |
 
 | Link e QR code da pesquisa | Perguntas da pesquisa |
 |---|---|
 | ![Link, QR code e cartaz](docs/prints/painel-link-qr.jpg) | ![Editor de perguntas](docs/prints/painel-perguntas.jpg) |
 
-**Resultados** (período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, destaques, dia da semana e turno, evolução e ranking da equipe):
+**Resultados** (período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, destaques, dia da semana e turno, evolução):
 
 ![Cartões de resumo e destaques](docs/prints/dashboard-topo.jpg)
 
@@ -109,10 +107,10 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - [x] **Etapa 4** — Criação de pesquisas e perguntas
 - [x] **Etapa 5A** — Página pública da pesquisa, link, QR code e cartaz
 - [x] **Etapa 5B** — Proteção contra robôs (Cloudflare Turnstile) e a coluna para descartar respostas
-- [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta, evolução e ranking da equipe
+- [x] **Etapa 6A** — Resultados: totais, nota de cada pergunta e evolução
 - [x] **Etapa 6B** — Lista de respostas, selo de respostas suspeitas e descarte
 - [x] **Etapa 7** — Resumo com IA das respostas escritas (elogios, reclamações e sugestões)
-- [x] **Etapa 7B** — Relatório para a equipe (IA + texto pronto para o WhatsApp, com opção de citar nomes)
+- [x] **Etapa 7B** — Relatório para a equipe (IA + texto pronto para o WhatsApp)
 - [x] **Etapa 6C** — Dashboard completo: período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, dia da semana e turno, destaques
 - [ ] **Etapa 8** — Teste real na Bebelu e ajustes
 
@@ -127,6 +125,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Página inicial com "Criar conta" e "Entrar"
 - **Cadastro** em uma tela (nome do negócio, e-mail e senha digitada duas vezes) com confirmação por e-mail
 - **Entrar**, **sair** e **esqueci a senha** (link por e-mail → nova senha)
+- **Funcionários e ranking da equipe foram removidos** (decisão de 2026-10-21: o foco agora é nota e texto escrito). Nada foi apagado do banco: a tabela `funcionarios` e as respostas antigas continuam lá, e as perguntas "Quem te atendeu?" antigas só ficaram arquivadas
 - Todo campo de senha tem um botão de olho para **mostrar/ocultar** o que foi digitado
 - **Painel:** do computador (1024px) para cima, logo, empresa atual e menu ficam na mesma linha; no celular o menu desce para uma linha própria. Uma barra fina coral no topo mostra o carregamento ao trocar de página (componente próprio, sem biblioteca)
 - **Desempenho:** as funções da Vercel rodam em São Paulo (`vercel.json`, região `gru1`), perto do banco do Supabase. Antes rodavam nos EUA e cada consulta ao banco cruzava o continente, o que deixava a troca de página lenta
@@ -134,19 +133,13 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - **Várias empresas por login** (ex.: duas unidades): seletor no topo do painel e "Adicionar empresa"
 - Mensagens de erro em português e formulários que não perdem o que foi digitado
 
-**Funcionários**
-- Página `/painel/funcionarios`: adicionar em sequência (o campo continua focado), renomear, desativar, reativar e excluir com confirmação
-- Nome único por empresa, sem diferenciar maiúsculas ("Ana" e "ana" são o mesmo), com aviso explicando como diferenciar
-- Inativos somem da pesquisa, mas o histórico fica guardado
-- Funciona pelo teclado e com leitor de tela: o foco nunca se perde, e erros e cadastros são anunciados
-
 **Pesquisas**
 - Página `/painel/pesquisas`: lista com o estado de cada pesquisa ("Recebendo respostas" ou "Pausada"); cada item mostra o final do link, o número de perguntas e as respostas recebidas (sem as descartadas), para distinguir pesquisas com o mesmo título
-- Criar pesquisa já com perguntas sugeridas: uma nota, "Quem te atendeu?" (só se a empresa tiver funcionários ativos) e a pergunta livre "Quer nos contar mais alguma coisa?"
+- Criar pesquisa já com perguntas sugeridas: uma nota e a pergunta livre "Quer nos contar mais alguma coisa?"
 - Editor da pesquisa: título editável, Pausar/Retomar e Excluir com confirmação
-- Perguntas dos 3 tipos (nota, texto livre e "Quem te atendeu?"), cada uma com ícone próprio: subir/descer, editar o texto, tirar da pesquisa e devolver depois
-- Limite de 10 perguntas e uma só "Quem te atendeu?" por pesquisa, garantidos também no banco
-- Avisos quando falta pergunta de nota ("sem nota") ou quando não há funcionários para a pergunta de equipe ("sem equipe")
+- Perguntas de 2 tipos (nota e texto livre), cada uma com ícone próprio: subir/descer, editar o texto, tirar da pesquisa e devolver depois
+- Limite de 10 perguntas por pesquisa, garantido também no banco
+- Aviso quando falta pergunta de nota ("sem nota")
 - Funciona pelo teclado e com leitor de tela
 
 **Resultados**
@@ -157,13 +150,12 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Destaques: pergunta mais bem avaliada e mais fraca, dia mais fraco e quem mais agradou (só aparecem com dados suficientes)
 - Nota média de cada pergunta, sempre com número e palavra ("Ótimo", "Pode melhorar", "Ruim"), nunca só cor
 - Gráfico da nota média por dia no período escolhido (eixo de tempo real), com tabela escondida para leitor de tela
-- Ranking da equipe pela nota média dos clientes que escolheram cada pessoa; quem tem menos de 3 avaliações aparece depois, com a etiqueta "poucas avaliações"
 - Respostas descartadas não entram em nenhum número; pesquisa sem respostas mostra como receber a primeira
 - Os números saem de uma função do banco (`painel_pesquisa`, `security invoker`), então o RLS vale: cada empresa só vê a própria pesquisa
 
 **Respostas, suspeitas e descarte**
 - Página `/painel/respostas`: lista as respostas de uma pesquisa, da mais recente para a mais antiga, 20 por página, com abas **Todas**, **Suspeitas** e **Descartadas** (cada uma com a quantidade)
-- Cada resposta mostra data e hora (horário de São Paulo), notas com número e palavra, texto livre e a pessoa escolhida em "Quem te atendeu?". Texto de cliente é sempre mostrado como texto puro
+- Cada resposta mostra data e hora (horário de São Paulo), notas com número e palavra, texto livre. Texto de cliente é sempre mostrado como texto puro
 - **Selo "Suspeita":** uma resposta é ruim quando a média das notas dela é 4 ou menos; 4 ou mais respostas ruins em até 15 minutos, na mesma pesquisa, formam uma rajada e todas ganham o selo. O selo só avisa: quem decide é o dono. Não usa IP nem identificação
 - Botões **Descartar** e **Restaurar** (reversíveis) e, na aba Suspeitas, "Descartar as suspeitas desta página". Descartar tira a resposta de todos os números de Resultados; a página anuncia o resultado para leitor de tela
 - A página Resultados mostra um aviso "N respostas suspeitas" com link para a aba Suspeitas
@@ -172,7 +164,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 **Resumo por IA**
 - Seção "Relatório para a equipe" em `/painel/resultados`: o botão **Gerar relatório** manda os números do período escolhido (7, 30 ou 90 dias) e as respostas de texto (sem as descartadas) para o Claude, que escreve a prosa: panorama, elogios, reclamações, sugestões e 2 ou 3 ações. O sistema monta o texto final para **WhatsApp** (negrito com `*`, listas curtas, sem emojis) com os números calculados pelo banco, e o botão **Copiar para WhatsApp** copia tudo. O último relatório fica salvo (`resumos_ia`, com o retrato dos números usados) e aparece de novo sem gastar outra chamada
 - O relatório também comenta as **notas de 1 a 10**: a IA recebe a média de cada pergunta de nota e os envios por faixa (9-10, 7-8, 4-6, 1-3) e escreve a seção "Sobre as notas"; logo abaixo o sistema põe "Envios por nota" com os números do banco. O texto passa pela mesma checagem de número inventado. Relatórios antigos já salvos não têm essa seção
-- A IA nunca escreve os números: se o panorama ou as ações citarem um número que não está nos dados, o servidor recusa e tenta de novo uma vez. A opção **Citar nomes e notas da equipe** vem desligada; desligada, nenhum nome de funcionário é enviado à IA nem aparece no texto
+- A IA nunca escreve os números: se o panorama ou as ações citarem um número que não está nos dados, o servidor recusa e tenta de novo uma vez. Nenhum nome de funcionário é enviado à IA nem aparece no texto
 - Com menos de 5 respostas no período a IA nem é chamada. **Limites de custo:** 10 minutos entre dois relatórios da mesma pesquisa e no máximo 20 por dia por dono (somando as empresas dele); no máximo 200 textos de até 1000 caracteres por pedido
 - **A chamada à IA acontece só no servidor** (Server Action); a chave `ANTHROPIC_API_KEY` nunca vai ao navegador. O banco só deixa o dono **ler** os resumos; quem grava é o servidor, depois de conferir que a pesquisa é do usuário (RLS)
 - **Privacidade:** o texto das respostas é enviado à Anthropic para gerar o resumo (isso aparece na tela, ao lado do botão). Não vão e-mail, IP, nome da empresa nem nome de funcionário
@@ -182,19 +174,18 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 **Página pública, link e QR code**
 - Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
 - No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
-- Página do cliente pensada para o celular: nota de 1 a 10, texto livre e "Quem te atendeu?", com tela de agradecimento
+- Página do cliente pensada para o celular: nota de 1 a 10, texto livre, com tela de agradecimento
 - **Nenhuma pergunta é obrigatória**: o cliente responde só o que quiser (pelo menos uma coisa)
 - **Nota baixa (1 a 6)** abre uma caixa opcional "Onde podemos melhorar?"; o texto fica junto da nota e entra no relatório de IA e na lista de respostas. Com nota 7 ou mais a caixa some
 - Pesquisa pausada mostra um aviso em vez do formulário
-- O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, funcionário ativo da mesma empresa, texto de melhoria só em nota abaixo de 7)
-- Pesquisa ou funcionário com respostas não podem ser excluídos (pausar ou desativar em vez disso)
+- O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, texto de melhoria só em nota abaixo de 7)
+- Pesquisa com respostas não pode ser excluída (pausar em vez disso)
 - **Proteção contra respostas falsas:** tempo mínimo de 3 segundos, marca "já respondeu hoje" no navegador e um teste invisível do Cloudflare Turnstile. O servidor confere o resultado com a Cloudflare antes de gravar; se a verificação falhar, a resposta não é aceita. **Nenhum sinal por IP é usado**, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais
 
 **Segurança**
 - Coluna `respostas.descartada`: o dono pode descartar respostas das próprias pesquisas (e só mexer nessa coluna); a tela de descarte é a página Respostas
 - Tabelas `respostas` e `respostas_itens`: só o dono da empresa lê; o público nunca lê. A leitura pública da pesquisa passa pela função `pesquisa_publica` (devolve só o necessário) e a gravação pela função `registrar_resposta`, que só o servidor consegue chamar
 - Tabela `empresas` criada automaticamente no cadastro (trigger no banco) e protegida por **RLS**: cada conta só vê e edita as próprias empresas; visitante sem login não vê nada
-- Tabela `funcionarios` também com **RLS**: o dono só mexe nos funcionários das próprias empresas, e ninguém consegue mover um funcionário para outra empresa
 - Tabelas `pesquisas` e `perguntas` também com **RLS**: o dono só mexe nas próprias; o tipo da pergunta, a pesquisa e a empresa não mudam depois de criados; pergunta não se exclui, se arquiva; a troca de ordem é atômica, numa função `security invoker`
 - Sessão em cookies verificada no servidor (`getClaims`), renovada por um *proxy* que também bloqueia páginas para quem não está logado
 - Proteção contra redirecionamento para sites falsos, cabeçalhos de segurança (anti-clickjacking etc.) e validação de todos os formulários no servidor com [zod](https://zod.dev)
@@ -274,9 +265,8 @@ src/
 │   ├── auth/confirm/         # Recebe o clique no link do e-mail e cria a sessão
 │   └── painel/               # Área logada (menu e seletor de empresa)
 │       ├── empresas/         # Trocar e adicionar empresa
-│       ├── funcionarios/     # Lista, formulário e ações dos funcionários
 │       ├── pesquisas/        # Lista, ações, editor (`[id]/`) e cartaz das pesquisas
-│       ├── resultados/       # Totais, notas, gráfico e ranking da equipe
+│       ├── resultados/       # Totais, notas e gráfico
 │       ├── respostas/        # Lista de respostas, abas, selo de suspeita e descarte
 │   └── p/[slug]/             # Página pública da pesquisa (cliente, sem login)
 ├── components/
@@ -287,7 +277,6 @@ src/
 └── lib/
     ├── auth/                 # Validações (zod), mensagens de erro, redirecionamento seguro
     ├── empresas/             # Qual empresa está aberta no painel
-    ├── funcionarios/         # Validação do nome do funcionário
     ├── notas/                # Faixas de nota (boa / atenção / ruim)
     ├── respostas/            # Validação e montagem do envio do cliente; leitura da lista de respostas
     ├── resumo/               # Regras, pedido, validação e chamada da IA (resumo das respostas escritas)

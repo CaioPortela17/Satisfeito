@@ -68,15 +68,8 @@ export async function criarPesquisa(): Promise<EstadoAcao> {
   }
   if (!pesquisa) return ERRO;
 
-  // "Quem te atendeu?" só entra se houver alguém ativo para escolher
-  const { count } = await supabase
-    .from("funcionarios")
-    .select("id", { count: "exact", head: true })
-    .eq("empresa_id", atual.id)
-    .eq("ativo", true);
-
   const { error: erroPerguntas } = await supabase.from("perguntas").insert(
-    perguntasSugeridas((count ?? 0) > 0).map((p, i) => ({
+    perguntasSugeridas().map((p, i) => ({
       pesquisa_id: pesquisa.id,
       texto: p.texto,
       tipo: p.tipo,

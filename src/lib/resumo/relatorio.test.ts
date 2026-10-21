@@ -72,17 +72,8 @@ describe("montarRelatorioWhatsApp", () => {
     expect(texto).toContain("Respostas: 48 (igual ao período anterior)");
   });
 
-  it("equipe só aparece quando os números trazem a equipe", () => {
+  it("o relatório não tem seção de equipe", () => {
     expect(montarRelatorioWhatsApp(NUMEROS_EXEMPLO, RESUMO_EXEMPLO)).not.toContain("*Equipe*");
-    const comEquipe = {
-      ...NUMEROS_EXEMPLO,
-      equipe: [
-        { nome: "Ana", media: 9, avaliacoes: 14 },
-        { nome: "Bia", media: 8.2, avaliacoes: 1 },
-      ],
-    };
-    const texto = montarRelatorioWhatsApp(comEquipe, RESUMO_EXEMPLO);
-    expect(texto).toContain("*Equipe*\n- Ana: 9,0 (14 avaliações)\n- Bia: 8,2 (1 avaliação)");
   });
 
   it("sinais de formatação do WhatsApp vindos de fora não viram negrito, itálico ou código", () => {

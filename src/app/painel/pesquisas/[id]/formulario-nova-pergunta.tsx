@@ -14,7 +14,6 @@ import { adicionarPergunta, type EstadoAcao } from "../actions";
 const TEXTO_INICIAL: Record<TipoPergunta, string> = {
   nota: "",
   texto: "",
-  funcionario: "Quem te atendeu?",
 };
 
 export function FormularioNovaPergunta({
@@ -23,7 +22,7 @@ export function FormularioNovaPergunta({
   noLimite,
 }: {
   pesquisaId: string;
-  tiposDisponiveis: TipoPergunta[]; // sem "funcionario" se já houver uma valendo
+  tiposDisponiveis: TipoPergunta[];
   noLimite: boolean;
 }) {
   const [estado, acao, pendente] = useActionState(adicionarPergunta, {} as EstadoAcao);
@@ -31,7 +30,7 @@ export function FormularioNovaPergunta({
   const campo = useRef<HTMLInputElement>(null);
   const aviso = useRef<HTMLParagraphElement>(null);
 
-  // Tipo escolhido sumiu da lista (ex.: acabou de adicionar "Quem te atendeu?")
+  // Tipo escolhido sumiu da lista
   const tipoValido = tiposDisponiveis.includes(tipo) ? tipo : (tiposDisponiveis[0] ?? "nota");
 
   // Depois de adicionar, o campo continua focado para a próxima

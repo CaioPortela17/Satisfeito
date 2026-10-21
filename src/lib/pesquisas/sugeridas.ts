@@ -5,13 +5,9 @@ export type PerguntaSugerida = { texto: string; tipo: TipoPergunta; obrigatoria:
 export const TITULO_SUGERIDO = "Pesquisa de satisfação";
 
 // Pesquisa nova já vem pronta: o dono só ajusta.
-// "Quem te atendeu?" só entra se houver alguém para escolher.
-export function perguntasSugeridas(temFuncionarios: boolean): PerguntaSugerida[] {
+export function perguntasSugeridas(): PerguntaSugerida[] {
   return [
     { texto: "Que nota você dá para o nosso atendimento?", tipo: "nota", obrigatoria: false },
-    ...(temFuncionarios
-      ? [{ texto: "Quem te atendeu?", tipo: "funcionario" as const, obrigatoria: false }]
-      : []),
     { texto: "Quer nos contar mais alguma coisa?", tipo: "texto", obrigatoria: false },
   ];
 }

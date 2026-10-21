@@ -23,16 +23,6 @@ export type PerguntaPainel = {
   respostas_anterior: number; // quantas respostas a pergunta teve no período anterior
 };
 
-export type MembroPainel = {
-  id: string;
-  nome: string;
-  ativo: boolean;
-  media: number;
-  avaliacoes: number;
-  media_anterior: number | null;
-  avaliacoes_anterior: number; // quantas avaliações a pessoa teve no período anterior
-};
-
 export type DiaSemana = { dia: number; media: number | null; envios: number }; // dia: 1 = segunda ... 7 = domingo
 
 export type NomeTurno = "manha" | "tarde" | "noite" | "madrugada";
@@ -42,7 +32,6 @@ export type Destaques = {
   melhor_pergunta: { id: string; texto: string; media: number } | null;
   pior_pergunta: { id: string; texto: string; media: number } | null;
   dia_mais_fraco: { dia: number; media: number; envios: number } | null;
-  melhor_funcionario: { id: string; nome: string; media: number; avaliacoes: number } | null;
 };
 
 export type Painel = {
@@ -62,7 +51,6 @@ export type Painel = {
   evolucao: PontoEvolucao[];
   dia_semana: DiaSemana[];
   turno: Turno[];
-  equipe: MembroPainel[];
   destaques: Destaques;
   suspeitas: number;
 };

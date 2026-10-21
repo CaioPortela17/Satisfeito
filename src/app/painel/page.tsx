@@ -20,17 +20,14 @@ export default async function PaginaPainel() {
 
   // O que a empresa aberta já tem, para marcar os passos como feitos (o RLS só devolve o que é do usuário)
   const contar = async (consulta: PromiseLike<{ count: number | null }>) => (await consulta).count ?? 0;
-  const [funcionarios, pesquisasIds] = atual
-    ? await Promise.all([
-        contar(supabase.from("funcionarios").select("id", { count: "exact", head: true }).eq("empresa_id", atual.id).eq("ativo", true)),
-        supabase.from("pesquisas").select("id").eq("empresa_id", atual.id),
-      ])
-    : [0, { data: null }];
-  const ids = (pesquisasIds.data ?? []).map((p) => p.id);
+  const { data: pesquisasIds } = atual
+    ? await supabase.from("pesquisas").select("id").eq("empresa_id", atual.id)
+    : { data: null };
+  const ids = (pesquisasIds ?? []).map((p) => p.id);
   const respostas = ids.length
     ? await contar(supabase.from("respostas").select("id", { count: "exact", head: true }).in("pesquisa_id", ids).eq("descartada", false))
     : 0;
-  const passos = passosDoPainel({ funcionarios, pesquisas: ids.length, respostas });
+  const passos = passosDoPainel({ pesquisas: ids.length, respostas });
   const pronto = tudoPronto(passos);
 
   return (
