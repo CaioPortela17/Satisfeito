@@ -128,6 +128,8 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - **Cadastro** em uma tela (nome do negócio, e-mail e senha digitada duas vezes) com confirmação por e-mail
 - **Entrar**, **sair** e **esqueci a senha** (link por e-mail → nova senha)
 - Todo campo de senha tem um botão de olho para **mostrar/ocultar** o que foi digitado
+- **Painel:** do computador (1024px) para cima, logo, empresa atual e menu ficam na mesma linha; no celular o menu desce para uma linha própria. Uma barra fina coral no topo mostra o carregamento ao trocar de página (componente próprio, sem biblioteca)
+- **Desempenho:** as funções da Vercel rodam em São Paulo (`vercel.json`, região `gru1`), perto do banco do Supabase. Antes rodavam nos EUA e cada consulta ao banco cruzava o continente, o que deixava a troca de página lenta
 - **Painel** protegido com a saudação da empresa e os primeiros passos
 - **Várias empresas por login** (ex.: duas unidades): seletor no topo do painel e "Adicionar empresa"
 - Mensagens de erro em português e formulários que não perdem o que foi digitado
@@ -169,6 +171,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Resumo por IA**
 - Seção "Relatório para a equipe" em `/painel/resultados`: o botão **Gerar relatório** manda os números do período escolhido (7, 30 ou 90 dias) e as respostas de texto (sem as descartadas) para o Claude, que escreve a prosa: panorama, elogios, reclamações, sugestões e 2 ou 3 ações. O sistema monta o texto final para **WhatsApp** (negrito com `*`, listas curtas, sem emojis) com os números calculados pelo banco, e o botão **Copiar para WhatsApp** copia tudo. O último relatório fica salvo (`resumos_ia`, com o retrato dos números usados) e aparece de novo sem gastar outra chamada
+- O relatório também comenta as **notas de 1 a 10**: a IA recebe a média de cada pergunta de nota e os envios por faixa (9-10, 7-8, 4-6, 1-3) e escreve a seção "Sobre as notas"; logo abaixo o sistema põe "Envios por nota" com os números do banco. O texto passa pela mesma checagem de número inventado. Relatórios antigos já salvos não têm essa seção
 - A IA nunca escreve os números: se o panorama ou as ações citarem um número que não está nos dados, o servidor recusa e tenta de novo uma vez. A opção **Citar nomes e notas da equipe** vem desligada; desligada, nenhum nome de funcionário é enviado à IA nem aparece no texto
 - Com menos de 5 respostas no período a IA nem é chamada. **Limites de custo:** 10 minutos entre dois relatórios da mesma pesquisa e no máximo 20 por dia por dono (somando as empresas dele); no máximo 200 textos de até 1000 caracteres por pedido
 - **A chamada à IA acontece só no servidor** (Server Action); a chave `ANTHROPIC_API_KEY` nunca vai ao navegador. O banco só deixa o dono **ler** os resumos; quem grava é o servidor, depois de conferir que a pesquisa é do usuário (RLS)
