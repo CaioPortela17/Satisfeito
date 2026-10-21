@@ -6,7 +6,7 @@ describe("perguntasSugeridas", () => {
     expect(perguntasSugeridas(true)).toEqual([
       { texto: "Que nota você dá para o nosso atendimento?", tipo: "nota", obrigatoria: false },
       { texto: "Quem te atendeu?", tipo: "funcionario", obrigatoria: false },
-      { texto: "Onde podemos melhorar?", tipo: "texto", obrigatoria: false },
+      { texto: "Quer nos contar mais alguma coisa?", tipo: "texto", obrigatoria: false },
     ]);
   });
   it("sem funcionários: pula o “Quem te atendeu?”", () => {
