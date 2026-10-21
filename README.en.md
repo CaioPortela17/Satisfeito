@@ -41,7 +41,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 | Home page | Sign in |
 |---|---|
-| ![Satisfeito home page](docs/prints/inicio.png) | ![Sign-in screen](docs/prints/entrar.jpg) |
+| ![Satisfeito home page](docs/prints/inicio.jpg) | ![Sign-in screen](docs/prints/entrar.jpg) |
 
 **Survey the customer answers on their phone** (opens from the QR code, no login):
 
@@ -59,7 +59,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Results** (7, 30 or 90-day period, comparison with the previous period, NPS, score distribution, highlights, weekday and shift, evolution):
 
-![Summary cards and highlights](docs/prints/dashboard-topo.jpg)
+![Summary cards and questions](docs/prints/dashboard-topo.jpg)
 
 ![Score by weekday and shift](docs/prints/dashboard-dia-turno.jpg)
 
@@ -76,7 +76,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **Answers** (All, Suspicious and Discarded tabs, suspicious badge and Discard button):
 
-![Answer list with suspicious answers](docs/prints/respostas.jpg)
+![Answer list, with tabs for suspicious and discarded answers](docs/prints/respostas.jpg)
 
 **Team report** (text ready to copy and send on WhatsApp):
 

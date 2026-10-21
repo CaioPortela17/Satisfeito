@@ -40,7 +40,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 | Página inicial | Entrar |
 |---|---|
-| ![Página inicial do satisfeito?!](docs/prints/inicio.png) | ![Tela de login](docs/prints/entrar.jpg) |
+| ![Página inicial do satisfeito?!](docs/prints/inicio.jpg) | ![Tela de login](docs/prints/entrar.jpg) |
 
 **Pesquisa que o cliente responde pelo celular** (a página abre pelo QR code, sem login):
 
@@ -58,7 +58,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Resultados** (período de 7, 30 ou 90 dias, comparação com o período anterior, NPS, distribuição das notas, destaques, dia da semana e turno, evolução):
 
-![Cartões de resumo e destaques](docs/prints/dashboard-topo.jpg)
+![Cartões de resumo e perguntas](docs/prints/dashboard-topo.jpg)
 
 ![Nota por dia da semana e por turno](docs/prints/dashboard-dia-turno.jpg)
 
@@ -75,7 +75,7 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Respostas** (abas Todas, Suspeitas e Descartadas, selo de suspeita e botão Descartar):
 
-![Lista de respostas com respostas suspeitas](docs/prints/respostas.jpg)
+![Lista de respostas, com abas de suspeitas e descartadas](docs/prints/respostas.jpg)
 
 **Relatório para a equipe** (texto pronto para copiar e mandar no WhatsApp):
 
