@@ -35,12 +35,13 @@ export default async function PaginaPainel() {
 
   return (
     <div className="space-y-6">
-      <div>
+      {/* Saudação e frase na mesma linha; em tela estreita a frase desce */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
         <h1 className="flex items-center gap-3 text-3xl font-bold tracking-tight sm:text-4xl">
           Olá, {atual?.nome ?? "tudo bem"}
           <IconeOla className="size-10 shrink-0" />
         </h1>
-        <p className="mt-1 text-lg font-medium text-ameixa">
+        <p className="text-lg font-medium text-ameixa">
           Bora deixar tudo pronto pros seus clientes avaliarem?
         </p>
       </div>
