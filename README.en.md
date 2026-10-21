@@ -130,6 +130,8 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 - **Sign-up** on a single screen (business name, e-mail and password typed twice) with e-mail confirmation
 - **Sign in**, **sign out** and **forgot password** (e-mail link, then a new password)
 - Every password field has an eye button to **show/hide** what was typed
+- **Panel:** from desktop width (1024px) up, logo, current business and menu share one row; on phones the menu drops to its own row. A thin coral bar at the top shows loading when changing page (own component, no library)
+- **Performance:** the Vercel functions run in São Paulo (`vercel.json`, region `gru1`), next to the Supabase database. They used to run in the US and every database query crossed the continent, which made page changes slow
 - Protected **dashboard** with the business greeting and first steps
 - **Several businesses per login** (e.g. two branches): selector at the top of the dashboard and "Adicionar empresa" (add business)
 - Error messages in Portuguese and forms that don't lose what was typed
@@ -171,6 +173,7 @@ The first customer is the snack bar **Bebelu**. Later, the plan is to offer Sati
 
 **AI summary**
 - "Relatório para a equipe" (team report) section in `/painel/resultados`: the **Gerar relatório** (generate report) button sends the numbers of the chosen period (7, 30 or 90 days) and the text answers (discarded ones excluded) to Claude, which writes the prose: overview, praise, complaints, suggestions and 2 or 3 actions. The system builds the final **WhatsApp** text (`*bold*`, short lists, no emojis) with the numbers computed by the database, and the **Copiar para WhatsApp** (copy to WhatsApp) button copies it all. The last report is saved (`resumos_ia`, with a snapshot of the numbers used) and shown again without another call
+- The report also comments on the **1 to 10 scores**: the AI receives the average of each score question and the submissions per band (9-10, 7-8, 4-6, 1-3) and writes the "Sobre as notas" (about the scores) section; right below it the system adds "Envios por nota" (submissions per score) with the database numbers. The text goes through the same invented-number check. Reports saved earlier do not have this section
 - The AI never writes the numbers: if the overview or the actions mention a number that is not in the data, the server rejects it and retries once. The **Citar nomes e notas da equipe** (name staff and scores) option is off by default; when off, no staff name is sent to the AI or shown in the text
 - With fewer than 5 answers in the period the AI is not even called. **Cost limits:** 10 minutes between two reports of the same survey, at most 20 per day per owner (summing their businesses), and at most 200 texts of up to 1000 characters per request
 - **The AI call happens on the server only** (Server Action); the `ANTHROPIC_API_KEY` key never reaches the browser. The database only lets the owner **read** summaries; the server writes them, after checking that the survey belongs to the user (RLS)
