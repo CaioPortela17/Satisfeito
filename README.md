@@ -125,8 +125,9 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Conta da empresa**
 - Página inicial com "Criar conta" e "Entrar"
-- **Cadastro** em uma tela (nome do negócio, e-mail e senha) com confirmação por e-mail
+- **Cadastro** em uma tela (nome do negócio, e-mail e senha digitada duas vezes) com confirmação por e-mail
 - **Entrar**, **sair** e **esqueci a senha** (link por e-mail → nova senha)
+- Todo campo de senha tem um botão de olho para **mostrar/ocultar** o que foi digitado
 - **Painel** protegido com a saudação da empresa e os primeiros passos
 - **Várias empresas por login** (ex.: duas unidades): seletor no topo do painel e "Adicionar empresa"
 - Mensagens de erro em português e formulários que não perdem o que foi digitado
@@ -139,9 +140,9 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 
 **Pesquisas**
 - Página `/painel/pesquisas`: lista com o estado de cada pesquisa ("Recebendo respostas" ou "Pausada"); cada item mostra o final do link, o número de perguntas e as respostas recebidas (sem as descartadas), para distinguir pesquisas com o mesmo título
-- Criar pesquisa já com perguntas sugeridas: uma nota obrigatória, "Quem te atendeu?" (só se a empresa tiver funcionários ativos) e um comentário livre
+- Criar pesquisa já com perguntas sugeridas: uma nota, "Quem te atendeu?" (só se a empresa tiver funcionários ativos) e a pergunta livre "Quer nos contar mais alguma coisa?"
 - Editor da pesquisa: título editável, Pausar/Retomar e Excluir com confirmação
-- Perguntas dos 3 tipos (nota, texto livre e "Quem te atendeu?"), cada uma com ícone próprio: subir/descer, tornar obrigatória/opcional, editar o texto, tirar da pesquisa e devolver depois
+- Perguntas dos 3 tipos (nota, texto livre e "Quem te atendeu?"), cada uma com ícone próprio: subir/descer, editar o texto, tirar da pesquisa e devolver depois
 - Limite de 10 perguntas e uma só "Quem te atendeu?" por pesquisa, garantidos também no banco
 - Avisos quando falta pergunta de nota ("sem nota") ou quando não há funcionários para a pergunta de equipe ("sem equipe")
 - Funciona pelo teclado e com leitor de tela
@@ -179,8 +180,10 @@ O primeiro cliente é a lanchonete **Bebelu**. Depois, a ideia é oferecer o Sat
 - Cada pesquisa tem um link próprio (`/p/<slug>`), com o slug sugerido a partir do nome da empresa e editável (único no sistema; se já existir, a tela avisa)
 - No editor: copiar o link, baixar o QR code em SVG e abrir um cartaz pronto para imprimir
 - Página do cliente pensada para o celular: nota de 1 a 10, texto livre e "Quem te atendeu?", com tela de agradecimento
+- **Nenhuma pergunta é obrigatória**: o cliente responde só o que quiser (pelo menos uma coisa)
+- **Nota baixa (1 a 6)** abre uma caixa opcional "Onde podemos melhorar?"; o texto fica junto da nota e entra no relatório de IA e na lista de respostas. Com nota 7 ou mais a caixa some
 - Pesquisa pausada mostra um aviso em vez do formulário
-- O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, funcionário ativo da mesma empresa, obrigatórias)
+- O envio passa por uma Server Action que usa a chave secreta só no servidor; o banco valida tudo de novo (pergunta da pesquisa, nota inteira de 1 a 10, funcionário ativo da mesma empresa, texto de melhoria só em nota abaixo de 7)
 - Pesquisa ou funcionário com respostas não podem ser excluídos (pausar ou desativar em vez disso)
 - **Proteção contra respostas falsas:** tempo mínimo de 3 segundos, marca "já respondeu hoje" no navegador e um teste invisível do Cloudflare Turnstile. O servidor confere o resultado com a Cloudflare antes de gravar; se a verificação falhar, a resposta não é aceita. **Nenhum sinal por IP é usado**, porque o Wi-Fi do local é compartilhado e isso atrapalharia clientes reais
 
