@@ -59,10 +59,13 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
         <div className="relative flex h-full flex-col items-center px-[8cqw] pt-[6cqw] pb-[5cqw] text-center text-ameixa">
           {/* Balão de fala com a pergunta */}
           <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[5cqw] pb-[4cqw]">
-            <h1 className="text-[10.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
-              Você ficou satisfeito<span className="text-creme">?</span>
+            <h1 className="text-[11.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
+              Ficou satisfeito<span className="text-creme">?</span>
             </h1>
-            <p className="mt-[3cqw] text-[4.2cqw] leading-tight font-medium text-balance">Sua opinião ajuda a gente a melhorar</p>
+            {/* Chamada em etiqueta manga, levemente torta: chama o olho sem gritar */}
+            <p className="mx-auto mt-[3.5cqw] w-fit -rotate-2 rounded-full bg-manga px-[5cqw] py-[1.6cqw] text-[6cqw] leading-none font-extrabold tracking-tight">
+              Conta pra gente!
+            </p>
             {/* Rabinho do balão apontando para o QR code */}
             <div
               aria-hidden="true"
@@ -90,7 +93,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
 
           <footer className="mt-auto flex w-full flex-col items-center gap-[1cqw] pt-[3cqw]">
             <p className="text-[4.6cqw] leading-tight font-bold text-balance">{atual.nome}</p>
-            <Logo className="text-[5.5cqw]" pequeno />
+            <Logo className="text-[5.5cqw]" />
           </footer>
         </div>
       </article>
