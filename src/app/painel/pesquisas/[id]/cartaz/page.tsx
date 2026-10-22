@@ -60,7 +60,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
           {/* Balão de fala com a pergunta */}
           <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[5cqw] pb-[4cqw]">
             <h1 className="text-[10.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
-              Você ficou satisfeito<span className="text-creme">?</span>
+              Você ficou satisfeito<span className="ml-[1.6cqw] text-creme">?</span>
             </h1>
             <p className="mt-[3cqw] text-[4.2cqw] leading-tight font-medium text-balance">Sua opinião ajuda a gente a melhorar</p>
             {/* Rabinho do balão apontando para o QR code */}
