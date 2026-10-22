@@ -54,17 +54,17 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
         className="entrada relative mx-auto aspect-[210/297] w-full max-w-md overflow-hidden rounded-3xl bg-creme shadow-[0_8px_24px_rgba(42,31,45,0.12)] [container-type:inline-size] [print-color-adjust:exact] [-webkit-print-color-adjust:exact] print:aspect-auto print:h-[297mm] print:rounded-none print:w-[210mm] print:max-w-none print:animate-none print:shadow-none"
       >
         {/* Formas de fundo: leves, só nos cantos */}
-        <div aria-hidden="true" className="pointer-events-none absolute -bottom-[16cqw] -left-[14cqw] size-[46cqw] rounded-full bg-manga" />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-[6cqw] bottom-[10cqw] size-[16cqw] rounded-full bg-coral" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-[26cqw] -left-[20cqw] size-[46cqw] rounded-full bg-manga" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-[6cqw] bottom-[12cqw] size-[16cqw] rounded-full bg-coral" />
         <div aria-hidden="true" className="pointer-events-none absolute top-[66cqw] -right-[20cqw] size-[44cqw] rounded-full bg-menta-claro" />
 
-        <div className="relative flex h-full flex-col items-center px-[8cqw] pt-[8cqw] pb-[6cqw] text-center text-ameixa">
+        <div className="relative flex h-full flex-col items-center px-[8cqw] pt-[6cqw] pb-[5cqw] text-center text-ameixa">
           {/* Balão de fala com a pergunta */}
-          <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[6cqw] pb-[5cqw]">
-            <h1 className="text-[11.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
+          <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[5cqw] pb-[4cqw]">
+            <h1 className="text-[10.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
               Como você nos avalia<span className="text-creme">?</span>
             </h1>
-            <ol aria-label="Notas de 1 a 10" className="mt-[4cqw] flex justify-between">
+            <ol aria-label="Notas de 1 a 10" className="mt-[3.5cqw] flex justify-between">
               {NOTAS.map((n) => (
                 <li
                   key={n}
@@ -82,16 +82,16 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
           </div>
 
           {/* QR code (sem o endereço escrito) */}
-          <div className="mt-[8cqw] rounded-[6cqw] border-[1.2cqw] border-manga bg-white p-[3cqw]">
+          <div className="mt-[6cqw] rounded-[6cqw] border-[1.2cqw] border-manga bg-white p-[3cqw]">
             <div
-              className="size-[44cqw] [&>svg]:size-full"
+              className="size-[40cqw] [&>svg]:size-full"
               role="img"
               aria-label={`QR code que abre ${link}`}
               dangerouslySetInnerHTML={{ __html: svg }}
             />
           </div>
 
-          <div className="mt-[5cqw] flex items-center gap-[3cqw] text-left">
+          <div className="mt-[4cqw] flex items-center gap-[3cqw] text-left">
             <IconeCelular className="size-[11cqw] shrink-0" />
             <div>
               <p className="text-[4.4cqw] leading-tight font-bold">Aponte a câmera do celular</p>
@@ -99,7 +99,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
             </div>
           </div>
 
-          <footer className="mt-auto flex w-full flex-col items-center gap-[1.5cqw] pt-[4cqw]">
+          <footer className="mt-auto flex w-full flex-col items-center gap-[1cqw] pt-[3cqw]">
             <p className="text-[4.6cqw] leading-tight font-bold text-balance">{atual.nome}</p>
             <Logo className="text-[5.5cqw]" pequeno />
           </footer>
