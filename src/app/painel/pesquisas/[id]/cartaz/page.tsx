@@ -84,7 +84,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
             <IconeCelular className="size-[11cqw] shrink-0" />
             <div>
               <p className="text-[4.4cqw] leading-tight font-bold">Aponte a câmera do celular</p>
-              <p className="text-[3.4cqw] leading-tight font-medium text-muted-foreground">Pesquisa de satisfação · 30 segundos</p>
+              <p className="text-[3.4cqw] leading-tight font-medium text-muted-foreground">Leva menos de 30 segundos</p>
             </div>
           </div>
 
