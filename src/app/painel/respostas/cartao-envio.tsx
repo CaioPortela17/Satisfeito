@@ -75,6 +75,13 @@ export function CartaoEnvio({ envio }: { envio: Envio }) {
                   </div>
                 </div>
               )}
+              {/* Nota baixa pode vir com o comentário "onde podemos melhorar", guardado junto da nota */}
+              {item.tipo === "nota" && item.texto && (
+                <div className="mt-3 border-t border-border pt-3">
+                  <p className="text-sm font-semibold text-muted-foreground">Onde podemos melhorar?</p>
+                  <p className="mt-1 break-words whitespace-pre-wrap">{item.texto}</p>
+                </div>
+              )}
               {item.tipo === "texto" && (
                 <>
                   <p className="text-sm font-semibold break-words text-muted-foreground">{item.pergunta}</p>
