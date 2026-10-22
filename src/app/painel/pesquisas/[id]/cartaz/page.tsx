@@ -56,7 +56,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
         <div aria-hidden="true" className="pointer-events-none absolute -right-[6cqw] bottom-[12cqw] size-[16cqw] rounded-full bg-coral" />
         <div aria-hidden="true" className="pointer-events-none absolute top-[66cqw] -right-[20cqw] size-[44cqw] rounded-full bg-menta-claro" />
 
-        <div className="relative flex h-full flex-col items-center px-[8cqw] pt-[6cqw] pb-[5cqw] text-center text-ameixa">
+        <div className="relative flex h-full flex-col items-center px-[8cqw] pt-[5cqw] pb-[5cqw] text-center text-ameixa">
           {/* Balão de fala com a pergunta */}
           <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[5cqw] pb-[4cqw]">
             <h1 className="text-[11.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
@@ -69,21 +69,21 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
             {/* Rabinho do balão apontando para o QR code */}
             <div
               aria-hidden="true"
-              className="absolute -bottom-[3cqw] left-[16cqw] size-[7cqw] rotate-45 rounded-[1cqw] bg-menta"
+              className="absolute -bottom-[3cqw] left-[5cqw] size-[7cqw] rotate-45 rounded-[1cqw] bg-menta"
             />
           </div>
 
           {/* QR code (sem o endereço escrito) */}
-          <div className="mt-[6cqw] rounded-[6cqw] border-[1.2cqw] border-manga bg-white p-[3cqw]">
+          <div className="mt-[5cqw] rounded-[6cqw] border-[1.2cqw] border-manga bg-white p-[3cqw]">
             <div
-              className="size-[43cqw] [&>svg]:size-full"
+              className="size-[39.5cqw] [&>svg]:size-full"
               role="img"
               aria-label={`QR code que abre ${link}`}
               dangerouslySetInnerHTML={{ __html: svg }}
             />
           </div>
 
-          <div className="mt-[4cqw] flex items-center gap-[3cqw] text-left">
+          <div className="mt-[3.5cqw] flex items-center gap-[3cqw] text-left">
             <IconeCelular className="size-[11cqw] shrink-0" />
             <div>
               <p className="text-[4.4cqw] leading-tight font-bold">Aponte a câmera do celular</p>
