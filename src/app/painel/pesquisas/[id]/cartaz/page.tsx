@@ -12,8 +12,6 @@ import { BotaoImprimir } from "./botao-imprimir";
 
 export const metadata: Metadata = { title: "Cartaz da pesquisa" };
 
-const NOTAS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
 export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[id]/cartaz">) {
   const { id: idRecebido } = await props.params;
   const { supabase, atual } = await obterContextoEmpresa();
@@ -62,18 +60,9 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
           {/* Balão de fala com a pergunta */}
           <div className="relative w-full rounded-[7cqw] bg-menta px-[5cqw] pt-[5cqw] pb-[4cqw]">
             <h1 className="text-[10.5cqw] leading-[1.02] font-extrabold tracking-tight text-balance">
-              Como você nos avalia<span className="text-creme">?</span>
+              Você ficou satisfeito<span className="text-creme">?</span>
             </h1>
-            <ol aria-label="Notas de 1 a 10" className="mt-[3.5cqw] flex justify-between">
-              {NOTAS.map((n) => (
-                <li
-                  key={n}
-                  className="numeros flex size-[6.6cqw] items-center justify-center rounded-full bg-white text-[3.2cqw] font-bold"
-                >
-                  {n}
-                </li>
-              ))}
-            </ol>
+            <p className="mt-[3cqw] text-[4.2cqw] leading-tight font-medium text-balance">Sua opinião ajuda a gente a melhorar</p>
             {/* Rabinho do balão apontando para o QR code */}
             <div
               aria-hidden="true"
@@ -84,7 +73,7 @@ export default async function PaginaCartaz(props: PageProps<"/painel/pesquisas/[
           {/* QR code (sem o endereço escrito) */}
           <div className="mt-[6cqw] rounded-[6cqw] border-[1.2cqw] border-manga bg-white p-[3cqw]">
             <div
-              className="size-[40cqw] [&>svg]:size-full"
+              className="size-[43cqw] [&>svg]:size-full"
               role="img"
               aria-label={`QR code que abre ${link}`}
               dangerouslySetInnerHTML={{ __html: svg }}
